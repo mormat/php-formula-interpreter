@@ -13,23 +13,23 @@ use FormulaInterpreter\Command\VariableCommand;
  * @author mathieu
  */
 class VariableCommandTest extends PHPUnit_Framework_TestCase {
-    
+
     /**
      * @dataProvider getData
      */
     public function testRunWhenVariablesExists($name, $variables, $result) {
         $command = new VariableCommand($name, $variables);
-        
+
         $this->assertEquals($command->run(), $result);
     }
-    
+
     public function getData() {
         return array(
             array('rate', array('rate' => 2), 2),
             array('price', array('price' => 32.2), 32.2),
         );
     }
-    
+
     /**
      * @expectedException FormulaInterpreter\Exception\UnknownVariableException
      */
@@ -37,9 +37,9 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
         $command = new VariableCommand('rate', array());
         $command->run();
     }
-    
+
     public function testRunWhenVariablesHolderImplementsArrayAccess() {
-        $variables = $this->getMock('\ArrayAccess');
+        $variables = $this->createMock('\ArrayAccess');
         $variables->expects($this->any())
             ->method('offsetExists')
             ->with($this->equalTo('rate'))
@@ -48,12 +48,12 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
             ->method('offsetGet')
             ->with($this->equalTo('rate'))
             ->will($this->returnValue(23));
-        
+
         $command = new VariableCommand('rate', $variables);
-        
+
         $this->assertEquals($command->run(), 23);
     }
-    
+
     /**
      * @expectedException \InvalidArgumentException
      * @dataProvider getIncorrectNames
@@ -61,7 +61,7 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
     public function testInjectIncorrectName($name) {
         $command = new VariableCommand($name, array());
     }
-    
+
     public function getIncorrectNames() {
         return array(
             array(12),
@@ -70,7 +70,7 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
             array(new StdClass()),
         );
     }
-    
+
     /**
      * @expectedException \InvalidArgumentException
      * @dataProvider getIncorrectVariables
@@ -78,7 +78,7 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
     public function testInjectIncorrectVariables($variables) {
         $command = new VariableCommand('rate', $variables);
     }
-    
+
     public function getIncorrectVariables() {
         return array(
             array(12),
@@ -87,7 +87,7 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
             array(new StdClass()),
         );
     }
-    
+
 }
 
 ?>

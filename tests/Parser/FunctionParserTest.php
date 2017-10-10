@@ -13,27 +13,27 @@ use FormulaInterpreter\Parser\FunctionParser;
  * @author mathieu
  */
 class FunctionParserTest extends PHPUnit_Framework_TestCase {
-    
+
     public function setUp() {
-        $argumentParser = $this->getMock('\FormulaInterpreter\Parser\ParserInterface');
+        $argumentParser = $this->createMock('\FormulaInterpreter\Parser\ParserInterface');
         $argumentParser
             ->expects($this->any())
             ->method('parse')
             ->will($this->returnCallback(array($this, 'mockArgumentParser')));
         $this->parser = new FunctionParser($argumentParser);
-        
+
     }
-    
+
     /**
      * @dataProvider getCorrectExpressions
      */
     public function testParseWithCorrecrExpression($expression, $infos) {
-        
+
         $infos['type'] = 'function';
-        
+
         $this->assertEquals($this->parser->parse($expression), $infos);
     }
-    
+
     public function getCorrectExpressions() {
         return array(
             array('pi()', array('name' => 'pi')),
@@ -48,7 +48,7 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
             array('max(sqrt(pow(2,4)),2)', array('name' => 'max', 'arguments' => array('sqrt(pow(2,4))', '2'))),
         );
     }
-    
+
     /**
      * @expectedException FormulaInterpreter\Parser\ParserException
      * @dataProvider getUncorrectExpressions
@@ -56,14 +56,14 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
     public function testParseUncorrectExpression($expression) {
         $this->parser->parse($expression);
     }
-    
+
     public function getUncorrectExpressions() {
         return array(
             array(' what ever '),
             array(' what_ever( '),
         );
     }
-    
+
     public function mockArgumentParser($expression) {
         return $expression;
     }

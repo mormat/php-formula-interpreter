@@ -13,29 +13,29 @@ use FormulaInterpreter\Parser\OperatorParser;
  * @author mathieu
  */
 class OperatorParserTest extends PHPUnit_Framework_TestCase {
-    
+
     public function setUp() {
-        
-        $operandParser = $this->getMock('\FormulaInterpreter\Parser\ParserInterface');
+
+        $operandParser = $this->createMock('\FormulaInterpreter\Parser\ParserInterface');
         $operandParser
             ->expects($this->any())
             ->method('parse')
             ->will($this->returnCallback(array($this, 'mockOperandParser')));
-        
+
         $this->parser = new OperatorParser($operandParser);
     }
-    
+
     /**
      * @dataProvider getDataForTestingParse
      */
     public function testParse($expression, $infos) {
         $infos['type'] = 'operation';
-        
+
         $this->assertEquals($this->parser->parse($expression), $infos);
     }
-    
+
     public function getDataForTestingParse() {
-        
+
         return array(
             array('2+2', array(
                             'firstOperand' => '2',
@@ -101,7 +101,7 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
                          )),
         );
     }
-    
+
     public function mockOperandParser($expression) {
         return $expression;
     }
@@ -113,7 +113,7 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
     public function testParseUncorrectExpression($expression) {
         $this->parser->parse($expression);
     }
-    
+
     public function getUncorrectExpressions() {
         return array(
             array(' what ever '),
@@ -121,7 +121,7 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
             array(' 2 + ()')
         );
     }
-    
+
 }
 
 ?>

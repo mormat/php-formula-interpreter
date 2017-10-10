@@ -12,7 +12,8 @@
     ],
 
     "require-dev": {
-        "symfony/class-loader": "2.1.*"
+        "symfony/class-loader": "2.1.*",
+        "phpunit/phpunit": "^5.0"
     },
 
     "autoload": {
