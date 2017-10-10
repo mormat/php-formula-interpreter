@@ -14,18 +14,18 @@ use FormulaInterpreter\Parser\ParserException;
  * @author mathieu
  */
 class CompilerTest extends PHPUnit_Framework_TestCase {
-    
+
     /**
      * @dataProvider getCompileAndRunData
      */
     public function testCompileAndRun($expression, $result, $variables = array()) {
         $compiler = new Compiler();
-        
+
         $executable = $compiler->compile($expression);
         $this->assertEquals($executable->run($variables), $result);
 
     }
-    
+
     public function getCompileAndRunData() {
         return array(
             array('3', 3),
@@ -39,12 +39,16 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
             array('sin(0)', 0),
             array('sqrt(4)', 2),
             array('pow(sqrt(pow(2, 2)), 2)', 4),
-            
+
             // Issue #4
-            array('(((100 * 0.43075) * 1.1 * 1.5) / (1-0.425)) * 1.105', 136.5852065217), 
+            array('(((100 * 0.43075) * 1.1 * 1.5) / (1-0.425)) * 1.105', 136.5852065217),
             array('1+(1+1)', 3),
+
+            // Issue 8
+            array('pow(foo,bar)', 9, array('foo' => 3, 'bar' => 2)),
+            array('pow(foo, bar)', 9, array('foo' => 3, 'bar' => 2)),
         );
     }
-    
+
 }
 

@@ -13,24 +13,24 @@ namespace FormulaInterpreter\Parser;
  * @author mathieu
  */
 class CompositeParser implements ParserInterface {
-    
+
     protected $parsers = array();
-    
+
     public function addParser(ParserInterface $parser) {
         $this->parsers[] = $parser;
     }
-    
+
     function parse($expression) {
         foreach ($this->parsers as $parser) {
             try {
                 return $parser->parse($expression);
             } catch (ParserException $e) {
-                if ($e->getExpression() != $expression) {
+                if ($e->getExpression() != trim($expression)) {
                     throw $e;
                 }
-            }           
+            }
         }
-        
+
         throw new ParserException($expression);
     }
 
