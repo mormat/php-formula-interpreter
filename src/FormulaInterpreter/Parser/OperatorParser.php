@@ -12,33 +12,34 @@ namespace FormulaInterpreter\Parser;
  *
  * @author mathieu
  */
-class OperatorParser implements ParserInterface {
+class OperatorParser implements ParserInterface
+{
     
     /**
      * @var ParserInterface
      */
     protected $operandParser;
     
-    function __construct(ParserInterface $operandParser) {
+    public function __construct(ParserInterface $operandParser)
+    {
         $this->operandParser = $operandParser;
     }
     
-    function parse($expression) {
-
+    public function parse($expression)
+    {
         $expression = trim($expression);
         
         if ($this->hasOperator($expression, '+') | $this->hasOperator($expression, '-')) {
-            return $this->searchOperands($expression, array('+', '-'));
+            return $this->searchOperands($expression, ['+', '-']);
         } elseif ($this->hasOperator($expression, '*') | $this->hasOperator($expression, '/')) {
-            return $this->searchOperands($expression, array('*', '/'));
+            return $this->searchOperands($expression, ['*', '/']);
         }
         
         throw new ParserException($expression);
-        
     }
     
-    function hasOperator($expression, $operator) {
-        
+    public function hasOperator($expression, $operator)
+    {
         $parenthesis = 0;
         
         for ($i = 0; $i < strlen($expression); $i++) {
@@ -59,8 +60,9 @@ class OperatorParser implements ParserInterface {
         return false;
     }
     
-    function searchOperands($expression, $operators) {
-        $operands = array();
+    public function searchOperands($expression, $operators)
+    {
+        $operands = [];
         $nbrCharacters = strlen($expression);
         
         $parenthesis = 0;
@@ -68,18 +70,17 @@ class OperatorParser implements ParserInterface {
         $previous = 0;
         $lastOperator = null;
         for ($i = 0; $i < $nbrCharacters; $i++) {
-            
             switch ($expression[$i]) {
                 case '(':
                     $parenthesis ++;
                     break;
-                case ')';
+                case ')':
                     $parenthesis --;
                     break;
                 default:
                     if (in_array($expression[$i], $operators) && $parenthesis == 0) {
                         $operands[] = $this->createOperand(
-                            substr($expression, $previous, $i - $previous), 
+                            substr($expression, $previous, $i - $previous),
                             $lastOperator
                         );
                         $lastOperator = $expression[$i];
@@ -90,28 +91,27 @@ class OperatorParser implements ParserInterface {
                         } else {
                             $previous = $i+1;
                         }
-                        
-                    }                    
+                    }
             }
-            
         }
         
         $operands[] = $this->createOperand(
-                substr($expression, $previous, strlen($expression) - $previous), 
+                substr($expression, $previous, strlen($expression) - $previous),
                 $lastOperator
         );
         
         $firstOperand = array_shift($operands);
         
-        return array(
+        return [
             'type' => 'operation',
             'firstOperand' => $firstOperand['value'],
             'otherOperands' => $operands
-        );
+        ];
     }
     
-    function createOperand($value, $operator = null) {
-        $operand = array();
+    public function createOperand($value, $operator = null)
+    {
+        $operand = [];
         switch ($operator) {
             case '+':
                 $operand['operator'] = 'add';
@@ -144,7 +144,4 @@ class OperatorParser implements ParserInterface {
         $operand['value'] = $this->operandParser->parse($value);
         return $operand;
     }
-    
 }
-
-?>

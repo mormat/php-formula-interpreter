@@ -70,7 +70,7 @@ $variables = array(
 $executable->run($variables);
 ```
 
-# Using functions 
+# Using functions
 
 Here is an example of expression using a function :
 
@@ -86,4 +86,23 @@ You can embed functions as much as you like
    'pow(sqrt(4), 2)'
 ```
 
+# Listing parameters
+
+You can get a list of all variables that must be provided to the ``run()`` method in order to run the executable:
+
+```php
+$executable = $compiler->compile('foo + bar');
+
+print_r($executable->getParameters());
+```
+
+This will output:
+
+```php
+    Array
+    (
+        [0] => foo
+        [0] => bar
+    )
+```
 

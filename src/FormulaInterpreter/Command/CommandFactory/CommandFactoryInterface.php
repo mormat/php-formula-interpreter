@@ -12,13 +12,12 @@ namespace FormulaInterpreter\Command\CommandFactory;
  *
  * @author mathieu
  */
-interface CommandFactoryInterface {
+interface CommandFactoryInterface
+{
     
     /**
      * @param array $options
      * @return FormulaInterpreter\Command\CommandInterface
      */
-    function create($options);
-    
+    public function create($options);
 }
-

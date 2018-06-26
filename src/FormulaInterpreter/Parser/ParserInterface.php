@@ -12,10 +12,7 @@ namespace FormulaInterpreter\Parser;
  *
  * @author mathieu
  */
-interface ParserInterface {
-    
-    function parse($exception);
-    
+interface ParserInterface
+{
+    public function parse($exception);
 }
-
-?>

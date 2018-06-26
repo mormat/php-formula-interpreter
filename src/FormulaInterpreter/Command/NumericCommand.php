@@ -12,34 +12,39 @@ namespace FormulaInterpreter\Command;
  *
  * @author mathieu
  */
-class NumericCommand implements CommandInterface {
-    
+class NumericCommand implements CommandInterface
+{
+
     /**
      * @var integer
      */
     protected $value;
-    
-    function __construct($value) {
+
+    public function __construct($value)
+    {
         if (!is_numeric($value)) {
             $message = sprintf(
-                'Parameter $value of method __construct() of class %s must be an integer. Got %s type instead.', 
-                get_class($this), 
+                'Parameter $value of method __construct() of class %s must be an integer. Got %s type instead.',
+                get_class($this),
                 gettype($value)
             );
             throw new \InvalidArgumentException($message);
         }
-        
+
         $this->value = $value;
     }
-    
-    public function run() {
+
+    public function run()
+    {
         return $this->value;
     }
-    
-    static function create($options) {
-        
-    }
-    
-}
 
-?>
+    public static function create($options)
+    {
+    }
+
+    public function getParameters()
+    {
+        return [];
+    }
+}

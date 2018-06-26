@@ -12,7 +12,8 @@ namespace FormulaInterpreter;
  *
  * @author mathieu
  */
-class Compiler {
+class Compiler
+{
     
     /**
      * @var Parser\CompositeParser
@@ -29,8 +30,8 @@ class Compiler {
      */
     protected $variables;
     
-    function __construct() {
-        
+    public function __construct()
+    {
         $this->parser = new Parser\CompositeParser();
         $this->parser->addParser(new Parser\NumericParser());
         $this->parser->addParser(new Parser\VariableParser());
@@ -47,29 +48,29 @@ class Compiler {
         $this->functionCommandFactory = new Command\CommandFactory\FunctionCommandFactory($this->commandFactory);
         $this->commandFactory->registerFactory('function', $this->functionCommandFactory);
         $this->registerDefaultFunctions();
-        
     }
     
-    protected function registerDefaultFunctions() {
-        $functions = array('pi', 'pow', 'cos', 'sin', 'sqrt');
+    protected function registerDefaultFunctions()
+    {
+        $functions = ['pi', 'pow', 'cos', 'sin', 'sqrt'];
         foreach ($functions as $function) {
-            $this->functionCommandFactory->registerFunction($function, $function);    
+            $this->functionCommandFactory->registerFunction($function, $function);
         }
-        $this->functionCommandFactory->registerFunction('modulo', function($a, $b) {return $a % $b;});    
+        $this->functionCommandFactory->registerFunction('modulo', function ($a, $b) {
+            return $a % $b;
+        });
     }
     
     /**
      * Compile an expression and return the corresponding executable
-     * 
+     *
      * @param string $expression
      * @return \FormulaInterpreter\Executable
      */
-    function compile($expression) {
+    public function compile($expression)
+    {
         $options = $this->parser->parse($expression);
         $command = $this->commandFactory->create($options);
         return new Executable($command, $this->variables);
     }
-    
 }
-
-?>

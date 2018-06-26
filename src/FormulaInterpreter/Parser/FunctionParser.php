@@ -12,18 +12,21 @@ namespace FormulaInterpreter\Parser;
  *
  * @author mathieu
  */
-class FunctionParser implements ParserInterface {
+class FunctionParser implements ParserInterface
+{
     
     /**
      * @var ParserInterface
      */
     protected $argumentParser;
     
-    function __construct(ParserInterface $argumentParser) {
+    public function __construct(ParserInterface $argumentParser)
+    {
         $this->argumentParser = $argumentParser;
     }
 
-    function parse($expression) {
+    public function parse($expression)
+    {
         $expression = trim($expression);
         
         if (!preg_match('/^(\w)+\(/', $expression)) {
@@ -35,14 +38,14 @@ class FunctionParser implements ParserInterface {
         
         $open = strpos($expression, '(');
 
-        $results = array(
+        $results = [
             'type' => 'function',
             'name' => substr($expression, 0, $open),
-        );
+        ];
 
         $arguments = trim(substr($expression, $open + 1, -1));
         if ($arguments != '') {
-            $parsedArguments = array();
+            $parsedArguments = [];
             foreach ($this->explodeArguments($arguments) as $argument) {
                 $parsedArguments[] = $this->argumentParser->parse($argument);
             }
@@ -52,9 +55,9 @@ class FunctionParser implements ParserInterface {
         return $results;
     }
 
-    protected function explodeArguments($expression) {
-
-        $arguments = array();
+    protected function explodeArguments($expression)
+    {
+        $arguments = [];
         $previous = 0;
         $parenthesis = 0;
         for ($position = 0; $position < strlen($expression); $position++) {
@@ -78,7 +81,4 @@ class FunctionParser implements ParserInterface {
 
         return $arguments;
     }
-
 }
-
-?>

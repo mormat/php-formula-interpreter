@@ -14,17 +14,14 @@ use FormulaInterpreter\Command\NumericCommand;
  *
  * @author mathieu
  */
-class NumericCommandFactory implements CommandFactoryInterface {
-    
-    public function create($options) {
+class NumericCommandFactory implements CommandFactoryInterface
+{
+    public function create($options)
+    {
         if (!isset($options['value'])) {
             throw new CommandFactoryException();
         }
         
         return new NumericCommand($options['value']);
-        
     }
-    
 }
-
-?>

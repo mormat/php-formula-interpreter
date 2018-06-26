@@ -14,15 +14,17 @@ use FormulaInterpreter\Command\VariableCommand;
  *
  * @author mathieu
  */
-class VariableCommandFactory implements CommandFactoryInterface  {
-    
+class VariableCommandFactory implements CommandFactoryInterface
+{
     protected $variables;
     
-    function __construct($variables) {
+    public function __construct($variables)
+    {
         $this->variables = $variables;
     }
     
-    public function create($options) {
+    public function create($options)
+    {
         if (!isset($options['name'])) {
             throw new CommandFactoryException();
         }
@@ -30,9 +32,6 @@ class VariableCommandFactory implements CommandFactoryInterface  {
         return new VariableCommand(
                 $options['name'],
                 $this->variables
-        );        
+        );
     }
-    
 }
-
-?>
