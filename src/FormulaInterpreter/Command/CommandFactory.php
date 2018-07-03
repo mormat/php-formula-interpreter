@@ -12,15 +12,17 @@ namespace FormulaInterpreter\Command;
  *
  * @author mathieu
  */
-class CommandFactory implements CommandFactory\CommandFactoryInterface {
+class CommandFactory implements CommandFactory\CommandFactoryInterface
+{
+    protected $factories = [];
     
-    protected $factories = array();
-    
-    public function registerFactory($type, CommandFactory\CommandFactoryInterface $factory) {
+    public function registerFactory($type, CommandFactory\CommandFactoryInterface $factory)
+    {
         $this->factories[$type] = $factory;
     }
     
-    public function create($options) {
+    public function create($options)
+    {
         if (!isset($options['type'])) {
             throw new CommandFactory\CommandFactoryException('Missing argument "type"');
         }
@@ -32,5 +34,3 @@ class CommandFactory implements CommandFactory\CommandFactoryInterface {
         return $this->factories[$options['type']]->create($options);
     }
 }
-
-?>

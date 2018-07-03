@@ -14,25 +14,27 @@ use FormulaInterpreter\Command\FunctionCommand;
  *
  * @author mathieu
  */
-class FunctionCommandFactory implements CommandFactoryInterface {
-    
-    protected $functions = array();
+class FunctionCommandFactory implements CommandFactoryInterface
+{
+    protected $functions = [];
     
     /**
      * @var CommandFactoryInstance
      */
     protected $argumentCommandFactory;
     
-    function __construct(CommandFactoryInterface $argumentCommandFactory) {
+    public function __construct(CommandFactoryInterface $argumentCommandFactory)
+    {
         $this->argumentCommandFactory = $argumentCommandFactory;
     }
     
-    public function registerFunction($name, $callable) {
+    public function registerFunction($name, $callable)
+    {
         $this->functions[$name] = $callable;
     }
     
-    public function create($options) {
-        
+    public function create($options)
+    {
         if (!isset($options['name'])) {
             throw new CommandFactoryException('Missing option "name"');
         }
@@ -41,7 +43,7 @@ class FunctionCommandFactory implements CommandFactoryInterface {
             throw new \FormulaInterpreter\Exception\UnknownFunctionException($options['name']);
         }
         
-        $argumentCommands = array();
+        $argumentCommands = [];
         if (isset($options['arguments'])) {
             foreach ($options['arguments'] as $argumentOptions) {
                 $argumentCommands[] = $this->argumentCommandFactory->create($argumentOptions);
@@ -50,7 +52,4 @@ class FunctionCommandFactory implements CommandFactoryInterface {
         
         return new FunctionCommand($this->functions[$options['name']], $argumentCommands);
     }
-    
 }
-
-?>

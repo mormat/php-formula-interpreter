@@ -12,8 +12,6 @@ namespace FormulaInterpreter\Exception;
  *
  * @author mathieu
  */
-class NotEnoughArgumentsException extends \Exception {
-    
+class NotEnoughArgumentsException extends \Exception
+{
 }
-
-?>

@@ -12,28 +12,33 @@ namespace FormulaInterpreter;
  *
  * @author mathieu
  */
-class Executable {
-    
+class Executable
+{
+
     /**
      * @var Command\CommandInterface
      */
     protected $command;
-    
+
     /**
      * @var \ArrayObject
      */
     protected $variables;
-    
-    function __construct(Command\CommandInterface $command, \ArrayObject $variables) {
+
+    public function __construct(Command\CommandInterface $command, \ArrayObject $variables)
+    {
         $this->command = $command;
         $this->variables = $variables;
     }
 
-    function run($variables = array()) {
+    public function run($variables = [])
+    {
         $this->variables->exchangeArray($variables);
         return $this->command->run();
     }
-    
-}
 
-?>
+    public function getParameters()
+    {
+        return $this->command->getParameters();
+    }
+}

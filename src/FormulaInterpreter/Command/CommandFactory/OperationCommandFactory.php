@@ -14,19 +14,21 @@ use FormulaInterpreter\Command\OperationCommand;
  *
  * @author mathieu
  */
-class OperationCommandFactory implements CommandFactoryInterface {
+class OperationCommandFactory implements CommandFactoryInterface
+{
     
     /**
      * @var CommandFactoryInterface
      */
     protected $operandCommandFactory;
     
-    function __construct(CommandFactoryInterface $operandCommandFactory) {
+    public function __construct(CommandFactoryInterface $operandCommandFactory)
+    {
         $this->operandCommandFactory = $operandCommandFactory;
     }
     
-    public function create($options) {
-
+    public function create($options)
+    {
         if (!isset($options['firstOperand'])) {
             throw new CommandFactoryException();
         }
@@ -38,7 +40,7 @@ class OperationCommandFactory implements CommandFactoryInterface {
             foreach ($options['otherOperands'] as $option) {
                 if (isset($option['operator']) && isset($option['value'])) {
                     $command->addOperand(
-                        $option['operator'], 
+                        $option['operator'],
                         $this->operandCommandFactory->create($option['value'])
                     );
                 }
@@ -47,7 +49,4 @@ class OperationCommandFactory implements CommandFactoryInterface {
         
         return $command;
     }
-    
 }
-
-?>

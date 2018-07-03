@@ -7,14 +7,14 @@
 
 namespace FormulaInterpreter\Command\CommandFactory;
 
-use FormulaInterpreter\Command\NumericCommand;
+use FormulaInterpreter\Command\StringCommand;
 
 /**
  * Description of FunctionParser
  *
- * @author mathieu
+ * @author Petra Barus <petra.barus@gmail.com>
  */
-class NumericCommandFactory implements CommandFactoryInterface
+class StringCommandFactory implements CommandFactoryInterface
 {
     public function create($options)
     {
@@ -22,6 +22,6 @@ class NumericCommandFactory implements CommandFactoryInterface
             throw new CommandFactoryException();
         }
         
-        return new NumericCommand($options['value']);
+        return new StringCommand($options['value']);
     }
 }

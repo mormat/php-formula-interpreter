@@ -5,41 +5,48 @@
  * and open the template in the editor.
  */
 
+namespace Tests\FormulaInterpreter\Command;
+
 use FormulaInterpreter\Command\VariableCommand;
+use FormulaInterpreter\Exception\UnknownVariableException;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Description of ParserTest
  *
  * @author mathieu
  */
-class VariableCommandTest extends PHPUnit_Framework_TestCase {
-    
+class VariableCommandTest extends TestCase
+{
+
     /**
      * @dataProvider getData
      */
-    public function testRunWhenVariablesExists($name, $variables, $result) {
+    public function testRunWhenVariablesExists($name, $variables, $result)
+    {
         $command = new VariableCommand($name, $variables);
-        
+
         $this->assertEquals($command->run(), $result);
     }
-    
-    public function getData() {
-        return array(
-            array('rate', array('rate' => 2), 2),
-            array('price', array('price' => 32.2), 32.2),
-        );
+
+    public function getData()
+    {
+        return [
+            ['rate', ['rate' => 2], 2],
+            ['price', ['price' => 32.2], 32.2],
+        ];
     }
-    
-    /**
-     * @expectedException FormulaInterpreter\Exception\UnknownVariableException
-     */
-    public function testRunWhenVariableNotExists() {
-        $command = new VariableCommand('rate', array());
+
+    public function testRunWhenVariableNotExists()
+    {
+        $this->expectException(UnknownVariableException::class);
+        $command = new VariableCommand('rate', []);
         $command->run();
     }
-    
-    public function testRunWhenVariablesHolderImplementsArrayAccess() {
-        $variables = $this->getMock('\ArrayAccess');
+
+    public function testRunWhenVariablesHolderImplementsArrayAccess()
+    {
+        $variables = $this->createMock(\ArrayAccess::class);
         $variables->expects($this->any())
             ->method('offsetExists')
             ->with($this->equalTo('rate'))
@@ -48,46 +55,47 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
             ->method('offsetGet')
             ->with($this->equalTo('rate'))
             ->will($this->returnValue(23));
-        
+
         $command = new VariableCommand('rate', $variables);
-        
+
         $this->assertEquals($command->run(), 23);
     }
-    
+
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider getIncorrectNames
      */
-    public function testInjectIncorrectName($name) {
-        $command = new VariableCommand($name, array());
+    public function testInjectIncorrectName($name)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $command = new VariableCommand($name, []);
     }
-    
-    public function getIncorrectNames() {
-        return array(
-            array(12),
-            array(False),
-            array(array()),
-            array(new StdClass()),
-        );
+
+    public function getIncorrectNames()
+    {
+        return [
+            [12],
+            [false],
+            [[]],
+            [new \stdClass()],
+        ];
     }
-    
+
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider getIncorrectVariables
      */
-    public function testInjectIncorrectVariables($variables) {
+    public function testInjectIncorrectVariables($variables)
+    {
+        $this->expectException(\InvalidArgumentException::class);
         $command = new VariableCommand('rate', $variables);
     }
-    
-    public function getIncorrectVariables() {
-        return array(
-            array(12),
-            array(False),
-            array('string'),
-            array(new StdClass()),
-        );
-    }
-    
-}
 
-?>
+    public function getIncorrectVariables()
+    {
+        return [
+            [12],
+            [false],
+            ['string'],
+            [new \stdClass()],
+        ];
+    }
+}

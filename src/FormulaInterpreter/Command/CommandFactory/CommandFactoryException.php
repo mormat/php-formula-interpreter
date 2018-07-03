@@ -12,9 +12,6 @@ namespace FormulaInterpreter\Command\CommandFactory;
  *
  * @author mathieu
  */
-class CommandFactoryException extends \Exception {
-    
-    
+class CommandFactoryException extends \Exception
+{
 }
-
-?>

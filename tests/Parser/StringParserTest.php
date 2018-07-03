@@ -9,34 +9,42 @@ namespace Tests\FormulaInterpreter\Parser;
 
 use FormulaInterpreter\Parser\NumericParser;
 use FormulaInterpreter\Parser\ParserException;
+use FormulaInterpreter\Parser\StringParser;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Description of NumericParserTest
+ * Description of StringParserTest
  *
- * @author mathieu
+ * @author Petra Barus <petra.barus@gmail.com>
  */
-class NumericParserTest extends \PHPUnit\Framework\TestCase
+class StringParserTest extends TestCase
 {
+    /**
+     * @var StringParser
+     */
+    private $parser;
+
     public function setUp()
     {
-        $this->parser = new NumericParser();
+        $this->parser = new StringParser();
     }
     
     /**
-     * @dataProvider getIntegerValue
+     * @dataProvider getStringValue
      */
     public function testParseInteger($expression, $infos)
     {
-        $infos['type'] = 'numeric';
-        $this->assertEquals($this->parser->parse($expression), $infos);
+        $infos['type'] = 'string';
+        $this->assertEquals($infos, $this->parser->parse($expression));
     }
     
-    public function getIntegerValue()
+    public function getStringValue()
     {
         return [
-            ['2', ['value' => 2]],
-            ['2.4', ['value' => 2.4]],
-            [' 2.4 ', ['value' => 2.4]],
+            ['"Hello"', ['value' => "Hello"]],
+            ['"Hello, World!"', ['value' => "Hello, World!"]],
+            ['"Hello, \"World!\""', ['value' => 'Hello, "World!"']],
+            ['"Hello - World"', ['value' => 'Hello - World']],
         ];
     }
     

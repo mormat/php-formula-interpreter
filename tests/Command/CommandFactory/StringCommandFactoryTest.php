@@ -8,15 +8,18 @@
 namespace Tests\FormulaInterpreter\Command\CommandFactory;
 
 use FormulaInterpreter\Command\CommandFactory\CommandFactoryException;
+use FormulaInterpreter\Command\CommandFactory\StringCommandFactory;
 use FormulaInterpreter\Command\NumericCommand;
 use FormulaInterpreter\Command\CommandFactory\NumericCommandFactory;
+use FormulaInterpreter\Command\StringCommand;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Description of NumericCommandFactory
  *
- * @author mathieu
+ * @author Petra Barus <petra.barus@gmail.com>
  */
-class NumericCommandFactoryTest extends \PHPUnit\Framework\TestCase
+class StringCommandFactoryTest extends TestCase
 {
     
     /**
@@ -24,9 +27,9 @@ class NumericCommandFactoryTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreate($value)
     {
-        $factory = new NumericCommandFactory();
+        $factory = new StringCommandFactory();
         $options = ['value' => $value];
-        $this->assertEquals($factory->create($options), new NumericCommand($value));
+        $this->assertEquals($factory->create($options), new StringCommand($value));
     }
     
     public function getData()
@@ -40,7 +43,7 @@ class NumericCommandFactoryTest extends \PHPUnit\Framework\TestCase
     public function testCreateWithMissingValueOption()
     {
         $this->expectException(CommandFactoryException::class);
-        $factory = new NumericCommandFactory();
+        $factory = new StringCommandFactory();
         $factory->create([]);
     }
 }

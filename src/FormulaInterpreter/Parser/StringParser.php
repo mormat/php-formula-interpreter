@@ -10,21 +10,25 @@ namespace FormulaInterpreter\Parser;
 /**
  * Description of FunctionParser
  *
- * @author mathieu
+ * @author Petra Barus <petra.barus@gmail.com>
  */
-class NumericParser implements ParserInterface
+class StringParser implements ParserInterface
 {
+    const PATTERN = '/^".+"$/';
+
     public function parse($expression)
     {
         $expression = trim($expression);
         
-        if (!preg_match('/^[0-9]*(\.[0-9]*){0,1}$/', $expression)) {
+        if (!preg_match(self::PATTERN, $expression)) {
             throw new ParserException($expression);
         }
-        
+
+        $string = substr($expression, 1, strlen($expression) - 2);
+        $string = str_replace("\\\"", "\"", $string);
         return $infos = [
-            'type' => 'numeric',
-            'value' => floatval($expression),
+            'type' => 'string',
+            'value' => (string) $string,
         ];
     }
 }

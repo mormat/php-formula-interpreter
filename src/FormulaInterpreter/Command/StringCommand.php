@@ -1,30 +1,25 @@
 <?php
-
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * @author Petra Barus <petra.barus@gmail.com>
  */
 
 namespace FormulaInterpreter\Command;
 
 /**
- * Description of FunctionParser
- *
- * @author mathieu
+ * @author Petra Barus <petra.barus@gmail.com>
  */
-class NumericCommand implements CommandInterface
+class StringCommand implements CommandInterface
 {
-
     /**
-     * @var integer
+     * @var string
      */
     protected $value;
 
     public function __construct($value)
     {
-        if (!is_numeric($value)) {
+        if (!is_string($value)) {
             $message = sprintf(
-                'Parameter $value of method __construct() of class %s must be an integer. Got %s type instead.',
+                'Parameter $value of method __construct() of class %s must be an string. Got %s type instead.',
                 get_class($this),
                 gettype($value)
             );

@@ -5,50 +5,57 @@
  * and open the template in the editor.
  */
 
+namespace Tests\FormulaInterpreter\Command;
+
 use FormulaInterpreter\Command\CommandFactory;
+use FormulaInterpreter\Command\CommandFactory\CommandFactoryException;
 
 /**
  * Description of ParserTest
  *
  * @author mathieu
  */
-class CommandFactoryTest extends PHPUnit_Framework_TestCase {
-    
-    public function testCreate() {
+class CommandFactoryTest extends \PHPUnit\Framework\TestCase
+{
+    public function testCreate()
+    {
         $factory = new CommandFactory();
-        
+
         $command = new CommandFactoryTest_FakeCommand();
-        $numericFactory = $this->getMock('\FormulaInterpreter\Command\CommandFactory');
+        $numericFactory = $this->createMock('\FormulaInterpreter\Command\CommandFactory');
         $numericFactory->expects($this->once())
                 ->method('create')
                 ->will($this->returnValue($command));
         $factory->registerFactory('numeric', $numericFactory);
-        
-        $this->assertEquals($factory->create(array('type' => 'numeric')), $command);
+
+        $this->assertEquals($factory->create(['type' => 'numeric']), $command);
     }
-    
-    /**
-     * @expectedException FormulaInterpreter\Command\CommandFactory\CommandFactoryException
-     */
-    public function testMissingTypeOption() {
+
+    public function testMissingTypeOption()
+    {
+        $this->expectException(CommandFactoryException::class);
         $factory = new CommandFactory();
-                
-        $factory->create(array());
+
+        $factory->create([]);
     }
-    
-    /**
-     * @expectedException FormulaInterpreter\Command\CommandFactory\CommandFactoryException
-     */
-    public function testUnknownType() {
+
+    public function testUnknownType()
+    {
+        $this->expectException(CommandFactoryException::class);
         $factory = new CommandFactory();
-                
-        $factory->create(array('type' => 'numeric'));
+
+        $factory->create(['type' => 'numeric']);
     }
-    
 }
 
-class CommandFactoryTest_FakeCommand implements \FormulaInterpreter\Command\CommandInterface {
-    public function run() {}
-}
+class CommandFactoryTest_FakeCommand implements \FormulaInterpreter\Command\CommandInterface
+{
+    public function run()
+    {
+    }
 
-?>
+    public function getParameters()
+    {
+        return [];
+    }
+}

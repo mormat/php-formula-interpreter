@@ -1,0 +1,8 @@
+<project name="php-formula-interpreter" default="test" basedir=".">
+    <target name="test">
+        <exec command="./vendor/bin/phpunit --coverage-clover 'build/reports/clover.xml'"
+              passthru="true"
+              checkreturn="true"
+        />
+    </target>
+</project>

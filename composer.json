@@ -10,9 +10,14 @@
             "email":     "mormat@free.fr"
         }
     ],
-
+    "require": {
+        "php": "^7.0"
+    },
     "require-dev": {
-        "symfony/class-loader": "2.1.*"
+        "phing/phing": "~2.16.1",
+        "symfony/class-loader": "2.1.*",
+        "phpunit/phpunit": "6.5.8",
+        "friendsofphp/php-cs-fixer": "v2.12.1"
     },
 
     "autoload": {
@@ -20,7 +25,10 @@
             "FormulaInterpreter": "src/"
         }
     },
-
+    "autoload-dev": {
+        "psr-0": {
+            "Tests\\FormulaInterpreter": "tests/"
+        }
+    },
     "minimum-stability": "dev"
-
 }

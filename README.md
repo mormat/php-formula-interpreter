@@ -49,6 +49,31 @@ You can use as many parentheses as you like.
 '2 * (2 * (3 + 2 * (3 + 2)) + 2)'
 ```
 
+## Comparison operators
+
+Supported comparison operators are `=`, `!=`, `<>`, `>=`, `>`, `<=`, '<'.
+
+```php
+'1 = 1' //true
+'1 != 1' //false
+'1 != 2' //true
+'1 < 2' //true
+```
+
+## Boolean operators
+
+Supported boolean operators are `AND` and `OR`.
+
+```php
+'(4 > 0) AND (3 > 2)' //true
+'(4 > 0) AND (3 < 2)' //false
+'(4 > 0) OR (3 < 2)' //true
+'(4 < 0) AND (3 < 2)' //false
+```
+
+
+## Future operators
+
 Others operators like modulo, power, etc. will be implemented in the future as functions.
 
 # Using variables
@@ -62,15 +87,34 @@ A variable is just a word inside your formula like this :
 Just before executing a formula, make sure to inject all the required variables in an array
 
 ```
-$variables = array(
+$variables = [
    'price' => 40.2,
    'rate' => 12.8
-);
+];
 
 $executable->run($variables);
 ```
 
-# Using functions 
+Variables now supports dot `.` as the name.
+
+```php
+$variables = [
+   'user.name' => 'John Doe'
+   'user.age' => '23'
+];
+
+$executable->run($variables);
+```
+
+## String support
+
+Variables can contain string. Use double quote (`"`) for denote a string.
+
+```php
+'a = "Hello world"'
+```
+
+# Using functions
 
 Here is an example of expression using a function :
 
@@ -86,4 +130,40 @@ You can embed functions as much as you like
    'pow(sqrt(4), 2)'
 ```
 
+## Custom functions
+
+Now function can be added before compiling should you want to add more variables.
+
+```php
+$compiler = new Compiler();
+$compiler->registerFunction('foobar', function ($a, $b) {
+    return $a + $b;
+});
+$executable = $compiler->compile("foobar(foo, bar)");
+$params = [
+    'foo' => 1,
+    'bar' => 2
+];
+$executable->run($params);
+```
+
+# Listing parameters
+
+You can get a list of all variables that must be provided to the ``run()`` method in order to run the executable:
+
+```php
+$executable = $compiler->compile('foo + bar');
+
+print_r($executable->getParameters());
+```
+
+This will output:
+
+```php
+    Array
+    (
+        [0] => foo
+        [0] => bar
+    )
+```
 

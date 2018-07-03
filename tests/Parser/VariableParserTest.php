@@ -5,6 +5,8 @@
  * and open the template in the editor.
  */
 
+namespace Tests\FormulaInterpreter\Parser;
+
 use FormulaInterpreter\Parser\VariableParser;
 use FormulaInterpreter\Parser\ParserException;
 
@@ -13,48 +15,51 @@ use FormulaInterpreter\Parser\ParserException;
  *
  * @author mathieu
  */
-class VariableParserTest extends PHPUnit_Framework_TestCase {
-    
-    public function setUp() {
+class VariableParserTest extends \PHPUnit\Framework\TestCase
+{
+    public function setUp()
+    {
         $this->parser = new VariableParser();
     }
 
     /**
      * @dataProvider getCorrectExpressions
      */
-    public function testParseCorrectExpression($expression, $infos) {
+    public function testParseCorrectExpression($expression, $infos)
+    {
         $infos['type'] = 'variable';
         $this->assertEquals($this->parser->parse($expression), $infos);
     }
     
-    public function getCorrectExpressions() {
-        return array(
-            array('price', array('name' => 'price')),
-            array('rate', array('name' => 'rate')),
-            array(' rate ', array('name' => 'rate')),
-            array('with_underscore', array('name' => 'with_underscore')),
-            array('camelCase', array('name' => 'camelCase')),
-            array('rate2', array('name' => 'rate2')),
-        );
+    public function getCorrectExpressions()
+    {
+        return [
+            ['price', ['name' => 'price']],
+            ['rate', ['name' => 'rate']],
+            [' rate ', ['name' => 'rate']],
+            ['with_underscore', ['name' => 'with_underscore']],
+            ['camelCase', ['name' => 'camelCase']],
+            ['rate2', ['name' => 'rate2']],
+            ['with.dot', ['name' => 'with.dot']],
+        ];
     }
     
     /**
-     * @expectedException FormulaInterpreter\Parser\ParserException
      * @dataProvider getUncorrectExpressionData
      */
-    public function testParseUncorrectExpression($expression) {
+    public function testParseUncorrectExpression($expression)
+    {
+        $this->expectException(ParserException::class);
         $this->parser->parse($expression);
     }
     
-    public function getUncorrectExpressionData() {
-        return array(
-            array(''),
-            array('23'),
-            array('23 12'),
-            array(' some_function( '),
-        );
+    public function getUncorrectExpressionData()
+    {
+        return [
+            [''],
+            ['23'],
+            ['23 12'],
+            [' some_function( '],
+        ];
     }
-    
 }
-
-?>
