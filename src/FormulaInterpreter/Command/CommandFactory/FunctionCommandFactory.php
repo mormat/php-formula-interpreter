@@ -4,6 +4,7 @@ namespace Mormat\FormulaInterpreter\Command\CommandFactory;
 
 use \Mormat\FormulaInterpreter\Command\FunctionCommand;
 use \Mormat\FormulaInterpreter\Exception\UnknownFunctionException;
+use \Mormat\FormulaInterpreter\Functions\FunctionInterface;
 
 /**
  * Description of FunctionParser
@@ -23,8 +24,8 @@ class FunctionCommandFactory implements CommandFactoryInterface {
         $this->argumentCommandFactory = $argumentCommandFactory;
     }
     
-    public function registerFunction($name, $callable) {
-        $this->functions[$name] = $callable;
+    public function registerFunction(FunctionInterface $function) {
+        $this->functions[$function->getName()] = $function;
     }
     
     public function create($options) {

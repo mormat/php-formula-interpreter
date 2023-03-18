@@ -1,7 +1,13 @@
 <?php
 
-use Mormat\FormulaInterpreter\Compiler;
-use Mormat\FormulaInterpreter\Parser\ParserException;
+use \Mormat\FormulaInterpreter\Compiler;
+use \Mormat\FormulaInterpreter\Functions\CallableFunction;
+use \Mormat\FormulaInterpreter\Exception\UnknownFunctionException;
+
+
+
+// use Mormat\FormulaInterpreter\Exception\InvalidParametersFunctionException;
+
 
 /**
  * Description of ParserTest
@@ -13,8 +19,11 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
     /**
      * @dataProvider getCompileAndRunData
      */
-    public function testCompileAndRun($expression, $result, $variables = array()) {
+    public function testCompileAndRun($expression, $result, $variables = []) {
         $compiler = new Compiler();
+        $compiler->registerCustomFunctions([
+            new CallableFunction('get_integer_part', 'floor', ['numeric'])
+        ]);
         
         $executable = $compiler->compile($expression);
         $this->assertEquals($executable->run($variables), $result);
@@ -34,15 +43,36 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
             array('sin(0)', 0),
             array('sqrt(4)', 2),
             array('pow(sqrt(pow(2, 2)), 2)', 4),
+            array('get_integer_part(3.4)', 3, []),
             
             // Issue #4
             array('(((100 * 0.43075) * 1.1 * 1.5) / (1-0.425)) * 1.105', 136.5852065217), 
             array('1+(1+1)', 3),
             
             // handling strings
-            array("'foobar'", 'foobar')
+            array("'foobar'", 'foobar'),
+            // array("count('foobar')", 6, [], ['count' => 'strlen'])
         );
     }
     
+    /**
+     * @dataProvider getCompileInvalidExpressionData
+     */
+    public function testCompileInvalidExpressions($expression, $expectedException)
+    {
+        $this->expectException($expectedException);
+        
+        $compiler = new Compiler();
+        $executable = $compiler->compile($expression);
+        $executable->run();
+    }
+    
+    function getCompileInvalidExpressionData() 
+    {
+        return array(
+            array('get_integer_part(2)', UnknownFunctionException::class),
+        );
+    }
+        
 }
 

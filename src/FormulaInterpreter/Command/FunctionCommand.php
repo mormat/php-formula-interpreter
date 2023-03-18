@@ -2,7 +2,10 @@
 
 namespace Mormat\FormulaInterpreter\Command;
 
+use \Mormat\FormulaInterpreter\Exception\InvalidParametersFunctionException;
 use \Mormat\FormulaInterpreter\Exception\NotEnoughArgumentsException;
+use \Mormat\FormulaInterpreter\Functions\FunctionInterface;
+
 
 /**
  * Description of FunctionParser
@@ -11,16 +14,12 @@ use \Mormat\FormulaInterpreter\Exception\NotEnoughArgumentsException;
  */
 class FunctionCommand implements CommandInterface {
     
-    protected $callable;
+    protected $function;
     
     protected $argumentCommands = array();
     
-    function __construct($callable, $argumentCommands = array()) {
-        if (!is_callable($callable)) {
-            throw new \InvalidArgumentException();        
-        }
-        
-        $this->callable = $callable;
+    function __construct(FunctionInterface $function, $argumentCommands = array()) {
+        $this->function = $function;
 
         foreach ($argumentCommands as $argumentCommand) {   
             if (!($argumentCommand instanceof CommandInterface)) {
@@ -28,10 +27,6 @@ class FunctionCommand implements CommandInterface {
             }
         }
         
-        $reflection = new \ReflectionFunction($this->callable);
-        if (sizeof($argumentCommands) < $reflection->getNumberOfRequiredParameters()) {
-            throw new NotEnoughArgumentsException();
-        }
         
         $this->argumentCommands = $argumentCommands;
     }
@@ -42,6 +37,13 @@ class FunctionCommand implements CommandInterface {
             $arguments[] = $command->run();
         }
         
-        return call_user_func_array($this->callable, $arguments);
+        if (!$this->function->supports($arguments)) {
+            throw new InvalidParametersFunctionException(sprintf(
+                "Invalid parameters provided to function '%s'",
+                $this->function->getName()
+            ));
+        }
+        
+        return $this->function->execute($arguments);
     }
 }

@@ -4,6 +4,7 @@ use Mormat\FormulaInterpreter\Command\FunctionCommand;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface;
 use Mormat\FormulaInterpreter\Command\CommandFactory\FunctionCommandFactory;
+use Mormat\FormulaInterpreter\Functions\FunctionInterface;
 
 /**
  * Description of NumericCommandFactory
@@ -18,8 +19,14 @@ class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
             CommandFactoryInterface::class
         )->getMock();
         $this->factory = new FunctionCommandFactory($this->argumentCommandFactory);
-        $this->piFunction = function() {return 3.14;};
-        $this->factory->registerFunction('pi', $this->piFunction);
+        
+        $this->piFunction = $this->getMockBuilder(
+            FunctionInterface::class
+        )->getMock();
+        $this->piFunction->method('getName')->willReturn('pi');
+        $this->piFunction->method('supports')->willReturn(true);
+        $this->piFunction->method('execute')->willReturn(3.14);
+        $this->factory->registerFunction($this->piFunction);
     }
     
     public function testCreateShouldReturnFunctionCommand() {
@@ -31,7 +38,7 @@ class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
     public function testCreateWithNoArguments() {       
         $options = array('name' => 'pi');
         $object = $this->factory->create($options);
-        $this->assertObjectPropertyEquals($object, 'callable', $this->piFunction);   
+        $this->assertObjectPropertyEquals($object, 'function', $this->piFunction);   
         $this->assertObjectPropertyEquals($object, 'argumentCommands', array());
     }
     
@@ -50,7 +57,7 @@ class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
             'arguments' => array(array('type' => 'fake'))
         );
         $object = $this->factory->create($options);
-        $this->assertObjectPropertyEquals($object, 'callable', $this->piFunction);   
+        $this->assertObjectPropertyEquals($object, 'function', $this->piFunction);   
         $this->assertObjectPropertyEquals($object, 'argumentCommands', array($argumentCommand));
     }
     

@@ -2,6 +2,8 @@
 
 namespace Mormat\FormulaInterpreter;
 
+use Mormat\FormulaInterpreter\Exception\CustomFunctionNotCallableException;
+
 /**
  * Description of Compiler
  *
@@ -47,12 +49,46 @@ class Compiler {
         
     }
     
+    /**
+     * @return Parser\ParserInterface
+     */
+    public function getParser()
+    {
+        return $this->parser;
+    }
+    
     protected function registerDefaultFunctions() {
-        $functions = array('pi', 'pow', 'cos', 'sin', 'sqrt');
-        foreach ($functions as $function) {
-            $this->functionCommandFactory->registerFunction($function, $function);    
+
+        $trucs = array(
+            array(['pi'], []),
+            array(['cos', 'sin', 'sqrt'], [['numeric']]),
+            array(['pow'], ['numeric', 'numeric']),
+        );
+        
+        foreach ($trucs as $truc) {
+            foreach ($truc[0] as $callable) {
+                $function = new Functions\CallableFunction($callable, $callable, $truc[1]);
+                $this->functionCommandFactory->registerFunction($function);
+            }  
         }
-        $this->functionCommandFactory->registerFunction('modulo', function($a, $b) {return $a % $b;});    
+                
+        $modulo = new Functions\CallableFunction(
+            'modulo', 
+            function($a, $b) {
+                return $a % $b;
+            }, 
+            ['numeric', 'numeric']
+        );
+        $this->functionCommandFactory->registerFunction($modulo);
+    }
+    
+    /**
+     * @param Functions\FunctionInterface[] $functions
+     */
+    public function registerCustomFunctions(array $functions) {
+        foreach ($functions as $function) {
+            $this->functionCommandFactory->registerFunction($function);
+        }
     }
     
     /**
