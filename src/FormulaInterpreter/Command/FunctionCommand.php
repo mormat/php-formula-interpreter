@@ -1,10 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Mormat\FormulaInterpreter\Command;
 
 use \Mormat\FormulaInterpreter\Exception\NotEnoughArgumentsException;
@@ -12,7 +7,7 @@ use \Mormat\FormulaInterpreter\Exception\NotEnoughArgumentsException;
 /**
  * Description of FunctionParser
  *
- * @author mathieu
+ * @author mormat
  */
 class FunctionCommand implements CommandInterface {
     
@@ -50,5 +45,3 @@ class FunctionCommand implements CommandInterface {
         return call_user_func_array($this->callable, $arguments);
     }
 }
-
-?>

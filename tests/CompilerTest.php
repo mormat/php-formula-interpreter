@@ -1,17 +1,12 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 use Mormat\FormulaInterpreter\Compiler;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 
 /**
  * Description of ParserTest
  *
- * @author mathieu
+ * @author mormat
  */
 class CompilerTest extends PHPUnit_Framework_TestCase {
     

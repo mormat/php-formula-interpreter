@@ -1,10 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Mormat\FormulaInterpreter\Command;
 
 use \Mormat\FormulaInterpreter\Exception\UnknownVariableException;
@@ -12,7 +7,7 @@ use \Mormat\FormulaInterpreter\Exception\UnknownVariableException;
 /**
  * Description of FunctionParser
  *
- * @author mathieu
+ * @author mormat
  */
 class VariableCommand implements CommandInterface {
     
@@ -56,5 +51,3 @@ class VariableCommand implements CommandInterface {
         return $this->variables[$this->name];
     }
 }
-
-?>

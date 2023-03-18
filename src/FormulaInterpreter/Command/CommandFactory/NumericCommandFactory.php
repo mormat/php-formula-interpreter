@@ -1,10 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Mormat\FormulaInterpreter\Command\CommandFactory;
 
 use \Mormat\FormulaInterpreter\Command\NumericCommand;
@@ -12,7 +7,7 @@ use \Mormat\FormulaInterpreter\Command\NumericCommand;
 /**
  * Description of FunctionParser
  *
- * @author mathieu
+ * @author mormat
  */
 class NumericCommandFactory implements CommandFactoryInterface {
     
@@ -26,5 +21,3 @@ class NumericCommandFactory implements CommandFactoryInterface {
     }
     
 }
-
-?>

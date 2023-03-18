@@ -1,17 +1,12 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 use Mormat\FormulaInterpreter\Command\NumericCommand;
 use Mormat\FormulaInterpreter\Command\CommandFactory\NumericCommandFactory;
 
 /**
  * Description of NumericCommandFactory
  *
- * @author mathieu
+ * @author mormat
  */
 class NumericCommandFactoryTest extends PHPUnit_Framework_TestCase {
     
@@ -40,5 +35,3 @@ class NumericCommandFactoryTest extends PHPUnit_Framework_TestCase {
     }
     
 }
-
-?>

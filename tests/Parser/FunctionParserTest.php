@@ -1,17 +1,12 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 use Mormat\FormulaInterpreter\Parser\FunctionParser;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 
 /**
  * Description of ParserTest
  *
- * @author mathieu
+ * @author mormat
  */
 class FunctionParserTest extends PHPUnit_Framework_TestCase {
     
@@ -71,5 +66,3 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
         return $expression;
     }
 }
-
-?>

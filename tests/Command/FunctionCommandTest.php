@@ -1,17 +1,12 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\FunctionCommand;
 
 /**
  * Description of ParserTest
  *
- * @author mathieu
+ * @author mormat
  */
 class FunctionCommandTest extends PHPUnit_Framework_TestCase {
     
@@ -91,9 +86,4 @@ class FunctionCommandTest extends PHPUnit_Framework_TestCase {
         $command = new FunctionCommand($callable);  
     }
     
-
-
-    
 }
-
-?>

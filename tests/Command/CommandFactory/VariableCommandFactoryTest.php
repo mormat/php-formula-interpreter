@@ -1,17 +1,12 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 use Mormat\FormulaInterpreter\Command\VariableCommand;
 use Mormat\FormulaInterpreter\Command\CommandFactory\VariableCommandFactory;
 
 /**
  * Description of VariableCommandFactory
  *
- * @author mathieu
+ * @author mormat
  */
 class VariableCommandFactoryTest extends PHPUnit_Framework_TestCase {
     
@@ -41,5 +36,3 @@ class VariableCommandFactoryTest extends PHPUnit_Framework_TestCase {
     }
     
 }
-
-?>

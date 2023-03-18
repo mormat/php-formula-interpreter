@@ -1,17 +1,12 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 use Mormat\FormulaInterpreter\Parser\VariableParser;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 
 /**
  * Description of NumericParserTest
  *
- * @author mathieu
+ * @author mormat
  */
 class VariableParserTest extends PHPUnit_Framework_TestCase {
     
@@ -56,5 +51,3 @@ class VariableParserTest extends PHPUnit_Framework_TestCase {
     }
     
 }
-
-?>

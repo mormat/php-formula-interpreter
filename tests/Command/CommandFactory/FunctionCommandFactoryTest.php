@@ -1,10 +1,5 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 use Mormat\FormulaInterpreter\Command\FunctionCommand;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface;
@@ -13,7 +8,7 @@ use Mormat\FormulaInterpreter\Command\CommandFactory\FunctionCommandFactory;
 /**
  * Description of NumericCommandFactory
  *
- * @author mathieu
+ * @author mormat
  */
 class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
     

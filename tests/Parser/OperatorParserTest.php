@@ -1,16 +1,11 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 use Mormat\FormulaInterpreter\Parser\OperatorParser;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 /**
  * Description of OperatorParserTest
  *
- * @author mathieu
+ * @author mormat
  */
 class OperatorParserTest extends PHPUnit_Framework_TestCase {
     
@@ -125,5 +120,3 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
     }
     
 }
-
-?>

@@ -1,16 +1,11 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 use Mormat\FormulaInterpreter\Command\NumericCommand;
 
 /**
  * Description of ParserTest
  *
- * @author mathieu
+ * @author mormat
  */
 class NumericCommandTest extends PHPUnit_Framework_TestCase {
     
@@ -48,5 +43,3 @@ class NumericCommandTest extends PHPUnit_Framework_TestCase {
     }
     
 }
-
-?>

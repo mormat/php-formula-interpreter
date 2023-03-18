@@ -1,16 +1,11 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 namespace Mormat\FormulaInterpreter;
 
 /**
  * Description of Compiler
  *
- * @author mathieu
+ * @author mormat
  */
 class Executable {
     
@@ -35,5 +30,3 @@ class Executable {
     }
     
 }
-
-?>

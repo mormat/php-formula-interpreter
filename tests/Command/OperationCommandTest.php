@@ -1,17 +1,12 @@
 <?php
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\OperationCommand;
 
 /**
  * Description of ParserTest
  *
- * @author mathieu
+ * @author mormat
  */
 class OperationCommandTest extends PHPUnit_Framework_TestCase {
     
@@ -111,8 +106,5 @@ class OperationCommandTest extends PHPUnit_Framework_TestCase {
             ->will($this->returnValue($returnValue));
         return $command;
     }
-
-    
+   
 }
-
-?>
