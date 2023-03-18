@@ -5,9 +5,10 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Command\OperationCommand;
-use FormulaInterpreter\Command\CommandInterface;
-use FormulaInterpreter\Command\CommandFactory\OperationCommandFactory;
+use Mormat\FormulaInterpreter\Command\OperationCommand;
+use Mormat\FormulaInterpreter\Command\CommandInterface;
+use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface;
+use Mormat\FormulaInterpreter\Command\CommandFactory\OperationCommandFactory;
 
 /**
  * Description of OperationCommandFactory
@@ -63,7 +64,7 @@ class OperationCommandFactoryTest extends PHPUnit_Framework_TestCase {
     }
         
     /**
-     * @expectedException FormulaInterpreter\Command\CommandFactory\CommandFactoryException
+     * @expectedException Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException
      */
     public function testCreateWithMissingFirstOperandOption() {
         $this->factory->create(array());
@@ -72,7 +73,7 @@ class OperationCommandFactoryTest extends PHPUnit_Framework_TestCase {
     protected function createCommandFactoryMock() {
         
         $operandFactory = $this->getMockBuilder(
-            'FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface'
+            CommandFactoryInterface::class
         )->getMock();
         $operandFactory->expects($this->any())
                 ->method('create')

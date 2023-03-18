@@ -5,7 +5,9 @@
  * and open the template in the editor.
  */
 
-namespace FormulaInterpreter\Command;
+namespace Mormat\FormulaInterpreter\Command;
+
+use \Mormat\FormulaInterpreter\Exception\NotEnoughArgumentsException;
 
 /**
  * Description of FunctionParser
@@ -33,7 +35,7 @@ class FunctionCommand implements CommandInterface {
         
         $reflection = new \ReflectionFunction($this->callable);
         if (sizeof($argumentCommands) < $reflection->getNumberOfRequiredParameters()) {
-            throw new \FormulaInterpreter\Exception\NotEnoughArgumentsException();
+            throw new NotEnoughArgumentsException();
         }
         
         $this->argumentCommands = $argumentCommands;

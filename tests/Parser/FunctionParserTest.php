@@ -5,7 +5,8 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Parser\FunctionParser;
+use Mormat\FormulaInterpreter\Parser\FunctionParser;
+use Mormat\FormulaInterpreter\Parser\ParserInterface;
 
 /**
  * Description of ParserTest
@@ -16,7 +17,7 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
     
     public function setUp() {
         $argumentParser = $this->getMockBuilder(
-            '\FormulaInterpreter\Parser\ParserInterface'
+            ParserInterface::class
         )->getMock();
         $argumentParser
             ->expects($this->any())
@@ -52,7 +53,7 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException FormulaInterpreter\Parser\ParserException
+     * @expectedException Mormat\FormulaInterpreter\Parser\ParserException
      * @dataProvider getUncorrectExpressions
      */
     public function testParseUncorrectExpression($expression) {

@@ -5,7 +5,8 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Command\OperationCommand;
+use Mormat\FormulaInterpreter\Command\CommandInterface;
+use Mormat\FormulaInterpreter\Command\OperationCommand;
 
 /**
  * Description of ParserTest
@@ -103,7 +104,7 @@ class OperationCommandTest extends PHPUnit_Framework_TestCase {
     
     public function createMockCommand($returnValue) {
         $command = $this->getMockBuilder(
-            'FormulaInterpreter\Command\CommandInterface'
+            CommandInterface::class
         )->getMock();
         $command->expects($this->any())
             ->method('run')

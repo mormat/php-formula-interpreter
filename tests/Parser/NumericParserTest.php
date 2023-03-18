@@ -5,8 +5,8 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Parser\NumericParser;
-use FormulaInterpreter\Parser\ParserException;
+use Mormat\FormulaInterpreter\Parser\NumericParser;
+use Mormat\FormulaInterpreter\Parser\ParserException;
 
 /**
  * Description of NumericParserTest
@@ -36,7 +36,7 @@ class NumericParserTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException FormulaInterpreter\Parser\ParserException
+     * @expectedException Mormat\FormulaInterpreter\Parser\ParserException
      * @dataProvider getUncorrectExpressionData
      */
     public function testParseUncorrectExpression($expression) {

@@ -5,9 +5,10 @@
  * and open the template in the editor.
  */
 
-namespace FormulaInterpreter\Command\CommandFactory;
+namespace Mormat\FormulaInterpreter\Command\CommandFactory;
 
-use FormulaInterpreter\Command\FunctionCommand;
+use \Mormat\FormulaInterpreter\Command\FunctionCommand;
+use \Mormat\FormulaInterpreter\Exception\UnknownFunctionException;
 
 /**
  * Description of FunctionParser
@@ -38,7 +39,7 @@ class FunctionCommandFactory implements CommandFactoryInterface {
         }
         
         if (!isset($this->functions[$options['name']])) {
-            throw new \FormulaInterpreter\Exception\UnknownFunctionException($options['name']);
+            throw new UnknownFunctionException($options['name']);
         }
         
         $argumentCommands = array();

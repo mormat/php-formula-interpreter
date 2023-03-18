@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 
-namespace FormulaInterpreter\Command;
+namespace Mormat\FormulaInterpreter\Command;
 
 /**
  * Description of FunctionParser

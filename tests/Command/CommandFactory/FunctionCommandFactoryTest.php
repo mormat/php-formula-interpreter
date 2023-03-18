@@ -5,9 +5,10 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Command\FunctionCommand;
-use FormulaInterpreter\Command\CommandInterface;
-use FormulaInterpreter\Command\CommandFactory\FunctionCommandFactory;
+use Mormat\FormulaInterpreter\Command\FunctionCommand;
+use Mormat\FormulaInterpreter\Command\CommandInterface;
+use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface;
+use Mormat\FormulaInterpreter\Command\CommandFactory\FunctionCommandFactory;
 
 /**
  * Description of NumericCommandFactory
@@ -19,7 +20,7 @@ class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
     public function setUp() {
         
         $this->argumentCommandFactory = $this->getMockBuilder(
-            'FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface'
+            CommandFactoryInterface::class
         )->getMock();
         $this->factory = new FunctionCommandFactory($this->argumentCommandFactory);
         $this->piFunction = function() {return 3.14;};
@@ -42,7 +43,7 @@ class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
     public function testCreateWithArguments() {       
         
         $argumentCommand = $this->getMockBuilder(
-            'FormulaInterpreter\Command\CommandInterface'
+            CommandInterface::class
         )->getMock();
         $this->argumentCommandFactory->expects($this->once())
                 ->method('create')
@@ -59,7 +60,7 @@ class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException FormulaInterpreter\Exception\UnknownFunctionException
+     * @expectedException Mormat\FormulaInterpreter\Exception\UnknownFunctionException
      */
     public function testCreateWithNotExistingFunction() {       
         
@@ -70,7 +71,7 @@ class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException FormulaInterpreter\Command\CommandFactory\CommandFactoryException
+     * @expectedException Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException
      */
     public function testCreateWithMissingNameOption() {
         $this->factory->create(array());

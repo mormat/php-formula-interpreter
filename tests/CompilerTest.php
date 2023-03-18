@@ -5,8 +5,8 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Compiler;
-use FormulaInterpreter\Parser\ParserException;
+use Mormat\FormulaInterpreter\Compiler;
+use Mormat\FormulaInterpreter\Parser\ParserException;
 
 /**
  * Description of ParserTest

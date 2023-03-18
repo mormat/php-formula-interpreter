@@ -5,8 +5,8 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Parser\OperatorParser;
-
+use Mormat\FormulaInterpreter\Parser\OperatorParser;
+use Mormat\FormulaInterpreter\Parser\ParserInterface;
 /**
  * Description of OperatorParserTest
  *
@@ -17,7 +17,7 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
     public function setUp() {
         
         $operandParser = $this->getMockBuilder(
-            '\FormulaInterpreter\Parser\ParserInterface'
+            ParserInterface::class
         )->getMock();
         $operandParser
             ->expects($this->any())
@@ -109,7 +109,7 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException FormulaInterpreter\Parser\ParserException
+     * @expectedException Mormat\FormulaInterpreter\Parser\ParserException
      * @dataProvider getUncorrectExpressions
      */
     public function testParseUncorrectExpression($expression) {

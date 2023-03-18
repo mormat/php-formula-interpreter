@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Command\VariableCommand;
+use Mormat\FormulaInterpreter\Command\VariableCommand;
 
 /**
  * Description of ParserTest
@@ -31,7 +31,7 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException FormulaInterpreter\Exception\UnknownVariableException
+     * @expectedException \Mormat\FormulaInterpreter\Exception\UnknownVariableException
      */
     public function testRunWhenVariableNotExists() {
         $command = new VariableCommand('rate', array());

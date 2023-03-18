@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 
-namespace FormulaInterpreter;
+namespace Mormat\FormulaInterpreter;
 
 /**
  * Description of Compiler

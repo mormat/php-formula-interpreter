@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Command\NumericCommand;
+use Mormat\FormulaInterpreter\Command\NumericCommand;
 
 /**
  * Description of ParserTest

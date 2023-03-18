@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 
-namespace FormulaInterpreter\Parser;
+namespace Mormat\FormulaInterpreter\Parser;
 
 /**
  * Description of FunctionParser
@@ -14,7 +14,7 @@ namespace FormulaInterpreter\Parser;
  */
 interface ParserInterface {
     
-    function parse($exception);
+    function parse($expression);
     
 }
 

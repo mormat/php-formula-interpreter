@@ -5,8 +5,8 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Command\VariableCommand;
-use FormulaInterpreter\Command\CommandFactory\VariableCommandFactory;
+use Mormat\FormulaInterpreter\Command\VariableCommand;
+use Mormat\FormulaInterpreter\Command\CommandFactory\VariableCommandFactory;
 
 /**
  * Description of VariableCommandFactory
@@ -33,7 +33,7 @@ class VariableCommandFactoryTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException FormulaInterpreter\Command\CommandFactory\CommandFactoryException
+     * @expectedException Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException
      */
     public function testCreateWithMissingNameOption() {
         $factory = new VariableCommandFactory(array());

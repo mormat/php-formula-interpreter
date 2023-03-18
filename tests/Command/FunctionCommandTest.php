@@ -5,7 +5,8 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Command\FunctionCommand;
+use Mormat\FormulaInterpreter\Command\CommandInterface;
+use Mormat\FormulaInterpreter\Command\FunctionCommand;
 
 /**
  * Description of ParserTest
@@ -30,7 +31,7 @@ class FunctionCommandTest extends PHPUnit_Framework_TestCase {
         };
         
         $argumentCommand = $this->getMockBuilder(
-            '\FormulaInterpreter\Command\CommandInterface'
+            CommandInterface::class
         )->getMock();
         $argumentCommand->expects($this->once())
                 ->method('run')
@@ -49,7 +50,7 @@ class FunctionCommandTest extends PHPUnit_Framework_TestCase {
         $argumentCommands = array();
         foreach (array(2, 3) as $value) {
             $argumentCommand = $this->getMockBuilder(
-                '\FormulaInterpreter\Command\CommandInterface'
+                CommandInterface::class
             )->getMock();
             $argumentCommand->expects($this->any())
                     ->method('run')
@@ -64,7 +65,7 @@ class FunctionCommandTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException FormulaInterpreter\Exception\NotEnoughArgumentsException
+     * @expectedException Mormat\FormulaInterpreter\Exception\NotEnoughArgumentsException
      */
     public function testRunWithMissingArguments() {
         $callable = function($arg1) {};

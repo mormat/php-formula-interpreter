@@ -5,7 +5,7 @@
  * and open the template in the editor.
  */
 
-namespace FormulaInterpreter\Exception;
+namespace Mormat\FormulaInterpreter\Exception;
 
 /**
  * Description of FunctionParser

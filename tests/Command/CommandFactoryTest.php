@@ -5,7 +5,8 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Command\CommandFactory;
+use Mormat\FormulaInterpreter\Command\CommandFactory;
+use Mormat\FormulaInterpreter\Command\CommandInterface;
 
 /**
  * Description of ParserTest
@@ -19,7 +20,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase {
         
         $command = new CommandFactoryTest_FakeCommand();
         $numericFactory = $this->getMockBuilder(
-            '\FormulaInterpreter\Command\CommandFactory'
+            CommandFactory::class
         )->getMock();
         $numericFactory->expects($this->once())
                 ->method('create')
@@ -30,7 +31,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException FormulaInterpreter\Command\CommandFactory\CommandFactoryException
+     * @expectedException Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException
      */
     public function testMissingTypeOption() {
         $factory = new CommandFactory();
@@ -39,7 +40,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException FormulaInterpreter\Command\CommandFactory\CommandFactoryException
+     * @expectedException Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException
      */
     public function testUnknownType() {
         $factory = new CommandFactory();
@@ -49,7 +50,7 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase {
     
 }
 
-class CommandFactoryTest_FakeCommand implements \FormulaInterpreter\Command\CommandInterface {
+class CommandFactoryTest_FakeCommand implements CommandInterface {
     public function run() {}
 }
 

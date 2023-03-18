@@ -5,7 +5,9 @@
  * and open the template in the editor.
  */
 
-namespace FormulaInterpreter\Command;
+namespace Mormat\FormulaInterpreter\Command;
+
+use \Mormat\FormulaInterpreter\Exception\UnknownVariableException;
 
 /**
  * Description of FunctionParser
@@ -48,7 +50,7 @@ class VariableCommand implements CommandInterface {
 
     public function run() {
         if(!isset($this->variables[$this->name])) {
-            throw new \FormulaInterpreter\Exception\UnknownVariableException($this->name);
+            throw new UnknownVariableException($this->name);
         }
         
         return $this->variables[$this->name];

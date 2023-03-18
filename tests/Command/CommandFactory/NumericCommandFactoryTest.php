@@ -5,8 +5,8 @@
  * and open the template in the editor.
  */
 
-use FormulaInterpreter\Command\NumericCommand;
-use FormulaInterpreter\Command\CommandFactory\NumericCommandFactory;
+use Mormat\FormulaInterpreter\Command\NumericCommand;
+use Mormat\FormulaInterpreter\Command\CommandFactory\NumericCommandFactory;
 
 /**
  * Description of NumericCommandFactory
@@ -32,7 +32,7 @@ class NumericCommandFactoryTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException FormulaInterpreter\Command\CommandFactory\CommandFactoryException
+     * @expectedException Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException
      */
     public function testCreateWithMissingValueOption() {
         $factory = new NumericCommandFactory();

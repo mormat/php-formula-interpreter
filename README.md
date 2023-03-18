@@ -14,13 +14,13 @@ Some user could wants to perform a simple calculation and being able to change i
 
 # How does it work ?
 
-First, create an instance of `FormulaInterpreter\Compiler`
+First, create an instance of `Mormat\FormulaInterpreter\Compiler`
 
 ```php
-$compiler = new FormulaInterpreter\Compiler();
+$compiler = new Mormat\FormulaInterpreter\Compiler();
 ```
 
-Then use the `compile()`method to parse the formula you want to interpret. It will return an instance of `FormulaInterpreter\Executable` :
+Then use the `compile()`method to parse the formula you want to interpret. It will return an instance of `Mormat\FormulaInterpreter\Executable` :
 
 ```php
 $executable = $compiler->compile('2 + 2');
