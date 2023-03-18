@@ -39,7 +39,9 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
     }
     
     public function testRunWhenVariablesHolderImplementsArrayAccess() {
-        $variables = $this->getMock('\ArrayAccess');
+        $variables = $this->getMockBuilder(
+            '\ArrayAccess'
+        )->getMock();
         $variables->expects($this->any())
             ->method('offsetExists')
             ->with($this->equalTo('rate'))

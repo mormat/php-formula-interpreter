@@ -102,7 +102,9 @@ class OperationCommandTest extends PHPUnit_Framework_TestCase {
     }
     
     public function createMockCommand($returnValue) {
-        $command = $this->getMock('FormulaInterpreter\Command\CommandInterface');
+        $command = $this->getMockBuilder(
+            'FormulaInterpreter\Command\CommandInterface'
+        )->getMock();
         $command->expects($this->any())
             ->method('run')
             ->will($this->returnValue($returnValue));

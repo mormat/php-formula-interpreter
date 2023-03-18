@@ -71,7 +71,9 @@ class OperationCommandFactoryTest extends PHPUnit_Framework_TestCase {
     
     protected function createCommandFactoryMock() {
         
-        $operandFactory = $this->getMock('FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface');
+        $operandFactory = $this->getMockBuilder(
+            'FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface'
+        )->getMock();
         $operandFactory->expects($this->any())
                 ->method('create')
                 ->will($this->returnCallback('OperationCommandFactoryTest::createFakeCommand'));

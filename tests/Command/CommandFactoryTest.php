@@ -18,7 +18,9 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase {
         $factory = new CommandFactory();
         
         $command = new CommandFactoryTest_FakeCommand();
-        $numericFactory = $this->getMock('\FormulaInterpreter\Command\CommandFactory');
+        $numericFactory = $this->getMockBuilder(
+            '\FormulaInterpreter\Command\CommandFactory'
+        )->getMock();
         $numericFactory->expects($this->once())
                 ->method('create')
                 ->will($this->returnValue($command));
