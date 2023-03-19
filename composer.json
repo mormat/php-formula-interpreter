@@ -16,8 +16,8 @@
     },
 
     "autoload": {
-        "psr-0": {
-            "FormulaInterpreter": "src/"
+        "psr-4": {
+            "Mormat\\FormulaInterpreter\\": "src/"
         }
     },
 

@@ -1,6 +1,7 @@
 <?php
 
 use Mormat\FormulaInterpreter\Parser\FunctionParser;
+use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 
 /**
@@ -48,10 +49,13 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException Mormat\FormulaInterpreter\Parser\ParserException
      * @dataProvider getUncorrectExpressions
      */
     public function testParseUncorrectExpression($expression) {
+        $this->expectException(ParserException::class);
+        $this->expectExceptionMessage(
+            sprintf('Failed to parse expression %s', $expression)
+        );
         $this->parser->parse($expression);
     }
     

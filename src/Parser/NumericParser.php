@@ -9,12 +9,12 @@ namespace Mormat\FormulaInterpreter\Parser;
  */
 class NumericParser implements ParserInterface  {
     
-    function parse($expression) {
+    function parse($rawExpression) {
         
-        $expression = trim($expression);
+        $expression = trim($rawExpression);
         
         if (!preg_match('/^[0-9]*(\.[0-9]*){0,1}$/', $expression)) {
-            throw new ParserException($expression);
+            throw new ParserException($rawExpression);
         }
         
         return $infos = array(

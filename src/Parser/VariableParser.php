@@ -9,11 +9,11 @@ namespace Mormat\FormulaInterpreter\Parser;
  */
 class VariableParser implements ParserInterface{
     
-    function parse($expression) {
-        $expression = trim($expression);
+    function parse($rawExpression) {
+        $expression = trim($rawExpression);
         
         if (!preg_match('/^([a-zA-Z_]+[0-9]*)+$/', $expression)) {
-            throw new ParserException($expression);
+            throw new ParserException($rawExpression);
         }
         
         return array(

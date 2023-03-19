@@ -31,10 +31,13 @@ class NumericParserTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException Mormat\FormulaInterpreter\Parser\ParserException
      * @dataProvider getUncorrectExpressionData
      */
     public function testParseUncorrectExpression($expression) {
+        $this->expectException(ParserException::class);
+        $this->expectExceptionMessage(
+            sprintf('Failed to parse expression %s', $expression)
+        );
         $this->parser->parse($expression);
     }
     

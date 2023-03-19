@@ -64,7 +64,7 @@ class Compiler {
             array(['cos', 'sin', 'sqrt'], [['numeric']]),
             array(['pow'], ['numeric', 'numeric']),
             
-            array(['strtolower', 'strtoupper', 'ucfirst'], ['string']),
+            array(['strtolower', 'strtoupper', 'ucfirst', 'strlen'], ['string']),
         );
         
         foreach ($trucs as $truc) {
@@ -73,15 +73,25 @@ class Compiler {
                 $this->functionCommandFactory->registerFunction($function);
             }  
         }
-                
-        $modulo = new Functions\CallableFunction(
-            'modulo', 
-            function($a, $b) {
-                return $a % $b;
-            }, 
-            ['numeric', 'numeric']
+          
+        $this->functionCommandFactory->registerFunction(
+            new Functions\CallableFunction(
+                'modulo', 
+                function($a, $b) {
+                    return $a % $b;
+                }, 
+                ['numeric', 'numeric']
+            )           
         );
-        $this->functionCommandFactory->registerFunction($modulo);
+        $this->functionCommandFactory->registerFunction(
+            new Functions\CallableFunction(
+                'concat', 
+                function($a, $b) {
+                    return $a . $b;
+                }, 
+                ['string', 'string']
+            )           
+        );
     }
     
     /**
@@ -100,7 +110,7 @@ class Compiler {
      * @return \FormulaInterpreter\Executable
      */
     function compile($expression) {
-        $options = $this->parser->parse($expression);
+        $options = $this->parser->parse($expression);        
         $command = $this->commandFactory->create($options);
         return new Executable($command, $this->variables);
     }

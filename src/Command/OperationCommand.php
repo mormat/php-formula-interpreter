@@ -3,7 +3,7 @@
 namespace Mormat\FormulaInterpreter\Command;
 
 /**
- * Description of FunctionParser
+ * @todo rename to OperatorCommand
  *
  * @author mormat
  */

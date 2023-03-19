@@ -19,7 +19,7 @@ class ParserException extends BaseException {
     function __construct($expression) {
         $this->expression = $expression;
         
-        $message = sprintf("Failed to parse expression '%s'", $expression);
+        $message = sprintf('Failed to parse expression %s', $expression);
         parent::__construct($message);
     }
 

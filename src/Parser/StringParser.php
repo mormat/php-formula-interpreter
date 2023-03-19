@@ -9,18 +9,18 @@ namespace Mormat\FormulaInterpreter\Parser;
  */
 class StringParser implements ParserInterface  {
     
-    public function parse($expression) {
+    public function parse($rawExpression) {
         
-        $expression = trim($expression);
+        $expression = trim($rawExpression);
         
         if ($expression[0] !== "'" || $expression[-1] !== "'") {
-            throw new ParserException($expression);
+            throw new ParserException($rawExpression);
         }
         
         $value = substr($expression, 1, -1);
         
         if (strpos($value, "'") !== false) {
-            throw new ParserException($expression);
+            throw new ParserException($rawExpression);
         }
         
         return array(

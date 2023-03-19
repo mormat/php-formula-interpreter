@@ -18,14 +18,14 @@ class FunctionParser implements ParserInterface {
         $this->argumentParser = $argumentParser;
     }
 
-    function parse($expression) {
-        $expression = trim($expression);
+    function parse($rawExpression) {
+        $expression = trim($rawExpression);
         
         if (!preg_match('/^(\w)+\(/', $expression)) {
-            throw new ParserException($expression);
+            throw new ParserException($rawExpression);
         }
         if (substr($expression, -1, 1) != ')') {
-            throw new ParserException($expression);
+            throw new ParserException($rawExpression);
         }
         
         $open = strpos($expression, '(');

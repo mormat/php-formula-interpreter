@@ -26,15 +26,15 @@ class ExceptionTest extends PHPUnit_Framework_TestCase {
         $srcFolder = implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'src']);
         
         $patterns  = array(
-            [$srcFolder, 'FormulaInterpreter', '*', '*Exception.php'],
-            [$srcFolder, 'FormulaInterpreter', '*', '*', '*Exception.php'],
+            [$srcFolder, '*', '*Exception.php'],
+            [$srcFolder, '*', '*', '*Exception.php'],
         );
         
         foreach ($patterns as $pattern) {
             $files = glob(implode(DIRECTORY_SEPARATOR, $pattern));
             foreach ($files as $file) {
                 $class = substr($file, strlen($srcFolder), -strlen('.php'));
-                $class = '\Mormat' . str_replace('/', '\\', $class);
+                $class = '\Mormat\FormulaInterpreter' . str_replace('/', '\\', $class);
                 $exceptions[] = $class;                
             }
             

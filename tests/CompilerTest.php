@@ -4,13 +4,8 @@ use \Mormat\FormulaInterpreter\Compiler;
 use \Mormat\FormulaInterpreter\Functions\CallableFunction;
 use \Mormat\FormulaInterpreter\Exception\UnknownFunctionException;
 
-
-
-// use Mormat\FormulaInterpreter\Exception\InvalidParametersFunctionException;
-
-
 /**
- * Description of ParserTest
+ * Tests the compiler
  *
  * @author mormat
  */
@@ -44,6 +39,7 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
             array('sqrt(4)', 2),
             array('pow(sqrt(pow(2, 2)), 2)', 4),
             array('get_integer_part(3.4)', 3, []),
+            array('modulo(5, two)', 1, ['two' => 2]),
             
             // Issue #4
             array('(((100 * 0.43075) * 1.1 * 1.5) / (1-0.425)) * 1.105', 136.5852065217), 
@@ -54,6 +50,9 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
             array("strtolower('FOOBAR')", 'foobar'),
             array("strtoupper('foobar')", 'FOOBAR'),
             array("ucfirst('foobar')", 'Foobar'),
+            array("concat('foo', 'bar')", 'foobar'),
+            array("'2 * 3'", '2 * 3'),
+            array("strlen('2 + 2') + 1", 6)
             // array("count('foobar')", 6, [], ['count' => 'strlen'])
         );
     }

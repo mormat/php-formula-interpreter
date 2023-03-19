@@ -34,10 +34,14 @@ class VariableParserTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException Mormat\FormulaInterpreter\Parser\ParserException
      * @dataProvider getUncorrectExpressionData
      */
     public function testParseUncorrectExpression($expression) {
+        $this->expectException(ParserException::class);
+        $this->expectExceptionMessage(
+            sprintf('Failed to parse expression %s', $expression)
+        );
+        
         $this->parser->parse($expression);
     }
     
@@ -45,6 +49,7 @@ class VariableParserTest extends PHPUnit_Framework_TestCase {
         return array(
             array(''),
             array('23'),
+            array(' 23 '),
             array('23 12'),
             array(' some_function( '),
         );

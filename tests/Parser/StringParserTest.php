@@ -30,10 +30,13 @@ class StringParserTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @expectedException Mormat\FormulaInterpreter\Parser\ParserException
      * @dataProvider getUncorrectExpressionData
      */
     public function testParseUncorrectExpression($expression) {
+        $this->expectException(ParserException::class);
+        $this->expectExceptionMessage(
+            sprintf('Failed to parse expression %s', $expression)
+        );
         $this->parser->parse($expression);
     }
     
@@ -41,8 +44,10 @@ class StringParserTest extends PHPUnit_Framework_TestCase {
         return array(
             array("2"),
             array("foo"),
+            array(" foo "),
             array("'foo'bar'"),
             array("''foobar'"),
+            array(" ''foobar'"),
         );
     }
     
