@@ -51,6 +51,9 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
             
             // handling strings
             array("'foobar'", 'foobar'),
+            array("strtolower('FOOBAR')", 'foobar'),
+            array("strtoupper('foobar')", 'FOOBAR'),
+            array("ucfirst('foobar')", 'Foobar'),
             // array("count('foobar')", 6, [], ['count' => 'strlen'])
         );
     }

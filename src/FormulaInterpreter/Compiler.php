@@ -63,6 +63,8 @@ class Compiler {
             array(['pi'], []),
             array(['cos', 'sin', 'sqrt'], [['numeric']]),
             array(['pow'], ['numeric', 'numeric']),
+            
+            array(['strtolower', 'strtoupper', 'ucfirst'], ['string']),
         );
         
         foreach ($trucs as $truc) {
