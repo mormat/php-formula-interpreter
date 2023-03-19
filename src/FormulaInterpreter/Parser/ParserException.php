@@ -2,12 +2,14 @@
 
 namespace Mormat\FormulaInterpreter\Parser;
 
+use Mormat\FormulaInterpreter\Exception as BaseException;
+
 /**
  * Description of FunctionParser
  *
  * @author mormat
  */
-class ParserException extends \Exception {
+class ParserException extends BaseException {
 
     /**
      * @var string

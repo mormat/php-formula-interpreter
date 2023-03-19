@@ -2,12 +2,14 @@
 
 namespace Mormat\FormulaInterpreter\Exception;
 
+use Mormat\FormulaInterpreter\Exception as BaseException;
+
 /**
  * Thrown if a function is called with invalid parameters
  *
  * @author mormat
  */
-class InvalidParametersFunctionException extends \Exception {
+class InvalidParametersFunctionException extends BaseException {
     
     function __construct($functionName) {
         

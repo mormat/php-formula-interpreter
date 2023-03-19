@@ -1,16 +1,9 @@
-- in CallableNumericFunctionTest :
-   - tests if callable is callable
-   - tests $minParams <= $maxParams
 
-- instead of CallableNumericFunction, maybe I should write a CallableScalarFunction class ?
+- to fully supports strings, operators between quotes must be ignored
 
 - in FunctionCommand, an instance of FunctionInterface must be provided instead of a callable
 
 - in Compiler, Registered functions must implements Mormat\FormulaInterpreter\Functions\FunctionInterface
-
-- create class CallableStringFunctionTest
-
-- Make sure that all exceptions implements Mormat\FormulaInterpreter\Exception
 
 - the operators + - \ *  must execute with numeric values only
 
@@ -25,5 +18,3 @@
 - in Readme.md, write "A stand-alone php library for interpreting formulas" in description and remove quotes from examples showing formulas
 
 - remove PHP Warnings
-
-- rename CustomFunctionNotCallableException to IncompatibleFunctionException

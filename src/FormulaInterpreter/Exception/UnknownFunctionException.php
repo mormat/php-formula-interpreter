@@ -2,12 +2,14 @@
 
 namespace Mormat\FormulaInterpreter\Exception;
 
+use Mormat\FormulaInterpreter\Exception as BaseException;
+
 /**
  * Description of FunctionParser
  *
  * @author mormat
  */
-class UnknownFunctionException extends \Exception {
+class UnknownFunctionException extends BaseException {
     
     protected $name;
     
