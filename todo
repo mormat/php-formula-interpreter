@@ -1,20 +1,6 @@
 
-- to fully supports strings, operators between quotes must be ignored
-
-- in FunctionCommand, an instance of FunctionInterface must be provided instead of a callable
-
-- in Compiler, Registered functions must implements Mormat\FormulaInterpreter\Functions\FunctionInterface
-
-- the operators + - \ *  must execute with numeric values only
-
-- implements the comparison operators = < > <= >= . Works only with numeric and string values
-
 - implements the 'in' operator. Works only with strings and array
-
-- in OperatorParser, pay attention to the quotes. The operator must not be between quotes because it's part of a string.
 
 - in OperatorParser, the method must be probably be improved by caching results in memory
 
 - in Readme.md, write "A stand-alone php library for interpreting formulas" in description and remove quotes from examples showing formulas
-
-- remove PHP Warnings

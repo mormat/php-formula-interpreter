@@ -4,7 +4,7 @@ use Mormat\FormulaInterpreter\Parser\VariableParser;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 
 /**
- * Description of NumericParserTest
+ * Tests the parsing of variables
  *
  * @author mormat
  */

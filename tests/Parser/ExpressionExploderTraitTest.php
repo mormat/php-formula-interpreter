@@ -7,7 +7,7 @@ use Mormat\FormulaInterpreter\Parser\ParserInterface;
 
 
 /**
- * Tests the explosion of expressions
+ * Tests the spliting of expressions
  *
  * @author mormat
  */

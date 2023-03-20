@@ -29,7 +29,7 @@ class Compiler {
     function __construct() {
         
         /**
-         *@todo take care of priorities of parsers. Maybe the operator parsing should be at top.
+         * The most complex parsers should be on top
          */
         $this->parser = new Parser\CompositeParser();
         $this->parser->addParser(new Parser\OperatorParser($this->parser));

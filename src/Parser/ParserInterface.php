@@ -3,8 +3,6 @@
 namespace Mormat\FormulaInterpreter\Parser;
 
 /**
- * Description of FunctionParser
- *
  * @author mormat
  */
 interface ParserInterface {

@@ -5,7 +5,7 @@ namespace Mormat\FormulaInterpreter\Parser;
 use Mormat\FormulaInterpreter\Exception\StackOverflowException;
 
 /**
- * Description of CompositeParser
+ * Aggregates multiples parsers into one
  *
  * @author mormat
  */

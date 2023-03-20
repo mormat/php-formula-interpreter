@@ -3,7 +3,7 @@
 namespace Mormat\FormulaInterpreter\Parser;
 
 /**
- * Description of FunctionParser
+ * Parse variables in formulas
  *
  * @author mormat
  */
