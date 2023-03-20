@@ -2,8 +2,10 @@
 
 namespace Mormat\FormulaInterpreter\Command;
 
+use \Mormat\FormulaInterpreter\Exception\UnsupportedOperandTypeException;
+
 /**
- * @todo rename to OperatorCommand
+ * Executes an operation command
  *
  * @author mormat
  */
@@ -13,6 +15,17 @@ class OperationCommand implements CommandInterface {
     const SUBTRACT_OPERATOR = 'subtract';
     const MULTIPLY_OPERATOR = 'multiply';
     const DIVIDE_OPERATOR = 'divide';
+    
+    protected $supportedTypes = array(
+        self::ADD_OPERATOR      => ['numeric', 'numeric'],
+        self::SUBTRACT_OPERATOR => ['numeric', 'numeric'],
+        self::MULTIPLY_OPERATOR => ['numeric', 'numeric'],
+        self::DIVIDE_OPERATOR   => ['numeric', 'numeric'],
+    );
+    
+    protected $validatorTypes = array(
+        'numeric' => 'is_numeric',
+    );
     
     /**
      * @var CommandInterface
@@ -42,6 +55,14 @@ class OperationCommand implements CommandInterface {
             $operator = $otherOperand['operator'];
             $command = $otherOperand['command'];
             
+            $values  = [$result, $command->run()];
+            if (!$this->areValuesValid($values, $operator)) {
+                throw new UnsupportedOperandTypeException(sprintf(
+                    'Unsupported operand types in %s operation',
+                    $operator
+                ));
+            }
+            
             switch ($operator) {
                 case self::ADD_OPERATOR:
                     $result = $result + $command->run();
@@ -59,5 +80,21 @@ class OperationCommand implements CommandInterface {
             
         }
         return $result;
+    }
+    
+    protected function areValuesValid($values, $operator)
+    {
+        foreach ($this->supportedTypes[$operator] as $i => $supportedType) {            
+            if (!isset($values[$i])) {
+                return false;
+            }
+            
+            $validator = $this->validatorTypes[$supportedType];
+            if (!$validator($values[$i])) {
+                return false;
+            }
+        }
+        
+        return true;
     }
 }
