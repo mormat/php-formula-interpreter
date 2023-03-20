@@ -5,7 +5,7 @@ use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 
 /**
- * Description of ParserTest
+ * Tests the parsing of functions
  *
  * @author mormat
  */
@@ -19,7 +19,7 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
             ->expects($this->any())
             ->method('parse')
             ->will($this->returnCallback(array($this, 'mockArgumentParser')));
-        $this->parser = new FunctionParser($argumentParser);
+        $this->parser = new FunctionParserTest_FunctionParser($argumentParser);
         
     }
     
@@ -36,15 +36,13 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
     public function getCorrectExpressions() {
         return array(
             array('pi()', array('name' => 'pi')),
+            array(' pi( ) ', array('name' => 'pi')),
             array('do_this()', array('name' => 'do_this')),
-            array('now()', array('name' => 'now')),
-            array('sqrt(2)', array('name' => 'sqrt', 'arguments' => array('2'))),
-            array('cos(0)', array('name' => 'cos', 'arguments' => array('0'))),
-            array('pi(  )', array('name' => 'pi')),
-            array('pow(2,3)', array('name' => 'pow', 'arguments' => array('2', '3'))),
-            array('sqrt(pi())', array('name' => 'sqrt', 'arguments' => array('pi()'))),
-            array(' pi() ', array('name' => 'pi')),
-            array('max(sqrt(pow(2,4)),2)', array('name' => 'max', 'arguments' => array('sqrt(pow(2,4))', '2'))),
+            array('cos(0)', array('name' => 'cos', 'arguments' => ['arg = 0'])),
+            array('sqrt(2)', array('name' => 'sqrt', 'arguments' => ['arg = 2'])),
+            array('pow(2,3)', array('name' => 'pow', 'arguments' => ['arg = 2', 'arg = 3'])),
+            array('sqrt(pi())', array('name' => 'sqrt', 'arguments' => ['arg = pi()'])),
+            array('max(sqrt(pow(3)),2)', array('name' => 'max', 'arguments' => ['arg = sqrt(pow(3))', 'arg = 2'])),
         );
     }
     
@@ -63,10 +61,19 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
         return array(
             array(' what ever '),
             array(' what_ever( '),
+            array('what_ever ( )'),
         );
     }
     
     public function mockArgumentParser($expression) {
-        return $expression;
+        return 'arg ' . $expression;
+    }
+}
+
+class FunctionParserTest_FunctionParser extends FunctionParser
+{
+    function explodeExpression($expression, array $separators, array $options = [])
+    {
+        return ExpressionExploderTraitTest::mockExplodeExpression($expression, $separators, $options);
     }
 }

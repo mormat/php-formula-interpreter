@@ -28,12 +28,16 @@ class Compiler {
     
     function __construct() {
         
+        /**
+         *@todo take care of priorities of parsers. Maybe the operator parsing should be at top.
+         */
         $this->parser = new Parser\CompositeParser();
-        $this->parser->addParser(new Parser\NumericParser());
-        $this->parser->addParser(new Parser\StringParser());
-        $this->parser->addParser(new Parser\VariableParser());
-        $this->parser->addParser(new Parser\FunctionParser($this->parser));
         $this->parser->addParser(new Parser\OperatorParser($this->parser));
+        $this->parser->addParser(new Parser\FunctionParser($this->parser));
+        $this->parser->addParser(new Parser\VariableParser());
+        $this->parser->addParser(new Parser\StringParser());
+        $this->parser->addParser(new Parser\NumericParser());
+        
         
         $this->variables = new \ArrayObject();
         

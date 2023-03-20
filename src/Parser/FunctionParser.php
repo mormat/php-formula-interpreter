@@ -9,6 +9,8 @@ namespace Mormat\FormulaInterpreter\Parser;
  */
 class FunctionParser implements ParserInterface {
     
+    use ExpressionExploderTrait;
+    
     /**
      * @var ParserInterface
      */
@@ -35,43 +37,16 @@ class FunctionParser implements ParserInterface {
             'name' => substr($expression, 0, $open),
         );
 
-        $arguments = trim(substr($expression, $open + 1, -1));
-        if ($arguments != '') {
-            $parsedArguments = array();
-            foreach ($this->explodeArguments($arguments) as $argument) {
-                $parsedArguments[] = $this->argumentParser->parse($argument);
-            }
-            $results['arguments'] = $parsedArguments;
+        $argumentsExpression = trim(substr($expression, $open + 1, -1));
+        if ($argumentsExpression != '') {
+            $separators = [','];
+            $fragments  = $this->explodeExpression($argumentsExpression, $separators);
+            $arguments  = array_diff($fragments, $separators);
+            $values     = array_map([$this->argumentParser, 'parse'], $arguments);
+            $results['arguments'] = $values;
         }
 
         return $results;
-    }
-
-    protected function explodeArguments($expression) {
-
-        $arguments = array();
-        $previous = 0;
-        $parenthesis = 0;
-        for ($position = 0; $position < strlen($expression); $position++) {
-            switch ($expression[$position]) {
-                case ',':
-                    if ($parenthesis == 0) {
-                        $arguments[] = substr($expression, $previous, $position);
-                        $position++;
-                        $previous = $position;
-                    }
-                    break;
-                case '(':
-                    $parenthesis++;
-                    break;
-                case ')':
-                    $parenthesis--;
-                    break;
-            }
-        }
-        $arguments[] = substr($expression, $previous, $position);
-
-        return $arguments;
     }
 
 }

@@ -9,6 +9,8 @@ namespace Mormat\FormulaInterpreter\Parser;
  */
 class OperatorParser implements ParserInterface {
     
+    use ExpressionExploderTrait;
+    
     /**
      * @var ParserInterface
      */
@@ -29,7 +31,7 @@ class OperatorParser implements ParserInterface {
         
         foreach ($priorities as $operators) {
             $parts = array_reverse(
-                self::splitExpressionByOperators($expression, $operators)
+                $this->explodeExpression($expression, $operators)
             );
             if (count($parts) == 1) {
                 continue;
@@ -125,70 +127,6 @@ class OperatorParser implements ParserInterface {
             $operand['value'] = null;
         }
         return $operand;
-    }
-    
-    
-    public static function splitExpressionByOperators($rawExpression, $operators)
-    {
-        $expression = trim($rawExpression);
-        if (!$expression) {
-            return [];
-        }
-        
-        $results  = [];
-        $fragment = '';
-        $openedParenthesis = 0;
-        $betweenQuotes     = false;
-        
-        $offset = 0;
-        $limit  = strlen($expression);
-        while ($offset < $limit) {
-            
-            foreach ($operators as $operator) {
-                
-                if (substr($expression, $offset, strlen($operator)) != $operator) {
-                    continue;
-                }
-                
-                if ($openedParenthesis > 0 || $betweenQuotes) {
-                    continue;
-                }
-
-                if ($fragment) {
-                    $results[] = $fragment;
-                    $fragment = '';      
-                }
-
-                $results[] = $operator;
-                $offset += strlen($operator);
-
-            }
-            
-            if (!($offset < $limit)) {
-                continue;
-            }
-            
-            if ($expression[$offset] == '(') {
-                $openedParenthesis++;
-            } else if ($expression[$offset] == ')') {
-                $openedParenthesis--;
-            }
-            
-            if ($expression[$offset] == "'") {
-                $betweenQuotes = !$betweenQuotes;
-            }
-            
-            $fragment .= $expression[$offset];
-            $offset   += 1;
-        }
-        
-        if ($fragment) {
-            $results[] = $fragment;
-        }
-        
-
-        
-        return $results;
     }
     
 }

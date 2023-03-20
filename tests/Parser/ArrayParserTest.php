@@ -20,7 +20,8 @@ class ArrayParserTest extends PHPUnit_Framework_TestCase {
             ->expects($this->any())
             ->method('parse')
             ->will($this->returnCallback(array($this, 'mockItemParser')));
-        $this->parser = new ArrayParser($itemParser);
+        
+        $this->parser = new ArrayParserTest_ArrayParser($itemParser);
         
     }
     
@@ -35,8 +36,8 @@ class ArrayParserTest extends PHPUnit_Framework_TestCase {
     public function getParseIfExpressionisCorrectData() {
         return array(
             array("[]",  array('value' => [])),
-            array("[1]", array('value' => ['item 1'])),
-            array("[2,3]", array('value' => ['item 2', "item 3"])),
+            array("[1]", array('value' => ['item = 1'])),
+            array("[2,3]", array('value' => ['item = 2', "item = 3"])),
         );
     }
     
@@ -59,52 +60,17 @@ class ArrayParserTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    /**
-     * @dataProvider getSplitExtensionData
-     */
-    public function testSplitExpression($expression, $expected) {
-        $actual = $this->parser->explode($expression, [',']);
-        $this->assertEquals(
-            $actual, 
-            $expected,
-            sprintf("actual value is %s", var_export($actual, true))
-        );
-    }
-    
-    public function getSplitExtensionData() {
-        return array(
-            
-            array(
-                " foo ",
-                [" foo "]
-            ),
-            
-            array(
-                "foo, bar",
-                ["foo", ",", " bar"]
-            ),
-            
-            array(
-                " [foo, bar] ",
-                [" [foo, bar] "]
-            ),
-            
-            array(
-                " func(2, 4) ",
-                [" func(2, 4) "]
-            ),
-            
-            array(
-                " '2, 4' ",
-                [" '2, 4' "]
-            ),
-            
-        );
-    }
-    
     public function mockItemParser($expression)
     {
         return 'item ' . $expression;
     }
     
+}
+
+class ArrayParserTest_ArrayParser extends ArrayParser
+{
+    function explodeExpression($expression, array $separators, array $options = [])
+    {
+        return ExpressionExploderTraitTest::mockExplodeExpression($expression, $separators, $options);
+    }
 }
