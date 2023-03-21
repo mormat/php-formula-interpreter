@@ -16,9 +16,9 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
      */
     public function testCompileAndRun($expression, $result, $variables = []) {
         $compiler = new Compiler();
-        $compiler->registerCustomFunctions([
+        $compiler->registerCustomFunction(
             new CallableFunction('get_integer_part', 'floor', ['numeric'])
-        ]);
+        );
         
         $executable = $compiler->compile($expression);
         $this->assertEquals($executable->run($variables), $result);
@@ -27,6 +27,7 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
     
     public function getCompileAndRunData() {
         return array(
+            
             array('3', 3),
             array('3 + 3', 6),
             array('price', 10, array('price' => 10)),
@@ -53,8 +54,8 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
             array("capitalize('foobar')", 'Foobar'),
             array("'2 * 3'", '2 * 3'),
             array("count('2 + 2') + 1", 6),
-            array("'wars' in strtolower('Star Wars - The Last Hope')", true),
-            array("'jedi' in strtolower('Star Wars - The Last Hope')", false),
+            array("'wars' in lowercase('Star Wars - The Last Hope')", true),
+            array("'jedi' in lowercase('Star Wars - The Last Hope')", false),
             // array("count('foobar')", 6, [], ['count' => 'strlen'])
             
             // handling arrays

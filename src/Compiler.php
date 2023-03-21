@@ -70,9 +70,6 @@ class Compiler {
             array(['pi'], []),
             array(['cos', 'sin', 'sqrt'], ['numeric']),
             array(['pow'], ['numeric', 'numeric']),
-            
-            array(['strtolower', 'strtoupper', 'ucfirst', 'strlen'], ['string']),
-            
         );
         
         foreach ($phpFunctions as $phpFunction) {
@@ -115,12 +112,10 @@ class Compiler {
     }
     
     /**
-     * @param Functions\FunctionInterface[] $functions
+     * @param Functions\FunctionInterface $function
      */
-    public function registerCustomFunctions(array $functions) {
-        foreach ($functions as $function) {
-            $this->functionCommandFactory->registerFunction($function);
-        }
+    public function registerCustomFunction(Functions\FunctionInterface $function) {
+        $this->functionCommandFactory->registerFunction($function);
     }
     
     /**
