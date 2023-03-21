@@ -24,9 +24,9 @@ class ExpressionExploderTraitTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @dataProvider getExplodeExpressionWithCommaAsSerapatorData
+     * @dataProvider getExplodeExpressionWithCommaAsSeparatorData
      */
-    public function testExplodeExpressionWithCommaAsSerapator($expression, $expected) {
+    public function testExplodeExpressionWithCommaAsSeparator($expression, $expected) {
         $actual = $this->expressionExploder->explodeExpression($expression, [',']);
         $this->assertEquals(
             $actual, 
@@ -35,7 +35,7 @@ class ExpressionExploderTraitTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    public function getExplodeExpressionWithCommaAsSerapatorData() {
+    public function getExplodeExpressionWithCommaAsSeparatorData() {
         return array(
             
             array(
@@ -78,10 +78,10 @@ class ExpressionExploderTraitTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @dataProvider getExplodeExpressionWithOperatorsAsSerapatorData
+     * @dataProvider getExplodeExpressionWithOperatorsAsSeparatorData
      */
-    public function testExplodeExpressionWithOperatorsAsSerapator($expression, $expected) {
-        $operators = ['+', '-', '/', '*', ' in ', ' or '];
+    public function testExplodeExpressionWithOperatorsAsSeparator($expression, $expected) {
+        $operators = ['+', '-', '/', '*', 'in', 'or'];
         $actual = $this->expressionExploder->explodeExpression($expression, $operators);
         $this->assertEquals(
             $actual, 
@@ -90,8 +90,9 @@ class ExpressionExploderTraitTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    public function getExplodeExpressionWithOperatorsAsSerapatorData() {
+    public function getExplodeExpressionWithOperatorsAsSeparatorData() {
         return array(
+            
             array(
                 '2 + 3 - 4 + 5', 
                 ['2 ', '+', ' 3 ', '-', " 4 ", '+', ' 5']
@@ -107,23 +108,40 @@ class ExpressionExploderTraitTest extends PHPUnit_Framework_TestCase {
             
             array(
                 "'a' in foo or 'b' in bar", 
-                ["'a'", ' in ', 'foo', ' or ', "'b'", ' in ', 'bar']
-            ),
-            // missing closing parenthesis
-            array(
-                "((5) * 2 / (3 - 1)", 
-                ["((5) * 2 / (3 - 1)"]
-            ),
-            // the operator 'in' between quotes must be ignored
-            array(
-                "'fun' in 'fun in fundamental'", 
-                ["'fun'", ' in ', "'fun in fundamental'"]
+                ["'a' ", 'in',  ' foo ', 'or', " 'b' ", 'in', ' bar']
             ),
             
             array(
                 "cos(1 * 2) + (3)",
                 ['cos(1 * 2) ', '+', ' (3)']
-            )
+            ),
+            
+            // missing closing parenthesis
+            array(
+                "((5) * 2 / (3 - 1)", 
+                ["((5) * 2 / (3 - 1)"]
+            ),
+            
+            // the operator 'in' between quotes must be ignored
+            array(
+                "'fun' in 'fun in fundamental'", 
+                ["'fun' ", 'in', " 'fun in fundamental'"]
+            ),
+            
+            // the 'in' operator is ignored if previous or next character is a letter, digit or underscore
+            array(
+                'ainzAinZ0in9_in_ + 2',
+                ['ainzAinZ0in9_in_ ', '+', ' 2']
+            ),
+            
+            // because we are checking previous and next character,
+            // make sure that what don't get an offset error
+            // when the expression starts and ends with 'in' keyword
+            array(
+                'in in',
+                ['in', ' ', 'in']
+            ),
+            
         );
     }
     

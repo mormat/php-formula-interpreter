@@ -2,15 +2,24 @@
 
 namespace Mormat\FormulaInterpreter\Parser;
 
-/**
- * explodes an expression into multiple fragments using specific separators
- * 
- * useful in complex parsers such as operators, functions and arrays
- */
 trait ExpressionExploderTrait {
 
+    /**
+     * Explodes an expression into multiple fragments using specific separators
+     * 
+     * useful in complex parsers such as operators, functions and arrays
+     * 
+     * @param  string $expression
+     * @param  array  $separators List of separators
+     * @param  array  $options    
+     * 
+     * @return array  List of fragments
+     */
     function explodeExpression($expression, array $separators, array $options = []) {
 
+        $fragments = [];
+        
+        // setting default options
         $options += array(
             
             'canUseOperatorCallback' => function ($infos) {
@@ -30,18 +39,40 @@ trait ExpressionExploderTrait {
             }
             
         );
-
+        
         // gathering infos when iterating over expression
         $infos = (object) [
             'openedBrackets'    => 0,
             'openedParenthesis' => 0,
             'betweenQuotes'     => false,
+            'matchingSeparator' => null,
+            'previousFragment'  => '',
         ];
-
-        $results = [];
-        $fragment = '';
-        $offset = -1;
-        $limit = strlen($expression);
+        
+        // Check if separators contains words (examples: 'or', 'and', 'in')
+        $isWord  = function($str) {
+            $nbrChars = strlen($str);
+            for ($i = 0; $i < $nbrChars; $i++) {
+                $dec = ord($str[$i]);
+                if ($dec === 95) {
+                    continue;
+                }
+                if (97 <= $dec && $dec < 122) {
+                    continue;
+                }
+                if (65 <= $dec && $dec < 90) {
+                    continue;
+                }
+                if (48 <= $dec && $dec < 57) {
+                    continue;
+                }
+                return false;
+            }
+            return ($nbrChars > 0);
+        };
+        $wordSeparators = array_filter($separators, $isWord);
+        
+        list($offset, $limit) = [-1, strlen($expression)];
         while (++$offset < $limit) {
 
             if ($expression[$offset] == '[') {
@@ -60,33 +91,49 @@ trait ExpressionExploderTrait {
                 $infos->betweenQuotes = !$infos->betweenQuotes;
             }
 
-            $foundSeparator = null;
-            foreach ($separators as $separator) {
-
-                if (substr($expression, $offset, strlen($separator)) === $separator) {
-                    $foundSeparator = $expression[$offset];
+            // find if any separator matches the current fragment
+            $infos->matchingSeparator = null;
+            foreach ($separators as $s) {
+                if (substr($expression, $offset, strlen($s)) === $s) {
+                    $infos->matchingSeparator = $s;
                     break;
                 }
             }
+            
+            // A list a requirements that the matching separator must meets before being handled
+            $matchingSeparatorRequirements = [];
+            if ($infos->matchingSeparator) {
+                $matchingSeparatorRequirements[] = $options['canUseOperatorCallback']($infos);
+            }
+            
+            // If matching separator is word, check that previous and next character are not also words
+            if (in_array($infos->matchingSeparator, $wordSeparators)) {
+                $previousChar = $offset > 0 ? $expression[$offset-1] : '';
+                $nextChar     = substr($expression, $offset + strlen($infos->matchingSeparator), 1);
 
-            if ($foundSeparator && $options['canUseOperatorCallback']($infos)) {
-                $results[] = $fragment;
-                $fragment = '';
+                $matchingSeparatorRequirements[] = !$isWord($previousChar);
+                $matchingSeparatorRequirements[] = !$isWord($nextChar);
+            }
+            
+            // finally handle the matching separator if all requirements are OK
+            if (array_unique($matchingSeparatorRequirements) == [true]) {
+                $fragments[] = $infos->previousFragment;
+                $infos->previousFragment = '';
 
-                $results[] = $separator;
+                $fragments[] = $infos->matchingSeparator;
 
-                $offset += strlen($separator) - 1;
+                $offset += strlen($infos->matchingSeparator) - 1;
                 continue;
             }
-
-            $fragment .= $expression[$offset];
+            
+            $infos->previousFragment .= $expression[$offset];
         }
 
-        $results[] = $fragment;
-        $results = array_filter($results, function($str) {
+        $fragments[] = $infos->previousFragment;
+        $fragments   = array_filter($fragments, function($str) {
             return $str !== '';
         });
-        return array_values($results);
+        return array_values($fragments);
     }
 
 }

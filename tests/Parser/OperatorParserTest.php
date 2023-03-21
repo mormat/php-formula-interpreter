@@ -117,7 +117,29 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
                 'otherOperands' => array(
                     array('operator' => 'add',      'value' => 'operand 2'),
                 )
-            ))
+            )),
+            
+            array(' 1 in [1, 2] ', array(
+                'firstOperand' => 'operand 1 ',
+                'otherOperands' => array(
+                    array('operator' => 'in',      'value' => 'operand [1, 2]'),
+                )
+            )),
+            
+            // checking priorities of the 'in' operator
+            array(' 1+2 in [3,4]', array(
+                'firstOperand' => 'operand 1+2 ',
+                'otherOperands' => array(
+                    array('operator' => 'in', 'value' => 'operand [3,4]'),
+                )
+            )),
+            
+            array(' 2*2 in [4,5] ', array(
+                'firstOperand' => 'operand 2*2 ',
+                'otherOperands' => array(
+                    array('operator' => 'in', 'value' => 'operand [4,5]'),
+                )
+            )),
             
         );
     }

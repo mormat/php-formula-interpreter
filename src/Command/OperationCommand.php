@@ -15,16 +15,20 @@ class OperationCommand implements CommandInterface {
     const SUBTRACT_OPERATOR = 'subtract';
     const MULTIPLY_OPERATOR = 'multiply';
     const DIVIDE_OPERATOR = 'divide';
+    const IN_OPERATOR = 'in';
     
     protected $supportedTypes = array(
         self::ADD_OPERATOR      => ['numeric', 'numeric'],
         self::SUBTRACT_OPERATOR => ['numeric', 'numeric'],
         self::MULTIPLY_OPERATOR => ['numeric', 'numeric'],
         self::DIVIDE_OPERATOR   => ['numeric', 'numeric'],
+        self::IN_OPERATOR       => ['numeric|string', 'array|string']
     );
     
     protected $validatorTypes = array(
         'numeric' => 'is_numeric',
+        'array'   => 'is_array',
+        'string'  => 'is_string'
     );
     
     /**
@@ -56,7 +60,7 @@ class OperationCommand implements CommandInterface {
             $command = $otherOperand['command'];
             
             $values  = [$result, $command->run()];
-            if (!$this->areValuesValid($values, $operator)) {
+            if (!$this->operatorSupportsValues($operator, $values)) {
                 throw new UnsupportedOperandTypeException(sprintf(
                     'Unsupported operand types in %s operation',
                     $operator
@@ -76,23 +80,52 @@ class OperationCommand implements CommandInterface {
                 case self::DIVIDE_OPERATOR:
                     $result = $result / $command->run();
                     break;
+                case self::IN_OPERATOR:
+                    $otherResult = $command->run();
+                    if (is_array($otherResult)) {
+                        return in_array($result, $otherResult);
+                    } else {
+                        // $otherResult contains $result
+                        return (strpos($otherResult, $result) !== false);
+                    }
+                    
+                    break;
             }
             
         }
         return $result;
     }
     
-    protected function areValuesValid($values, $operator)
+    /**
+     * Returns true if $operator supports the provided $values
+     * 
+     * @param string $operator
+     * @param array  $values
+     * @return boolean
+     */
+    protected function operatorSupportsValues($operator, $values)
     {
-        foreach ($this->supportedTypes[$operator] as $i => $supportedType) {            
-            if (!isset($values[$i])) {
+        foreach ($this->supportedTypes[$operator] as $i => $rawSupportedType) {    
+            
+            $results = array_map(function($supportedType) use ($i, $values) {
+                
+                if (!isset($values[$i])) {
+                    return false;
+                }
+
+                $validator = $this->validatorTypes[$supportedType];
+                if (!$validator($values[$i])) {
+                    return false;
+                }
+                
+                return true;
+                
+            }, explode('|', $rawSupportedType));
+            
+            if (array_unique($results) == [false]) {
                 return false;
             }
             
-            $validator = $this->validatorTypes[$supportedType];
-            if (!$validator($values[$i])) {
-                return false;
-            }
         }
         
         return true;

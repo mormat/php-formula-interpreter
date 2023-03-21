@@ -81,6 +81,31 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
+     * @dataProvider getRunWithInOperatorData
+     */
+    public function testRunWithInOperator($leftValue, $rightValue, $expected) {
+    
+        // testing with integer
+        $firstOperand = $this->createMockCommand($leftValue);
+        $command = new OperationCommand($firstOperand);
+        
+        $operand = $this->createMockCommand($rightValue);
+        $command->addOperand(OperationCommand::IN_OPERATOR, $operand);
+        
+        $this->assertEquals($command->run(), $expected);
+    }
+    
+    public function getRunWithInOperatorData()
+    {
+        return array(
+            array(2,     [1, 2, 3], true),
+            array(6,     [1, 2, 3], false),
+            array('foo', 'foobar',  true),
+            array('baz', 'foobar',  false),
+        );
+    }
+    
+    /**
      *
      */
     public function testRunWithThreeOperands() {
@@ -139,6 +164,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         );
     }
     
+    // @rename to createMockCommandReturningValue
     public function createMockCommand($returnValue) {
         $command = $this->getMockBuilder(
             CommandInterface::class

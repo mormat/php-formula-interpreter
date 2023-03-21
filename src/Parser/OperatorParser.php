@@ -25,8 +25,10 @@ class OperatorParser implements ParserInterface {
         $expression = trim($rawExpression);
         
         $priorities = array(
+            ['in'],
             ['+', '-'],
-            ['*', '/']
+            ['*', '/'],
+            
         );
         
         foreach ($priorities as $operators) {
@@ -110,6 +112,8 @@ class OperatorParser implements ParserInterface {
             case '/':
                 $operand['operator'] = 'divide';
                 break;
+            default:
+                $operand['operator'] = $operator;
         }
         
         $value = trim($value);
