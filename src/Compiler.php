@@ -68,19 +68,30 @@ class Compiler {
 
         $phpFunctions = array(
             array(['pi'], []),
-            array(['cos', 'sin', 'sqrt'], [['numeric']]),
+            array(['cos', 'sin', 'sqrt'], ['numeric']),
             array(['pow'], ['numeric', 'numeric']),
             
             array(['strtolower', 'strtoupper', 'ucfirst', 'strlen'], ['string']),
             
-            array(['count'], ['array']),
         );
         
         foreach ($phpFunctions as $phpFunction) {
-            foreach ($phpFunction[0] as $callable) {
-                $function = new Functions\CallableFunction($callable, $callable, $phpFunction[1]);
+            list($callables, $supportedTypes) = $phpFunction;
+            foreach ($callables as $callable) {
+                $function = new Functions\CallableFunction($callable, $callable, $supportedTypes);
                 $this->functionCommandFactory->registerFunction($function);
             }  
+        }
+        
+        $aliases = array(
+            'lowercase'  => ['strtolower', ['string']],
+            'uppercase'  => ['strtoupper', ['string']],
+            'capitalize' => ['ucfirst',    ['string']],
+        );
+        foreach ($aliases as $name => $alias) {
+            list($callable, $supportedTypes) = $alias;
+            $function = new Functions\CallableFunction($name, $callable, $supportedTypes);
+            $this->functionCommandFactory->registerFunction($function);
         }
         
         $this->functionCommandFactory->registerFunction(
@@ -94,11 +105,11 @@ class Compiler {
         );
         $this->functionCommandFactory->registerFunction(
             new Functions\CallableFunction(
-                'concat', 
-                function($a, $b) {
-                    return $a . $b;
+                'count', 
+                function($a) {
+                    return is_array($a) ? sizeof($a) : strlen($a);
                 }, 
-                ['string', 'string']
+                ['string|array']
             )           
         );
     }

@@ -48,12 +48,11 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
             
             // handling strings
             array("'foobar'", 'foobar'),
-            array("strtolower('FOOBAR')", 'foobar'),
-            array("strtoupper('foobar')", 'FOOBAR'),
-            array("ucfirst('foobar')", 'Foobar'),
-            array("concat('foo', 'bar')", 'foobar'),
+            array("lowercase('FOOBAR')", 'foobar'),
+            array("uppercase('foobar')", 'FOOBAR'),
+            array("capitalize('foobar')", 'Foobar'),
             array("'2 * 3'", '2 * 3'),
-            array("strlen('2 + 2') + 1", 6),
+            array("count('2 + 2') + 1", 6),
             array("'wars' in strtolower('Star Wars - The Last Hope')", true),
             array("'jedi' in strtolower('Star Wars - The Last Hope')", false),
             // array("count('foobar')", 6, [], ['count' => 'strlen'])

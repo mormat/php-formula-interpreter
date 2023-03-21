@@ -19,24 +19,45 @@ class CallableFunction implements FunctionInterface {
      */
     protected $supportedTypes;
     
+    protected $validatorTypes = array(
+        'numeric' => 'is_numeric',
+        'array'   => 'is_array',
+        'string'  => 'is_string'
+    );
+    
     public function __construct($name, $callable, array $supportedTypes = []) {
         $this->name     = $name;
         $this->callable = $callable; // @todo tests if callable is really callable
         $this->supportedTypes = $supportedTypes;
     }
     
-    public function supports(array $params) {
-        foreach ($this->supportedTypes as $i => $supportedType) {            
-            if (!isset($params[$i])) {
+    public function supports(array $values) {
+        
+        foreach ($this->supportedTypes as $i => $rawSupportedType) {   
+            
+            $results = array_map(function($supportedType) use ($i, $values) {
+                
+                if (!isset($values[$i])) {
+                    return false;
+                }
+
+                $validator = $this->validatorTypes[$supportedType];
+                if (!$validator($values[$i])) {
+                    return false;
+                }
+                
+                return true;
+                
+            }, explode('|', $rawSupportedType));
+            
+            if (array_unique($results) == [false]) {
                 return false;
             }
             
-            if (!$this->valueIsType($params[$i], $supportedType)) {
-                return false;
-            }
         }
         
         return true;
+        
     }
     
     /**
@@ -50,25 +71,13 @@ class CallableFunction implements FunctionInterface {
     {
         switch ($type) {
             case 'numeric':
-                return $this->isNumeric($value);
+                return is_numeric($value);
             case 'string':
                 return is_string($value);
+            case 'array':
+                return is_array($value);
         }
         return true;
-    }
-
-    /**
-     * @todo put this in a helper ?
-     * 
-     * @param mixed $value
-     * @return boolean
-     */
-    protected function isNumeric($value)
-    {
-        if (is_int($value) || is_float($value) || is_numeric($value)) {
-            return true;
-        }
-        return false;
     }
     
     public function execute(array $params) {

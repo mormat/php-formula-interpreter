@@ -20,10 +20,11 @@ class CallableFunctionTest extends PHPUnit_Framework_TestCase {
     
     public function getTestSupportsData() {
         return array(
-            array('floor', [2],     ['numeric']),
-            array('floor', [2.3],   ['numeric']),
-            array('floor', ['2.3'], ['numeric']),
-            array('floor', ['2'],   ['numeric']),
+            array('floor',  [2],        ['numeric']),
+            array('floor',  [2.3],      ['numeric']),
+            array('floor',  ['2.3'],    ['numeric']),
+            array('floor',  ['2'],      ['numeric']),
+            array('sizeof', [array(2)], ['array']),
         );
     }
     
@@ -54,6 +55,9 @@ class CallableFunctionTest extends PHPUnit_Framework_TestCase {
             
             // string only required
             array('strtolower', [1], ['string']),
+            
+            // array only
+            array('sizeof', [2], ['array']),
         );
     }
     
