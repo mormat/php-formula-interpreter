@@ -54,10 +54,14 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
             array("concat('foo', 'bar')", 'foobar'),
             array("'2 * 3'", '2 * 3'),
             array("strlen('2 + 2') + 1", 6),
+            array("'wars' in strtolower('Star Wars - The Last Hope')", true),
+            array("'jedi' in strtolower('Star Wars - The Last Hope')", false),
             // array("count('foobar')", 6, [], ['count' => 'strlen'])
             
             // handling arrays
             array("[1, 2]", [1, 2]),
+            array("2 in [0, 1 + 1, 2]", true),
+            array("1 in [sin(0)]",      false),
         );
     }
     
