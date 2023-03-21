@@ -66,21 +66,23 @@ class Compiler {
     
     protected function registerDefaultFunctions() {
 
-        $trucs = array(
+        $phpFunctions = array(
             array(['pi'], []),
             array(['cos', 'sin', 'sqrt'], [['numeric']]),
             array(['pow'], ['numeric', 'numeric']),
             
             array(['strtolower', 'strtoupper', 'ucfirst', 'strlen'], ['string']),
+            
+            array(['count'], ['array']),
         );
         
-        foreach ($trucs as $truc) {
-            foreach ($truc[0] as $callable) {
-                $function = new Functions\CallableFunction($callable, $callable, $truc[1]);
+        foreach ($phpFunctions as $phpFunction) {
+            foreach ($phpFunction[0] as $callable) {
+                $function = new Functions\CallableFunction($callable, $callable, $phpFunction[1]);
                 $this->functionCommandFactory->registerFunction($function);
             }  
         }
-          
+        
         $this->functionCommandFactory->registerFunction(
             new Functions\CallableFunction(
                 'modulo', 

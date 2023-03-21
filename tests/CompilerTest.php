@@ -62,6 +62,7 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
             array("[1, 2]", [1, 2]),
             array("2 in [0, 1 + 1, 2]", true),
             array("1 in [sin(0)]",      false),
+            array("count([0, 1])", 2),
         );
     }
     
