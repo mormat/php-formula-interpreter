@@ -25,9 +25,11 @@ class OperatorParser implements ParserInterface {
         $expression = trim($rawExpression);
         
         $priorities = array(
+            ['<=', '>=', '<', '>', '='],
             ['in'],
             ['+', '-'],
             ['*', '/'],
+            
             
         );
         
@@ -111,6 +113,21 @@ class OperatorParser implements ParserInterface {
                 break;
             case '/':
                 $operand['operator'] = 'divide';
+                break;
+            case "<":
+                $operand['operator'] = 'lower';
+                break;
+            case ">":
+                $operand['operator'] = 'greater';
+                break;
+            case "=":
+                $operand['operator'] = 'equal';
+                break;
+            case "<=":
+                $operand['operator'] = 'lower_or_equal';
+                break;
+            case ">=":
+                $operand['operator'] = 'greater_or_equal';
                 break;
             default:
                 $operand['operator'] = $operator;

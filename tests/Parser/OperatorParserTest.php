@@ -33,7 +33,13 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($this->parser->parse($expression), $infos);
     }
     
+    /**
+     * @todo make this dataProvider more readable
+     * 
+     * @return array
+     */
     public function getParseWithValidExpressionData() {
+        
         
         return array(
             array('2+2', array(
@@ -138,6 +144,107 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
                 'firstOperand' => 'operand 2*2 ',
                 'otherOperands' => array(
                     array('operator' => 'in', 'value' => 'operand [4,5]'),
+                )
+            )),
+            
+            // 'lower than' operator
+            array(' 2 < 3 ', array(
+                'firstOperand' => 'operand 2 ',
+                'otherOperands' => array(
+                    array('operator' => 'lower', 'value' => 'operand 3'),
+                )
+            )),
+            array(' 2 + 1 < 3 ', array(
+                'firstOperand' => 'operand 2 + 1 ',
+                'otherOperands' => array(
+                    array('operator' => 'lower', 'value' => 'operand 3'),
+                )
+            )),
+            array(' 1 < 2 - 1 ', array(
+                'firstOperand' => 'operand 1 ',
+                'otherOperands' => array(
+                    array('operator' => 'lower', 'value' => 'operand 2 - 1'),
+                )
+            )),
+            
+            // 'greater than' operator
+            array(' 2 > 3 ', array(
+                'firstOperand' => 'operand 2 ',
+                'otherOperands' => array(
+                    array('operator' => 'greater', 'value' => 'operand 3'),
+                )
+            )),
+            array(' 3 - 1 > 2 ', array(
+                'firstOperand' => 'operand 3 - 1 ',
+                'otherOperands' => array(
+                    array('operator' => 'greater', 'value' => 'operand 2'),
+                )
+            )),
+            array(' 3 > 2 + 1 ', array(
+                'firstOperand' => 'operand 3 ',
+                'otherOperands' => array(
+                    array('operator' => 'greater', 'value' => 'operand 2 + 1'),
+                )
+            )),
+            
+            // 'equal' operator
+            array(' 2 = 3 ', array(
+                'firstOperand' => 'operand 2 ',
+                'otherOperands' => array(
+                    array('operator' => 'equal', 'value' => 'operand 3'),
+                )
+            )),
+            array(' 3 + 1 = 3 ', array(
+                'firstOperand' => 'operand 3 + 1 ',
+                'otherOperands' => array(
+                    array('operator' => 'equal', 'value' => 'operand 3'),
+                )
+            )),
+            array(' 3 = 3 + 1 ', array(
+                'firstOperand' => 'operand 3 ',
+                'otherOperands' => array(
+                    array('operator' => 'equal', 'value' => 'operand 3 + 1'),
+                )
+            )),
+            
+            
+            // 'lower or equal' operator
+            array(' 2 <= 3 ', array(
+                'firstOperand' => 'operand 2 ',
+                'otherOperands' => array(
+                    array('operator' => 'lower_or_equal', 'value' => 'operand 3'),
+                )
+            )),
+            array(' 3 + 1 <= 3 ', array(
+                'firstOperand' => 'operand 3 + 1 ',
+                'otherOperands' => array(
+                    array('operator' => 'lower_or_equal', 'value' => 'operand 3'),
+                )
+            )),
+            array(' 3 <= 3 - 1 ', array(
+                'firstOperand' => 'operand 3 ',
+                'otherOperands' => array(
+                    array('operator' => 'lower_or_equal', 'value' => 'operand 3 - 1'),
+                )
+            )),
+            
+            // 'greater than' operator
+            array(' 2 >= 3 ', array(
+                'firstOperand' => 'operand 2 ',
+                'otherOperands' => array(
+                    array('operator' => 'greater_or_equal', 'value' => 'operand 3'),
+                )
+            )),
+            array(' 3 >= 3 + 1 ', array(
+                'firstOperand' => 'operand 3 ',
+                'otherOperands' => array(
+                    array('operator' => 'greater_or_equal', 'value' => 'operand 3 + 1'),
+                )
+            )),
+            array(' 3 >= 3 + 1 ', array(
+                'firstOperand' => 'operand 3 ',
+                'otherOperands' => array(
+                    array('operator' => 'greater_or_equal', 'value' => 'operand 3 + 1'),
                 )
             )),
             
