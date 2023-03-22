@@ -24,7 +24,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     *
+     * @todo [refactor] move test to testRunWithBinaryOperator
      */
     public function testRunWithAddition() {
     
@@ -38,7 +38,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     *
+     * @todo [refactor] move test to testRunWithBinaryOperator
      */
     public function testRunWithMultplication() {
     
@@ -52,7 +52,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     *
+     * @todo [refactor] move test to testRunWithBinaryOperator
      */
     public function testRunWithSubstraction() {
     
@@ -66,7 +66,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     *
+     * @todo [refactor] move test to testRunWithBinaryOperator
      */
     public function testRunWithDivision() {
     
@@ -115,6 +115,19 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
             array('greater_or_equal', 3, 2, true),
             array('greater_or_equal', 2, 2, true),
             array('greater_or_equal', 1, 2, false),
+            
+            array('lower', 'a', 'b', true),
+            array('lower', 'a', 'a', false),
+            array('greater', 'b', 'a', true),
+            array('greater', 'b', 'b', false),
+            array('equal', 'a', 'a', true),
+            array('equal', 'a', 'b', false),
+            array('lower_or_equal', 'a', 'b', true),
+            array('lower_or_equal', 'b', 'b', true),
+            array('lower_or_equal', 'c', 'b', false),
+            array('greater_or_equal', 'c', 'b', true),
+            array('greater_or_equal', 'b', 'b', true),
+            array('greater_or_equal', 'a', 'b', false),
         );
     }
     
