@@ -28,11 +28,11 @@ class OperationCommand implements CommandInterface {
         self::MULTIPLY_OPERATOR => ['numeric', 'numeric'],
         self::DIVIDE_OPERATOR   => ['numeric', 'numeric'],
         self::IN_OPERATOR       => ['numeric|string', 'array|string'],
-        self::LOWER_OPERATOR    => ['numeric', 'numeric'],
-        self::GREATER_OPERATOR  => ['numeric', 'numeric'],
-        self::EQUAL_OPERATOR    => ['numeric', 'numeric'],
-        self::LOWER_OR_EQUAL_OPERATOR   => ['numeric', 'numeric'],
-        self::GREATER_OR_EQUAL_OPERATOR => ['numeric', 'numeric'],
+        self::LOWER_OPERATOR    => ['numeric|string', 'numeric|string'],
+        self::GREATER_OPERATOR  => ['numeric|string', 'numeric|string'],
+        self::EQUAL_OPERATOR    => ['numeric|string', 'numeric|string'],
+        self::LOWER_OR_EQUAL_OPERATOR   => ['numeric|string', 'numeric|string'],
+        self::GREATER_OR_EQUAL_OPERATOR => ['numeric|string', 'numeric|string'],
         
     );
     
