@@ -16,13 +16,24 @@ class OperationCommand implements CommandInterface {
     const MULTIPLY_OPERATOR = 'multiply';
     const DIVIDE_OPERATOR = 'divide';
     const IN_OPERATOR = 'in';
+    const LOWER_OPERATOR = 'lower';
+    const GREATER_OPERATOR = 'greater';
+    const EQUAL_OPERATOR = 'equal';
+    const LOWER_OR_EQUAL_OPERATOR   = 'lower_or_equal';
+    const GREATER_OR_EQUAL_OPERATOR = 'greater_or_equal';
     
     protected $supportedTypes = array(
         self::ADD_OPERATOR      => ['numeric', 'numeric'],
         self::SUBTRACT_OPERATOR => ['numeric', 'numeric'],
         self::MULTIPLY_OPERATOR => ['numeric', 'numeric'],
         self::DIVIDE_OPERATOR   => ['numeric', 'numeric'],
-        self::IN_OPERATOR       => ['numeric|string', 'array|string']
+        self::IN_OPERATOR       => ['numeric|string', 'array|string'],
+        self::LOWER_OPERATOR    => ['numeric', 'numeric'],
+        self::GREATER_OPERATOR  => ['numeric', 'numeric'],
+        self::EQUAL_OPERATOR    => ['numeric', 'numeric'],
+        self::LOWER_OR_EQUAL_OPERATOR   => ['numeric', 'numeric'],
+        self::GREATER_OR_EQUAL_OPERATOR => ['numeric', 'numeric'],
+        
     );
     
     protected $validatorTypes = array(
@@ -66,7 +77,10 @@ class OperationCommand implements CommandInterface {
                     $operator
                 ));
             }
-            
+           
+            /**
+             * @todo [refactor] each case can directly return value
+             */
             switch ($operator) {
                 case self::ADD_OPERATOR:
                     $result = $result + $command->run();
@@ -90,6 +104,16 @@ class OperationCommand implements CommandInterface {
                     }
                     
                     break;
+                case self::LOWER_OPERATOR:
+                    return $result < $command->run();
+                case self::GREATER_OPERATOR:
+                    return $result > $command->run();
+                case self::EQUAL_OPERATOR:
+                    return $result == $command->run();
+                case self::LOWER_OR_EQUAL_OPERATOR:
+                    return $result <= $command->run();
+                case self::GREATER_OR_EQUAL_OPERATOR:
+                    return $result >= $command->run();
             }
             
         }

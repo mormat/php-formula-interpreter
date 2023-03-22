@@ -81,27 +81,40 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
     }
     
     /**
-     * @dataProvider getRunWithInOperatorData
+     * @dataProvider getRunWithBinaryOperatorData
      */
-    public function testRunWithInOperator($leftValue, $rightValue, $expected) {
+    public function testRunWithBinaryOperator($operator, $leftValue, $rightValue, $expected) {
     
         // testing with integer
         $firstOperand = $this->createMockCommand($leftValue);
         $command = new OperationCommand($firstOperand);
         
         $operand = $this->createMockCommand($rightValue);
-        $command->addOperand(OperationCommand::IN_OPERATOR, $operand);
+        $command->addOperand($operator, $operand);
         
         $this->assertEquals($command->run(), $expected);
     }
     
-    public function getRunWithInOperatorData()
+    public function getRunWithBinaryOperatorData()
     {
         return array(
-            array(2,     [1, 2, 3], true),
-            array(6,     [1, 2, 3], false),
-            array('foo', 'foobar',  true),
-            array('baz', 'foobar',  false),
+            array('in', 2,     [1, 2, 3], true),
+            array('in', 6,     [1, 2, 3], false),
+            array('in', 'foo', 'foobar',  true),
+            array('in', 'baz', 'foobar',  false),
+            
+            array('lower', 1, 2, true),
+            array('lower', 1, 1, false),
+            array('greater', 3, 2, true),
+            array('greater', 2, 2, false),
+            array('equal', 2, 2, true),
+            array('equal', 3, 2, false),
+            array('lower_or_equal', 1, 2, true),
+            array('lower_or_equal', 2, 2, true),
+            array('lower_or_equal', 3, 2, false),
+            array('greater_or_equal', 3, 2, true),
+            array('greater_or_equal', 2, 2, true),
+            array('greater_or_equal', 1, 2, false),
         );
     }
     
