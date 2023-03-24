@@ -114,6 +114,60 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
         );
     }
     
+    public function testGetRegisteredFunctions()
+    {
+        $compiler = new Compiler();
+        
+        $actual = $compiler->getRegisteredFunctions();
+                
+        $this->assertEquals(
+            $actual,
+            array(
+                'pi'    => [
+                    'name' => 'pi', 
+                    'supportedTypes' => []
+                ],
+                'cos'   => [
+                    'name' => 'cos', 
+                    'supportedTypes' => ['numeric']
+                ],
+                'sin'   => [
+                    'name' => 'sin', 
+                    'supportedTypes' => ['numeric']
+                ],
+                'sqrt'  => [
+                    'name' => 'sqrt', 
+                    'supportedTypes' => ['numeric']
+                ],
+                'pow'   => [
+                    'name' => 'pow', 
+                    'supportedTypes' => ['numeric', 'numeric']
+                ],
+                'modulo'     => [
+                    'name' => 'modulo', 
+                    'supportedTypes' => ['numeric', 'numeric']
+                ],
+                'lowercase'  => [
+                    'name' => 'lowercase', 
+                    'supportedTypes' => ['string']
+                ],
+                'uppercase'  => [
+                    'name' => 'uppercase', 
+                    'supportedTypes' => ['string']
+                ],
+                'capitalize' => [
+                    'name' => 'capitalize', 
+                    'supportedTypes' => ['string']
+                ],
+                'count'      => [
+                    'name' => 'count', 
+                    'supportedTypes' => ['string|array']
+                ],
+            ),
+            sprintf('actual values : %s', json_encode($actual, JSON_PRETTY_PRINT))
+        );
+        
+    }
     
 }
 
