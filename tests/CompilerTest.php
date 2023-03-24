@@ -92,5 +92,28 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
         );
     }
         
+    
+    public function testGetAvailableOperators()
+    {
+        $compiler = new Compiler();
+        
+        $this->assertEquals(
+            $compiler->getAvailableOperators(),
+            array(
+                '+'  => ['name' => 'add'],
+                '-'  => ['name' => 'subtract'],
+                '*'  => ['name' => 'multiply'],
+                '/'  => ['name' => 'divide'],
+                '<'  => ['name' => 'lower'],
+                '>'  => ['name' => 'greater'],
+                '='  => ['name' => 'equal'],
+                "<=" => ['name' => 'lower_or_equal'],
+                ">=" => ['name' => 'greater_or_equal'],
+                "in" => ['name' => 'in']   
+            )
+        );
+    }
+    
+    
 }
 

@@ -44,5 +44,13 @@ class CompositeParser implements ParserInterface {
         throw new ParserException($expression);
     }
 
+    /**
+     * @return ParserInterface[]
+     */    
+    public function getParsers() {
+        return $this->parsers;
+    }
+
+
 
 }
