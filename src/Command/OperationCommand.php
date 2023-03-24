@@ -22,7 +22,7 @@ class OperationCommand implements CommandInterface {
     const LOWER_OR_EQUAL_OPERATOR   = 'lower_or_equal';
     const GREATER_OR_EQUAL_OPERATOR = 'greater_or_equal';
     
-    protected $supportedTypes = array(
+    protected static $supportedTypes = array(
         self::ADD_OPERATOR      => ['numeric', 'numeric'],
         self::SUBTRACT_OPERATOR => ['numeric', 'numeric'],
         self::MULTIPLY_OPERATOR => ['numeric', 'numeric'],
@@ -54,6 +54,10 @@ class OperationCommand implements CommandInterface {
     
     function __construct(CommandInterface $firstOperand) {
         $this->firstOperand = $firstOperand;
+    }
+    
+    public static function getSupportedTypes() {
+        return self::$supportedTypes;
     }
     
     function addOperand($operator, CommandInterface $command) {
@@ -129,7 +133,7 @@ class OperationCommand implements CommandInterface {
      */
     protected function operatorSupportsValues($operator, $values)
     {
-        foreach ($this->supportedTypes[$operator] as $i => $rawSupportedType) {    
+        foreach (self::$supportedTypes[$operator] as $i => $rawSupportedType) {    
             
             $results = array_map(function($supportedType) use ($i, $values) {
                 

@@ -95,23 +95,56 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
         
     
     public function testGetAvailableOperators()
-    {
+        {
         $compiler = new Compiler();
         
+        $actual = $compiler->getAvailableOperators();
+        
         $this->assertEquals(
-            $compiler->getAvailableOperators(),
+            $actual,
             array(
-                '+'  => ['name' => 'add'],
-                '-'  => ['name' => 'subtract'],
-                '*'  => ['name' => 'multiply'],
-                '/'  => ['name' => 'divide'],
-                '<'  => ['name' => 'lower'],
-                '>'  => ['name' => 'greater'],
-                '='  => ['name' => 'equal'],
-                "<=" => ['name' => 'lower_or_equal'],
-                ">=" => ['name' => 'greater_or_equal'],
-                "in" => ['name' => 'in']   
-            )
+                '+'  => [
+                    'name' => 'add',
+                    'supportedTypes' => ['numeric', 'numeric'],
+                ],
+                '-'  => [
+                    'name' => 'subtract',
+                    'supportedTypes' => ['numeric', 'numeric'],
+                ],
+                '*'  => [
+                    'name' => 'multiply',
+                    'supportedTypes' => ['numeric', 'numeric'],
+                ],
+                '/'  => [
+                    'name' => 'divide',
+                    'supportedTypes' => ['numeric', 'numeric'],
+                ],
+                '<'  => [
+                    'name' => 'lower',
+                    'supportedTypes' => ['numeric|string', 'numeric|string'],
+                ],
+                '>'  => [
+                    'name' => 'greater',
+                    'supportedTypes' => ['numeric|string', 'numeric|string'],
+                ],
+                '='  => [
+                    'name' => 'equal',
+                    'supportedTypes' => ['numeric|string', 'numeric|string'],
+                ],
+                "<=" => [
+                    'name' => 'lower_or_equal',
+                    'supportedTypes' => ['numeric|string', 'numeric|string'],
+                ],
+                ">=" => [
+                    'name' => 'greater_or_equal',
+                    'supportedTypes' => ['numeric|string', 'numeric|string'],
+                ],
+                "in" => [
+                    'name' => 'in',
+                    'supportedTypes' => ['numeric|string', 'array|string'],
+                ]   
+            ),
+            sprintf('actual values : %s', json_encode($actual, JSON_PRETTY_PRINT))
         );
     }
     
