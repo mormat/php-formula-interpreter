@@ -34,12 +34,5 @@ class VariableCommand implements CommandInterface {
         }
         
         return $context->getVariable($this->name);
-        
-        /*
-        if(!isset($this->variables[$this->name])) {
-            throw new UnknownVariableException($this->name);
-        }
-        
-        return $this->variables[$this->name];*/
     }
 }

@@ -172,6 +172,9 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
     
 }
 
+/**
+ * @todo replace with getMockBuilder
+ */
 class CompilerTest_Variables implements \ArrayAccess {
     
     protected $variables = array();

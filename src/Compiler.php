@@ -21,11 +21,6 @@ class Compiler {
      */
     protected $commandFactory;
     
-    /**
-     * @var \ArrayObject
-     */
-    protected $variables;
-    
     function __construct() {
         
         /**
@@ -40,12 +35,10 @@ class Compiler {
         $this->parser->addParser(new Parser\NumericParser());
         
         
-        $this->variables = new \ArrayObject();
-        
         $this->commandFactory = new Command\CommandFactory();
         $this->commandFactory->registerFactory('numeric', new Command\CommandFactory\NumericCommandFactory());
         $this->commandFactory->registerFactory('string', new Command\CommandFactory\StringCommandFactory());
-        $this->commandFactory->registerFactory('variable', new Command\CommandFactory\VariableCommandFactory($this->variables));
+        $this->commandFactory->registerFactory('variable', new Command\CommandFactory\VariableCommandFactory());
         $this->commandFactory->registerFactory('array', new Command\CommandFactory\ArrayCommandFactory($this->commandFactory));
         $this->commandFactory->registerFactory('operation', new Command\CommandFactory\OperationCommandFactory($this->commandFactory));
         // $this->commandFactory->registerFactory('array', new Command\CommandFactory\C)
@@ -172,7 +165,7 @@ class Compiler {
     function compile($expression) {
         $options = $this->parser->parse($expression);        
         $command = $this->commandFactory->create($options);
-        return new Executable($command, $this->variables);
+        return new Executable($command);
     }
     
 }
