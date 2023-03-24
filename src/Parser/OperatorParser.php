@@ -16,10 +16,33 @@ class OperatorParser implements ParserInterface {
      */
     protected $operandParser;
     
+    /**
+     * @var array
+     */
+    protected $operators;
+    
     function __construct(ParserInterface $operandParser) {
+        
         $this->operandParser = $operandParser;
+        
+        $this->operators = array(
+            '+'  => 'add',
+            '-'  => 'subtract',
+            '*'  => 'multiply',
+            '/'  => 'divide',
+            '<'  => 'lower',
+            '>'  => 'greater',
+            '='  => 'equal',
+            "<=" => 'lower_or_equal',
+            ">=" => 'greater_or_equal',
+            "in" => 'in'
+        );
     }
     
+    public function getOperators() {
+        return $this->operators;
+    }
+        
     function parse($rawExpression) {
 
         $expression = trim($rawExpression);
@@ -28,9 +51,7 @@ class OperatorParser implements ParserInterface {
             ['<=', '>=', '<', '>', '='],
             ['in'],
             ['+', '-'],
-            ['*', '/'],
-            
-            
+            ['*', '/'],            
         );
         
         foreach ($priorities as $operators) {
@@ -101,36 +122,9 @@ class OperatorParser implements ParserInterface {
     
     function createOperand($value, $operator = null) {
         $operand = array();
-        switch ($operator) {
-            case '+':
-                $operand['operator'] = 'add';
-                break;
-            case '-':
-                $operand['operator'] = 'subtract';
-                break;
-            case '*':
-                $operand['operator'] = 'multiply';
-                break;
-            case '/':
-                $operand['operator'] = 'divide';
-                break;
-            case "<":
-                $operand['operator'] = 'lower';
-                break;
-            case ">":
-                $operand['operator'] = 'greater';
-                break;
-            case "=":
-                $operand['operator'] = 'equal';
-                break;
-            case "<=":
-                $operand['operator'] = 'lower_or_equal';
-                break;
-            case ">=":
-                $operand['operator'] = 'greater_or_equal';
-                break;
-            default:
-                $operand['operator'] = $operator;
+        
+        if (isset($this->operators[$operator])) {
+            $operand['operator'] = $this->operators[$operator];
         }
         
         $value = trim($value);

@@ -119,6 +119,27 @@ class Compiler {
     }
     
     /**
+     * Get a list of available operators
+     * 
+     * @return array
+     */
+    public function getAvailableOperators()
+    {
+       $availableOperators = [];
+        
+       foreach ($this->parser->getParsers() as $parser) {
+           if ($parser instanceof Parser\OperatorParser) {
+               $operators = $parser->getOperators();
+               foreach ($operators as $key => $name) {
+                   $availableOperators[$key] = ['name' => $name];
+               }
+           }
+       } 
+       
+       return $availableOperators;
+    }
+    
+    /**
      * Compile an expression and return the corresponding executable
      * 
      * @param string $expression
