@@ -119,12 +119,16 @@ class Compiler {
     public function getAvailableOperators()
     {
        $availableOperators = [];
+       $supportedTypes = Command\OperationCommand::getSupportedTypes();
         
        foreach ($this->parser->getParsers() as $parser) {
            if ($parser instanceof Parser\OperatorParser) {
                $operators = $parser->getOperators();
                foreach ($operators as $key => $name) {
-                   $availableOperators[$key] = ['name' => $name];
+                   $availableOperators[$key] = [
+                       'name' => $name,
+                       'supportedTypes' => isset($supportedTypes[$name]) ? $supportedTypes[$name]: null
+                   ];
                }
            }
        } 
