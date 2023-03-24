@@ -28,6 +28,10 @@ class FunctionCommandFactory implements CommandFactoryInterface {
         $this->functions[$function->getName()] = $function;
     }
     
+    public function getFunctions() {
+        return $this->functions;
+    }
+   
     public function create($options) {
         
         if (!isset($options['name'])) {

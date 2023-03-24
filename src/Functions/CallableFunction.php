@@ -31,6 +31,10 @@ class CallableFunction implements FunctionInterface {
         $this->supportedTypes = $supportedTypes;
     }
     
+    public function getSupportedTypes() {
+        return $this->supportedTypes;
+    }
+    
     public function supports(array $values) {
         
         foreach ($this->supportedTypes as $i => $rawSupportedType) {   

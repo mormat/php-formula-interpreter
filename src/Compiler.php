@@ -140,6 +140,30 @@ class Compiler {
     }
     
     /**
+     * Get a list of registered functions
+     */
+    public function getRegisteredFunctions()
+    {
+        $functions = [];
+        
+        foreach ($this->functionCommandFactory->getFunctions() as $function) {
+            
+            $supportedTypes = null;
+            if ($function instanceof Functions\CallableFunction) {
+                $supportedTypes = $function->getSupportedTypes();
+            }
+            
+            
+            $functions[$function->getName()] = array(
+                'name'           => $function->getName(),
+                'supportedTypes' => $supportedTypes
+            );
+        }
+        
+        return $functions;
+    }
+    
+    /**
      * Compile an expression and return the corresponding executable
      * 
      * @param string $expression
