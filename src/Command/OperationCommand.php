@@ -63,14 +63,14 @@ class OperationCommand implements CommandInterface {
         );
     }
    
-    public function run() {
-        $result = $this->firstOperand->run();
+    public function run(CommandContext $context) {
+        $result = $this->firstOperand->run($context);
         foreach ($this->otherOperands as $otherOperand) {
             
             $operator = $otherOperand['operator'];
             $command = $otherOperand['command'];
             
-            $values  = [$result, $command->run()];
+            $values  = [$result, $command->run($context)];
             if (!$this->operatorSupportsValues($operator, $values)) {
                 throw new UnsupportedOperandTypeException(sprintf(
                     'Unsupported operand types in %s operation',
@@ -83,19 +83,19 @@ class OperationCommand implements CommandInterface {
              */
             switch ($operator) {
                 case self::ADD_OPERATOR:
-                    $result = $result + $command->run();
+                    $result = $result + $command->run($context);
                     break;
                 case self::MULTIPLY_OPERATOR:
-                    $result = $result * $command->run();
+                    $result = $result * $command->run($context);
                     break;
                 case self::SUBTRACT_OPERATOR:
-                    $result = $result - $command->run();
+                    $result = $result - $command->run($context);
                     break;
                 case self::DIVIDE_OPERATOR:
-                    $result = $result / $command->run();
+                    $result = $result / $command->run($context);
                     break;
                 case self::IN_OPERATOR:
-                    $otherResult = $command->run();
+                    $otherResult = $command->run($context);
                     if (is_array($otherResult)) {
                         return in_array($result, $otherResult);
                     } else {
@@ -105,15 +105,15 @@ class OperationCommand implements CommandInterface {
                     
                     break;
                 case self::LOWER_OPERATOR:
-                    return $result < $command->run();
+                    return $result < $command->run($context);
                 case self::GREATER_OPERATOR:
-                    return $result > $command->run();
+                    return $result > $command->run($context);
                 case self::EQUAL_OPERATOR:
-                    return $result == $command->run();
+                    return $result == $command->run($context);
                 case self::LOWER_OR_EQUAL_OPERATOR:
-                    return $result <= $command->run();
+                    return $result <= $command->run($context);
                 case self::GREATER_OR_EQUAL_OPERATOR:
-                    return $result >= $command->run();
+                    return $result >= $command->run($context);
             }
             
         }

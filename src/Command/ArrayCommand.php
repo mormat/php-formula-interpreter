@@ -18,10 +18,10 @@ class ArrayCommand implements CommandInterface {
         $this->itemCommands = $itemCommands;
     }
     
-    public function run() {
+    public function run(CommandContext $context) {
         return array_map(
-            function(CommandInterface $item) {
-                return $item->run();
+            function(CommandInterface $item) use($context) {
+                return $item->run($context);
             },
             $this->itemCommands
         );

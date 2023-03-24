@@ -32,6 +32,7 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
             array('3 + 3', 6),
             array('price', 10, array('price' => 10)),
             array('price + 2 * 3', 16, array('price' => 10)),
+            array('price * 25 / 100', 37.5, new CompilerTest_Variables(['price' => 150])),
             array('pi()', pi()),
             array('pow(3, 2)', 9),
             array('modulo(5, 2)', 1),
@@ -171,3 +172,31 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
     
 }
 
+class CompilerTest_Variables implements \ArrayAccess {
+    
+    protected $variables = array();
+    
+    public function __construct(array $variables) {
+        $this->variables = $variables;
+    }
+
+    
+    public function offsetExists($offset) {
+        return array_key_exists($offset, $this->variables);
+    }
+
+    public function offsetGet($offset) {
+        if (array_key_exists($offset, $this->variables)) {
+            return $this->variables[$offset];
+        }
+    }
+
+    public function offsetSet($offset, $value) {
+        throw new \Exception("not implemented");
+    }
+
+    public function offsetUnset($offset) {
+        throw new \Exception("not implemented");
+    }
+
+}

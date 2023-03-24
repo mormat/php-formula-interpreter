@@ -1,6 +1,7 @@
 <?php
 
 use Mormat\FormulaInterpreter\Command\OperationCommand;
+use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface;
 use Mormat\FormulaInterpreter\Command\CommandFactory\OperationCommandFactory;
@@ -91,5 +92,5 @@ class OperationCommandFactoryTest_FakeCommand implements CommandInterface {
         $this->options = $options;
     }
     
-    public function run() {}
+    public function run(CommandContext $context) {}
 }

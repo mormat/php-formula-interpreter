@@ -1,5 +1,6 @@
 <?php
 
+use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\StringCommand;
 
 /**
@@ -10,12 +11,22 @@ use Mormat\FormulaInterpreter\Command\StringCommand;
 class StringCommandTest extends PHPUnit_Framework_TestCase {
     
     /**
+     * @var ContextCommand
+     */
+    protected $commandContext;
+    
+    public function setUp()
+    {
+        $this->commandContext = new CommandContext();
+    }
+    
+    /**
      * @dataProvider getData
      */
     public function testRun($value, $result) {
         $command = new StringCommand($value);
         
-        $this->assertEquals($command->run(), $result);
+        $this->assertEquals($command->run($this->commandContext), $result);
     }
     
     public function getData() {
@@ -31,7 +42,7 @@ class StringCommandTest extends PHPUnit_Framework_TestCase {
      */
     public function testInjectIncorrectValue($value) {
         $command = new StringCommand($value);
-        $command->run();
+        $command->run($this->commandContext);
     }
 
     public function getIncorrectValues() {
