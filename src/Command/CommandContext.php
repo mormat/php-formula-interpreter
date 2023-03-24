@@ -27,13 +27,16 @@ class CommandContext {
     
     public function hasVariable($name)
     {
+        if ($this->variables instanceof \ArrayAccess) {
+            return $this->variables->offsetExists($name);
+        }
         return array_key_exists($name, $this->variables);
     }
     
     public function getVariable($name)
     {
-        if (array_key_exists($name, $this->variables)) {
-            return $this->variables[$name];
+        if ($this->hasVariable($name)) {
+            return $this->variables[$name];    
         }
     }
     

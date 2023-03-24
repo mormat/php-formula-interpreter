@@ -14,19 +14,11 @@ class Executable {
      */
     protected $command;
     
-    /**
-     * @var \ArrayObject
-     */
-    protected $variables;
-    
-    function __construct(Command\CommandInterface $command, \ArrayObject $variables) {
+    function __construct(Command\CommandInterface $command) {
         $this->command = $command;
-        $this->variables = $variables;
     }
 
-    function run($variables = array()) {
-        $this->variables->exchangeArray($variables);
-        
+    function run($variables = array()) {        
         $context = new Command\CommandContext($variables);
         return $this->command->run($context);
     }
