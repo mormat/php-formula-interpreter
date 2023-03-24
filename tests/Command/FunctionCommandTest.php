@@ -1,5 +1,6 @@
 <?php
 
+use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\FunctionCommand;
 use Mormat\FormulaInterpreter\Functions\FunctionInterface;
@@ -11,6 +12,16 @@ use Mormat\FormulaInterpreter\Functions\FunctionInterface;
  */
 class FunctionCommandTest extends PHPUnit_Framework_TestCase {
 
+    /**
+     * @var ContextCommand
+     */
+    protected $commandContext;
+    
+    public function setUp()
+    {
+        $this->commandContext = new CommandContext();
+    }
+    
     protected function createFunctionMock(callable $execute = null, callable $supports = null)
     {        
         $mock = $this->getMockBuilder(
@@ -43,7 +54,7 @@ class FunctionCommandTest extends PHPUnit_Framework_TestCase {
         });
            
         $command = new FunctionCommand($function);
-        $this->assertEquals($command->run(), 2);
+        $this->assertEquals($command->run($this->commandContext), 2);
         
     }
     
@@ -60,7 +71,7 @@ class FunctionCommandTest extends PHPUnit_Framework_TestCase {
             ->will($this->returnValue(4));
         $command = new FunctionCommand($function, array($argumentCommand));
         
-        $this->assertEquals($command->run(), 5);
+        $this->assertEquals($command->run($this->commandContext), 5);
   
     }
     
@@ -82,7 +93,7 @@ class FunctionCommandTest extends PHPUnit_Framework_TestCase {
         
         $command = new FunctionCommand($function, $argumentCommands);
         
-        $this->assertEquals($command->run(), 5);
+        $this->assertEquals($command->run($this->commandContext), 5);
     }
     
     /**
@@ -95,7 +106,7 @@ class FunctionCommandTest extends PHPUnit_Framework_TestCase {
         });
         
         $command = new FunctionCommand($function);  
-        $command->run();
+        $command->run($this->commandContext);
     }
     
     /**

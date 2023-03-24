@@ -9,6 +9,6 @@ namespace Mormat\FormulaInterpreter\Command;
  */
 interface CommandInterface {
     
-    function run();
+    function run(CommandContext $context);
      
 }

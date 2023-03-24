@@ -31,10 +31,10 @@ class FunctionCommand implements CommandInterface {
         $this->argumentCommands = $argumentCommands;
     }
 
-    public function run() {
+    public function run(CommandContext $context) {
         $arguments = array();
         foreach ($this->argumentCommands as $command) {
-            $arguments[] = $command->run();
+            $arguments[] = $command->run($context);
         }
         
         if (!$this->function->supports($arguments)) {

@@ -27,7 +27,7 @@ class StringCommand implements CommandInterface {
         $this->value = $value;
     }
     
-    public function run() {
+    public function run(CommandContext $context) {
         return $this->value;
     }
     

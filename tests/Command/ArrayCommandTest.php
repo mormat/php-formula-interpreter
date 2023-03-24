@@ -1,6 +1,7 @@
 <?php
 
 use Mormat\FormulaInterpreter\Command\ArrayCommand;
+use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 
 /**
@@ -9,6 +10,16 @@ use Mormat\FormulaInterpreter\Command\CommandInterface;
  * @author mormat
  */
 class ArrayCommandTest extends PHPUnit_Framework_TestCase {
+    
+    /**
+     * @var ContextCommand
+     */
+    protected $commandContext;
+    
+    public function setUp()
+    {
+        $this->commandContext = new CommandContext();
+    }
     
     /**
      * @dataProvider getData
@@ -20,7 +31,7 @@ class ArrayCommandTest extends PHPUnit_Framework_TestCase {
             array_map($mocker, $items)
         );
         
-        $this->assertEquals($command->run(), $result);
+        $this->assertEquals($command->run($this->commandContext), $result);
     }
     
     public function getData() {

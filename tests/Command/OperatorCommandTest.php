@@ -1,5 +1,6 @@
 <?php
 
+use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\OperationCommand;
 use Mormat\FormulaInterpreter\Exception\UnsupportedOperandTypeException;
@@ -12,6 +13,16 @@ use Mormat\FormulaInterpreter\Exception\UnsupportedOperandTypeException;
 class OperatorCommandTest extends PHPUnit_Framework_TestCase {
     
     /**
+     * @var ContextCommand
+     */
+    protected $commandContext;
+    
+    public function setUp()
+    {
+        $this->commandContext = new CommandContext();
+    }
+    
+    /**
      *
      */
     public function testRunWithOneOperand() {
@@ -20,7 +31,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         
         $command = new OperationCommand($firstOperand);
         
-        $this->assertEquals($command->run(), 12);
+        $this->assertEquals($command->run($this->commandContext), 12);
     }
     
     /**
@@ -34,7 +45,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         $operand = $this->createMockCommand(2);
         $command->addOperand(OperationCommand::ADD_OPERATOR, $operand);
         
-        $this->assertEquals($command->run(), 4);
+        $this->assertEquals($command->run($this->commandContext), 4);
     }
     
     /**
@@ -48,7 +59,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         $operand = $this->createMockCommand(2);
         $command->addOperand(OperationCommand::MULTIPLY_OPERATOR, $operand);
         
-        $this->assertEquals($command->run(), 6);
+        $this->assertEquals($command->run($this->commandContext), 6);
     }
     
     /**
@@ -62,7 +73,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         $operand = $this->createMockCommand(1);
         $command->addOperand(OperationCommand::SUBTRACT_OPERATOR, $operand);
         
-        $this->assertEquals($command->run(), 1);
+        $this->assertEquals($command->run($this->commandContext), 1);
     }
     
     /**
@@ -76,7 +87,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         $operand = $this->createMockCommand(2);
         $command->addOperand(OperationCommand::DIVIDE_OPERATOR, $operand);
         
-        $this->assertEquals($command->run(), 3);
+        $this->assertEquals($command->run($this->commandContext), 3);
         
     }
     
@@ -92,7 +103,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         $operand = $this->createMockCommand($rightValue);
         $command->addOperand($operator, $operand);
         
-        $this->assertEquals($command->run(), $expected);
+        $this->assertEquals($command->run($this->commandContext), $expected);
     }
     
     public function getRunWithBinaryOperatorData()
@@ -145,7 +156,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         $operand = $this->createMockCommand(1);
         $command->addOperand(OperationCommand::SUBTRACT_OPERATOR, $operand);
         
-        $this->assertEquals($command->run(), 14);
+        $this->assertEquals($command->run($this->commandContext), 14);
     }
     
     /**
@@ -162,7 +173,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         $operand = $this->createMockCommand($secondValue);
         $command->addOperand(OperationCommand::DIVIDE_OPERATOR, $operand);
         
-        $command->run();
+        $command->run($this->commandContext);
     }
     
     public function getRunWithInvalidOperandsData()

@@ -1,5 +1,6 @@
 <?php
 
+use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandFactory;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 
@@ -46,6 +47,6 @@ class CommandFactoryTest extends PHPUnit_Framework_TestCase {
 }
 
 class CommandFactoryTest_FakeCommand implements CommandInterface {
-    public function run() {}
+    public function run(CommandContext $context) {}
 }
 

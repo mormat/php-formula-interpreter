@@ -26,7 +26,9 @@ class Executable {
 
     function run($variables = array()) {
         $this->variables->exchangeArray($variables);
-        return $this->command->run();
+        
+        $context = new Command\CommandContext($variables);
+        return $this->command->run($context);
     }
     
 }

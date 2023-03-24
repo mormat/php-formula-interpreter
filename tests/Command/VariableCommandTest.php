@@ -1,9 +1,10 @@
 <?php
 
+use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\VariableCommand;
 
 /**
- * Description of ParserTest
+ * Test the command to execute of a variable
  *
  * @author mormat
  */
@@ -13,9 +14,11 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
      * @dataProvider getData
      */
     public function testRunWhenVariablesExists($name, $variables, $result) {
-        $command = new VariableCommand($name, $variables);
+        $command = new VariableCommand($name);
         
-        $this->assertEquals($command->run(), $result);
+        $context = new CommandContext($variables);
+        
+        $this->assertEquals($command->run($context), $result);
     }
     
     public function getData() {
@@ -29,26 +32,10 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
      * @expectedException \Mormat\FormulaInterpreter\Exception\UnknownVariableException
      */
     public function testRunWhenVariableNotExists() {
+        $context = new CommandContext([]);
+        
         $command = new VariableCommand('rate', array());
-        $command->run();
-    }
-    
-    public function testRunWhenVariablesHolderImplementsArrayAccess() {
-        $variables = $this->getMockBuilder(
-            '\ArrayAccess'
-        )->getMock();
-        $variables->expects($this->any())
-            ->method('offsetExists')
-            ->with($this->equalTo('rate'))
-            ->will($this->returnValue(true));
-        $variables->expects($this->any())
-            ->method('offsetGet')
-            ->with($this->equalTo('rate'))
-            ->will($this->returnValue(23));
-        
-        $command = new VariableCommand('rate', $variables);
-        
-        $this->assertEquals($command->run(), 23);
+        $command->run($context);
     }
     
     /**
@@ -64,23 +51,6 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
             array(12),
             array(False),
             array(array()),
-            array(new StdClass()),
-        );
-    }
-    
-    /**
-     * @expectedException \InvalidArgumentException
-     * @dataProvider getIncorrectVariables
-     */
-    public function testInjectIncorrectVariables($variables) {
-        $command = new VariableCommand('rate', $variables);
-    }
-    
-    public function getIncorrectVariables() {
-        return array(
-            array(12),
-            array(False),
-            array('string'),
             array(new StdClass()),
         );
     }
