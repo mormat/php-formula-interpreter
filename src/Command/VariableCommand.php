@@ -27,6 +27,11 @@ class VariableCommand implements CommandInterface {
         }
         $this->name = $name;
     }
+    
+    public function getVariableName()
+    {
+        return $this->name;
+    }
 
     public function run(CommandContext $context) {
         if (!$context->hasVariable($this->name)) {
