@@ -28,6 +28,11 @@ class FunctionCommand implements CommandInterface {
         }
     }
     
+    public function getFunctionName()
+    {
+        return $this->function;
+    }
+    
     public function addArgumentCommand(CommandInterface $argumentCommand)
     {
         $this->argumentCommands[] = $argumentCommand;
