@@ -5,7 +5,7 @@ namespace Mormat\FormulaInterpreter\Exception;
 use Mormat\FormulaInterpreter\Exception as BaseException;
 
 /**
- * Description of FunctionParser
+ * Thrown if formula contains unknow function
  *
  * @author mormat
  */

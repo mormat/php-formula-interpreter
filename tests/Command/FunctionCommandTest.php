@@ -6,7 +6,7 @@ use Mormat\FormulaInterpreter\Command\FunctionCommand;
 use Mormat\FormulaInterpreter\Functions\FunctionInterface;
 
 /**
- * Description of ParserTest
+ * Test execution of function
  *
  * @author mormat
  */
@@ -18,106 +18,102 @@ class FunctionCommandTest extends PHPUnit_Framework_TestCase {
     protected $commandContext;
     
     public function setUp()
-    {
-        $this->commandContext = new CommandContext();
+    {    
+        $this->commandContext = new CommandContext([], $this->getFunctions());
     }
     
-    protected function createFunctionMock(callable $execute = null, callable $supports = null)
-    {        
-        $mock = $this->getMockBuilder(
-            FunctionInterface::class
-        )->getMock();
-        $mock->method('getName')->willReturn('mock');
+    protected function getFunctions()
+    {
         
-        $defaults = array(
-            'execute'  => [$this, 'noop'],
-            'supports' => function() { return true; }
-        );
-        $methods = array_filter(array(
-            'supports' => $supports, 
-            'execute'  => $execute
-        )) + $defaults;
-        foreach ($methods as $name => $callable) {
-            $mock->method($name)
-                 ->willReturnCallback(function($params) use ($callable) {
-                    return call_user_func_array($callable, $params);
-                });
+        $functions = array();
+        foreach (['pi', 'increment', 'add', 'invalid_params'] as $name) {
+            $functions[$name] = $this->getMockBuilder(FunctionInterface::class)->getMock();
+            $functions[$name]->method('getName')->willReturn($name);
         }
         
-        return $mock;
+        $functions['pi']->method('supports')->willReturn(true);
+        $functions['pi']->method('execute')->willReturn(3.14);
+        
+        $functions['increment']->method('supports')->willReturn(true);
+        $functions['increment']->method('execute')->willReturnCallback(function($params) {
+            return $params[0] + 1;
+        });
+        
+        $functions['add']->method('supports')->willReturn(true);
+        $functions['add']->method('execute')->willReturnCallback(function($params) {
+            return $params[0] + $params[1];
+        });
+        
+        $functions['invalid_params']->method('supports')->willReturn(false);
+        
+        return $functions;
+                
     }
     
     public function testRunWithoutArguments() {
-
-        $function = $this->createFunctionMock(function() {
-            return 2;  
-        });
-           
-        $command = new FunctionCommand($function);
-        $this->assertEquals($command->run($this->commandContext), 2);
+        
+        $command = new FunctionCommand('pi');
+        $this->assertEquals($command->run($this->commandContext), 3.14);
         
     }
     
     public function testRunWithOneArgument() {
-        $function = $this->createFunctionMock(function($arg) {
-            return $arg + 1;
-        });
-        
-        $argumentCommand = $this->getMockBuilder(
-            CommandInterface::class
-        )->getMock();
-        $argumentCommand->expects($this->once())
-            ->method('run')
-            ->will($this->returnValue(4));
-        $command = new FunctionCommand($function, array($argumentCommand));
+
+        $command = new FunctionCommand('increment', array(
+            $this->mockArgumentCommand(4)
+        ));
         
         $this->assertEquals($command->run($this->commandContext), 5);
   
     }
     
     public function testRunWithTwoArgument() {
-        $function = $this->createFunctionMock(function($arg1, $arg2) {
-          return $arg1 + $arg2;
-        });
         
-        $argumentCommands = array();
-        foreach (array(2, 3) as $value) {
-            $argumentCommand = $this->getMockBuilder(
-                CommandInterface::class
-            )->getMock();
-            $argumentCommand->expects($this->any())
-                    ->method('run')
-                    ->will($this->returnValue($value));
-            $argumentCommands[] = $argumentCommand;
-        }
-        
-        $command = new FunctionCommand($function, $argumentCommands);
+        $command = new FunctionCommand('add', array(
+            $this->mockArgumentCommand(2),
+            $this->mockArgumentCommand(3)
+        ));
         
         $this->assertEquals($command->run($this->commandContext), 5);
+        
     }
     
     /**
      * @expectedException Mormat\FormulaInterpreter\Exception\InvalidParametersFunctionException
-     * @expectedExceptionMessage Invalid parameters provided to function 'mock'
+     * @expectedExceptionMessage Invalid parameters provided to function 'invalid_params'
      */
     public function testRunWithInvalidParameters() {
-        $function = $this->createFunctionMock(null, function() {
-            return false;
-        });
         
-        $command = new FunctionCommand($function);  
+        $command = new FunctionCommand('invalid_params');  
         $command->run($this->commandContext);
     }
     
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException \Mormat\FormulaInterpreter\Exception\UnknownFunctionException
+     * @expectedExceptionMessage Unknown function "cos"
      */
-    public function testConstructWhenArgumentCommandsDontImplementInterfaceCommand() {
-        $function = $this->createFunctionMock();
+    public function testRunWhenFunctionNotExists() {
         
-        new FunctionCommand($function, array('whatever'));  
+        $command = new FunctionCommand('cos', array());
+        $command->run($this->commandContext);
     }
     
-    protected function noop() {}
+    /**
+     * @expectedException \TypeError
+     */
+    public function tesArgumentCommandsMustImplementCommandInterface() {
+        new FunctionCommand('cos', array('some string'));  
+    }
+    
+    protected function mockArgumentCommand($returnedValue)
+    {
+        $argumentCommand = $this->getMockBuilder(
+            CommandInterface::class
+        )->getMock();
+        $argumentCommand->expects($this->once())
+            ->method('run')
+            ->will($this->returnValue($returnedValue));
+        return $argumentCommand;
+    }
     
 }

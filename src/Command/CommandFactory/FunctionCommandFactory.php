@@ -13,8 +13,6 @@ use \Mormat\FormulaInterpreter\Functions\FunctionInterface;
  */
 class FunctionCommandFactory implements CommandFactoryInterface {
     
-    protected $functions = array();
-    
     /**
      * @var CommandFactoryInstance
      */
@@ -24,22 +22,10 @@ class FunctionCommandFactory implements CommandFactoryInterface {
         $this->argumentCommandFactory = $argumentCommandFactory;
     }
     
-    public function registerFunction(FunctionInterface $function) {
-        $this->functions[$function->getName()] = $function;
-    }
-    
-    public function getFunctions() {
-        return $this->functions;
-    }
-   
     public function create($options) {
         
         if (!isset($options['name'])) {
             throw new CommandFactoryException('Missing option "name"');
-        }
-        
-        if (!isset($this->functions[$options['name']])) {
-            throw new UnknownFunctionException($options['name']);
         }
         
         $argumentCommands = array();
@@ -49,7 +35,7 @@ class FunctionCommandFactory implements CommandFactoryInterface {
             }
         }
         
-        return new FunctionCommand($this->functions[$options['name']], $argumentCommands);
+        return new FunctionCommand($options['name'], $argumentCommands);
     }
     
 }
