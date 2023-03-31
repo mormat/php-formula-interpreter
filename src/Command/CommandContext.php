@@ -3,25 +3,21 @@
 namespace Mormat\FormulaInterpreter\Command;
 
 /**
- * Describes the execution context of a command
+ * Execution context of a command
  *
  * @author mormat
  */
 class CommandContext {
      
-    protected $variables;
+    protected $variables = [];
     
-    public function __construct($variables = []) {
+    protected $functions = [];
+    
+    public function __construct($variables = [], $functions = []) {
         
-        if (!(is_array($variables) || $variables instanceof \ArrayAccess)) {
-            $message = sprintf(
-                'Parameter $variables of method __construct() of class %s must be an array or implements ArrayAccess interface. Got %s type instead.', 
-                get_class($this), 
-                gettype($variables)
-            );
-            throw new \InvalidArgumentException($message);
-        }
         $this->variables = $variables;
+        
+        $this->functions = $functions;
         
     }
     
@@ -30,7 +26,10 @@ class CommandContext {
         if ($this->variables instanceof \ArrayAccess) {
             return $this->variables->offsetExists($name);
         }
-        return array_key_exists($name, $this->variables);
+        if (is_array($this->variables)) {
+            return array_key_exists($name, $this->variables);
+        }
+        return false;
     }
     
     public function getVariable($name)
@@ -38,6 +37,16 @@ class CommandContext {
         if ($this->hasVariable($name)) {
             return $this->variables[$name];    
         }
+    }
+    
+    public function hasFunction($name)
+    {
+        return array_key_exists($name, $this->functions);
+    }
+    
+    public function getFunction($name)
+    {
+        return $this->functions[$name];
     }
     
 }

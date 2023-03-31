@@ -14,19 +14,10 @@ use Mormat\FormulaInterpreter\Functions\FunctionInterface;
 class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
     
     public function setUp() {
-        
         $this->argumentCommandFactory = $this->getMockBuilder(
             CommandFactoryInterface::class
         )->getMock();
-        $this->factory = new FunctionCommandFactory($this->argumentCommandFactory);
-        
-        $this->piFunction = $this->getMockBuilder(
-            FunctionInterface::class
-        )->getMock();
-        $this->piFunction->method('getName')->willReturn('pi');
-        $this->piFunction->method('supports')->willReturn(true);
-        $this->piFunction->method('execute')->willReturn(3.14);
-        $this->factory->registerFunction($this->piFunction);
+        $this->factory = new FunctionCommandFactory($this->argumentCommandFactory);        
     }
     
     public function testCreateShouldReturnFunctionCommand() {
@@ -38,7 +29,7 @@ class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
     public function testCreateWithNoArguments() {       
         $options = array('name' => 'pi');
         $object = $this->factory->create($options);
-        $this->assertObjectPropertyEquals($object, 'function', $this->piFunction);   
+        $this->assertObjectPropertyEquals($object, 'function', 'pi');   
         $this->assertObjectPropertyEquals($object, 'argumentCommands', array());
     }
     
@@ -57,19 +48,8 @@ class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
             'arguments' => array(array('type' => 'fake'))
         );
         $object = $this->factory->create($options);
-        $this->assertObjectPropertyEquals($object, 'function', $this->piFunction);   
+        $this->assertObjectPropertyEquals($object, 'function', 'pi');   
         $this->assertObjectPropertyEquals($object, 'argumentCommands', array($argumentCommand));
-    }
-    
-    /**
-     * @expectedException Mormat\FormulaInterpreter\Exception\UnknownFunctionException
-     */
-    public function testCreateWithNotExistingFunction() {       
-        
-        $options = array(
-            'name' => 'notExistingFunction',
-        );
-        $this->factory->create($options);
     }
     
     /**

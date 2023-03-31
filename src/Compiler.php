@@ -21,6 +21,11 @@ class Compiler {
      */
     protected $commandFactory;
     
+    /**
+     * @var Functions\FunctionInterface[]
+     */
+    protected $functions = [];
+    
     function __construct() {
         
         /**
@@ -45,7 +50,10 @@ class Compiler {
         
         $this->functionCommandFactory = new Command\CommandFactory\FunctionCommandFactory($this->commandFactory);
         $this->commandFactory->registerFactory('function', $this->functionCommandFactory);
-        $this->registerDefaultFunctions();
+        
+        foreach ($this->buildDefaultFunctions() as $function) {
+            $this->registerCustomFunction($function);
+        }
         
     }
     
@@ -57,7 +65,7 @@ class Compiler {
         return $this->parser;
     }
     
-    protected function registerDefaultFunctions() {
+    protected function buildDefaultFunctions() {
 
         $phpFunctions = array(
             array(['pi'], []),
@@ -68,8 +76,7 @@ class Compiler {
         foreach ($phpFunctions as $phpFunction) {
             list($callables, $supportedTypes) = $phpFunction;
             foreach ($callables as $callable) {
-                $function = new Functions\CallableFunction($callable, $callable, $supportedTypes);
-                $this->functionCommandFactory->registerFunction($function);
+                yield new Functions\CallableFunction($callable, $callable, $supportedTypes);
             }  
         }
         
@@ -80,27 +87,22 @@ class Compiler {
         );
         foreach ($aliases as $name => $alias) {
             list($callable, $supportedTypes) = $alias;
-            $function = new Functions\CallableFunction($name, $callable, $supportedTypes);
-            $this->functionCommandFactory->registerFunction($function);
+            yield new Functions\CallableFunction($name, $callable, $supportedTypes);
         }
         
-        $this->functionCommandFactory->registerFunction(
-            new Functions\CallableFunction(
-                'modulo', 
-                function($a, $b) {
-                    return $a % $b;
-                }, 
-                ['numeric', 'numeric']
-            )           
+        yield new Functions\CallableFunction(
+            'modulo', 
+            function($a, $b) {
+                return $a % $b;
+            }, 
+            ['numeric', 'numeric']
         );
-        $this->functionCommandFactory->registerFunction(
-            new Functions\CallableFunction(
-                'count', 
-                function($a) {
-                    return is_array($a) ? sizeof($a) : strlen($a);
-                }, 
-                ['string|array']
-            )           
+        yield new Functions\CallableFunction(
+            'count', 
+            function($a) {
+                return is_array($a) ? sizeof($a) : strlen($a);
+            }, 
+            ['string|array']
         );
     }
     
@@ -108,7 +110,7 @@ class Compiler {
      * @param Functions\FunctionInterface $function
      */
     public function registerCustomFunction(Functions\FunctionInterface $function) {
-        $this->functionCommandFactory->registerFunction($function);
+        $this->functions[$function->getName()] = $function;
     }
     
     /**
@@ -143,7 +145,7 @@ class Compiler {
     {
         $functions = [];
         
-        foreach ($this->functionCommandFactory->getFunctions() as $function) {
+        foreach ($this->functions as $function) {
             
             $supportedTypes = null;
             if ($function instanceof Functions\CallableFunction) {
@@ -169,7 +171,7 @@ class Compiler {
     function compile($expression) {
         $options = $this->parser->parse($expression);        
         $command = $this->commandFactory->create($options);
-        return new Executable($command);
+        return new Executable($command, $this->functions);
     }
     
 }

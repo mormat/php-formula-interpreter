@@ -5,11 +5,13 @@ use Mormat\FormulaInterpreter\Command\CommandContext;
 class CommandContextTest extends PHPUnit_Framework_TestCase {
     
     /**
-     * @expectedException \InvalidArgumentException
+     * Should not throw exception if $variables is not an array
+     * 
      * @dataProvider getIncorrectVariables
      */
     public function testInjectIncorrectVariables($variables) {
-        new CommandContext($variables);
+        $context = new CommandContext($variables);
+        $this->assertFalse($context->hasVariable('foo'));
     }
     
     public function getIncorrectVariables() {
