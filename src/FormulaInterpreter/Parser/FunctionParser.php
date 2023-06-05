@@ -61,7 +61,7 @@ class FunctionParser implements ParserInterface {
             switch ($expression[$position]) {
                 case ',':
                     if ($parenthesis == 0) {
-                        $arguments[] = substr($expression, $previous, $position);
+                        $arguments[] = substr($expression, $previous, $position - $previous);
                         $position++;
                         $previous = $position;
                     }

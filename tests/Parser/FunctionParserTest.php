@@ -46,6 +46,7 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
             array('sqrt(pi())', array('name' => 'sqrt', 'arguments' => array('pi()'))),
             array(' pi() ', array('name' => 'pi')),
             array('max(sqrt(pow(2,4)),2)', array('name' => 'max', 'arguments' => array('sqrt(pow(2,4))', '2'))),
+            array('max(10,12,14)', array('name' => 'max', 'arguments' => array('10', '12', '14'))),
         );
     }
     
