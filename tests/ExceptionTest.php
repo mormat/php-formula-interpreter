@@ -2,16 +2,17 @@
 
 use Mormat\FormulaInterpreter\Exception as BaseException;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Testing Exceptions
  *
  * @author mormat
  */
-class ExceptionTest extends PHPUnit_Framework_TestCase {
+class ExceptionTest extends TestCase {
     
-    /**
-     * @dataProvider getAllExceptionsMustImplementsBaseExceptionData()
-     */
+     #[DataProvider('getAllExceptionsMustImplementsBaseExceptionData')]
     function testAllExceptionsMustImplementsBaseException($exception)
     {
         $this->assertTrue(
@@ -20,7 +21,7 @@ class ExceptionTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    function getAllExceptionsMustImplementsBaseExceptionData()
+    static function getAllExceptionsMustImplementsBaseExceptionData()
     {
         $exceptions = [];
         $srcFolder = implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'src']);

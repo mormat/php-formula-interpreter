@@ -4,17 +4,16 @@ use Mormat\FormulaInterpreter\Exception\StackOverflowException;
 use Mormat\FormulaInterpreter\Parser\CompositeParser;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * @author mormat
  */
-class CompositeParserTest extends PHPUnit_Framework_TestCase {
+class CompositeParserTest extends TestCase {
         
-    /**
-     * @var type
-     */
-    protected $nbrCalls;
+    protected int $nbrCalls;
     
-    public function setUp()
+    public function setUp(): void
     {
         $this->nbrCalls = 0;
     }

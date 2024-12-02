@@ -3,26 +3,29 @@
 use Mormat\FormulaInterpreter\Parser\NumericParser;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the parsing of numeric values
  *
  * @author mormat
  */
-class NumericParserTest extends PHPUnit_Framework_TestCase {
+class NumericParserTest extends TestCase {
     
-    public function setUp() {
+    protected NumericParser $parser;
+    
+    public function setUp(): void {
         $this->parser = new NumericParser();
     }
     
-    /**
-     * @dataProvider getIntegerValue
-     */
+    #[DataProvider('getIntegerValue')]
     public function testParseInteger($expression, $infos) {
         $infos['type'] = 'numeric';
         $this->assertEquals($this->parser->parse($expression), $infos);
     }
     
-    public function getIntegerValue() {
+    public static function getIntegerValue() {
         return array(
             array('2', array('value' => 2)),
             array('2.4', array('value' => 2.4)),
@@ -30,9 +33,7 @@ class NumericParserTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    /**
-     * @dataProvider getUncorrectExpressionData
-     */
+    #[DataProvider('getUncorrectExpressionData')]
     public function testParseUncorrectExpression($expression) {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
@@ -41,7 +42,7 @@ class NumericParserTest extends PHPUnit_Framework_TestCase {
         $this->parser->parse($expression);
     }
     
-    public function getUncorrectExpressionData() {
+    public static function getUncorrectExpressionData() {
         return array(
             array('mlksdf'),
             array('MLKmlm'),

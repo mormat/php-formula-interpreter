@@ -1,19 +1,24 @@
 <?php
 
-use Mormat\FormulaInterpreter\Command\OperationCommand;
 use Mormat\FormulaInterpreter\Command\CommandContext;
-use Mormat\FormulaInterpreter\Command\CommandInterface;
+use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException;
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface;
 use Mormat\FormulaInterpreter\Command\CommandFactory\OperationCommandFactory;
+use Mormat\FormulaInterpreter\Command\CommandInterface;
+use Mormat\FormulaInterpreter\Command\OperationCommand;
+
+use PHPUnit\Framework\TestCase;
 
 /**
  * Description of OperationCommandFactory
  *
  * @author mormat
  */
-class OperationCommandFactoryTest extends PHPUnit_Framework_TestCase {
+class OperationCommandFactoryTest extends TestCase {
     
-    public function setUp() {
+    protected OperationCommandFactory $factory;
+    
+    public function setUp(): void {
         $this->factory = new OperationCommandFactory($this->createCommandFactoryMock());
     }
     
@@ -59,10 +64,8 @@ class OperationCommandFactoryTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($this->factory->create($options), $expected);
     }
         
-    /**
-     * @expectedException Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException
-     */
     public function testCreateWithMissingFirstOperandOption() {
+        $this->expectException(CommandFactoryException::class);
         $this->factory->create(array());
     }
     

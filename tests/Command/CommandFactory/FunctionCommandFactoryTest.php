@@ -1,19 +1,24 @@
 <?php
 
-use Mormat\FormulaInterpreter\Command\FunctionCommand;
-use Mormat\FormulaInterpreter\Command\CommandInterface;
+use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException;
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface;
 use Mormat\FormulaInterpreter\Command\CommandFactory\FunctionCommandFactory;
-use Mormat\FormulaInterpreter\Functions\FunctionInterface;
+use Mormat\FormulaInterpreter\Command\CommandInterface;
+use Mormat\FormulaInterpreter\Command\FunctionCommand;
+
+use PHPUnit\Framework\TestCase;
 
 /**
  * Description of NumericCommandFactory
  *
  * @author mormat
  */
-class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
+class FunctionCommandFactoryTest extends TestCase {
     
-    public function setUp() {
+    protected CommandFactoryInterface $argumentCommandFactory;
+    protected FunctionCommandFactory $factory;
+    
+    public function setUp(): void {
         $this->argumentCommandFactory = $this->getMockBuilder(
             CommandFactoryInterface::class
         )->getMock();
@@ -29,8 +34,15 @@ class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
     public function testCreateWithNoArguments() {       
         $options = array('name' => 'pi');
         $object = $this->factory->create($options);
-        $this->assertObjectPropertyEquals($object, 'function', 'pi');   
-        $this->assertObjectPropertyEquals($object, 'argumentCommands', array());
+        
+        $this->assertEquals(
+            self::getObjectProperty($object, 'function'),
+            'pi',
+        );
+        $this->assertEquals(
+            self::getObjectProperty($object, 'argumentCommands'),
+            array(),
+        );
     }
     
     public function testCreateWithArguments() {       
@@ -48,20 +60,26 @@ class FunctionCommandFactoryTest extends PHPUnit_Framework_TestCase {
             'arguments' => array(array('type' => 'fake'))
         );
         $object = $this->factory->create($options);
-        $this->assertObjectPropertyEquals($object, 'function', 'pi');   
-        $this->assertObjectPropertyEquals($object, 'argumentCommands', array($argumentCommand));
+        $this->assertEquals(
+            self::getObjectProperty($object, 'function'),
+            'pi',
+        );
+        $this->assertEquals(
+            self::getObjectProperty($object, 'argumentCommands'),
+            array($argumentCommand),
+        );
     }
     
-    /**
-     * @expectedException Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException
-     */
     public function testCreateWithMissingNameOption() {
+        $this->expectException(CommandFactoryException::class);
         $this->factory->create(array());
     }
-        
-    protected function assertObjectPropertyEquals($object, $property, $expected) {
-        $this->assertEquals(PHPUnit_Framework_Assert::readAttribute($object, $property), $expected);
+    
+    protected static function getObjectProperty($object, $property) {        
+        $reflectedClass = new \ReflectionClass($object);
+        $reflection = $reflectedClass->getProperty($property);
+        $reflection->setAccessible(true);
+        return $reflection->getValue($object);
     }
     
 }
-

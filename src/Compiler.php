@@ -48,8 +48,8 @@ class Compiler {
         $this->commandFactory->registerFactory('operation', new Command\CommandFactory\OperationCommandFactory($this->commandFactory));
         // $this->commandFactory->registerFactory('array', new Command\CommandFactory\C)
         
-        $this->functionCommandFactory = new Command\CommandFactory\FunctionCommandFactory($this->commandFactory);
-        $this->commandFactory->registerFactory('function', $this->functionCommandFactory);
+        $functionCommandFactory = new Command\CommandFactory\FunctionCommandFactory($this->commandFactory);
+        $this->commandFactory->registerFactory('function', $functionCommandFactory);
         
         foreach ($this->buildDefaultFunctions() as $function) {
             $this->registerCustomFunction($function);

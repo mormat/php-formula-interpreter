@@ -2,19 +2,21 @@
 
 use Mormat\FormulaInterpreter\Command\CommandContext;
 
-class CommandContextTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
+class CommandContextTest extends TestCase {
     
     /**
      * Should not throw exception if $variables is not an array
-     * 
-     * @dataProvider getIncorrectVariables
      */
+    #[DataProvider('getIncorrectVariables')]
     public function testInjectIncorrectVariables($variables) {
         $context = new CommandContext($variables);
         $this->assertFalse($context->hasVariable('foo'));
     }
     
-    public function getIncorrectVariables() {
+    public static function getIncorrectVariables() {
         return array(
             array(12),
             array(False),

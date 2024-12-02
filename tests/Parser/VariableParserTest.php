@@ -3,26 +3,29 @@
 use Mormat\FormulaInterpreter\Parser\VariableParser;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the parsing of variables
  *
  * @author mormat
  */
-class VariableParserTest extends PHPUnit_Framework_TestCase {
+class VariableParserTest extends TestCase {
     
-    public function setUp() {
+    protected VariableParser $parser;
+    
+    public function setUp(): void {
         $this->parser = new VariableParser();
     }
 
-    /**
-     * @dataProvider getCorrectExpressions
-     */
+    #[DataProvider('getCorrectExpressions')]
     public function testParseCorrectExpression($expression, $infos) {
         $infos['type'] = 'variable';
         $this->assertEquals($this->parser->parse($expression), $infos);
     }
     
-    public function getCorrectExpressions() {
+    public static function getCorrectExpressions() {
         return array(
             array('price', array('name' => 'price')),
             array('rate', array('name' => 'rate')),
@@ -33,9 +36,7 @@ class VariableParserTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    /**
-     * @dataProvider getUncorrectExpressionData
-     */
+    #[DataProvider('getUncorrectExpressionData')]
     public function testParseUncorrectExpression($expression) {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
@@ -45,7 +46,7 @@ class VariableParserTest extends PHPUnit_Framework_TestCase {
         $this->parser->parse($expression);
     }
     
-    public function getUncorrectExpressionData() {
+    public static function getUncorrectExpressionData() {
         return array(
             array(''),
             array('23'),

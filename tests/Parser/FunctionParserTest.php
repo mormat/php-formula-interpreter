@@ -4,14 +4,19 @@ use Mormat\FormulaInterpreter\Parser\FunctionParser;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the parsing of functions
  *
  * @author mormat
  */
-class FunctionParserTest extends PHPUnit_Framework_TestCase {
+class FunctionParserTest extends TestCase {
     
-    public function setUp() {
+    protected FunctionParser $parser;
+    
+    public function setUp(): void {
         $argumentParser = $this->getMockBuilder(
             ParserInterface::class
         )->getMock();
@@ -23,9 +28,7 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
         
     }
     
-    /**
-     * @dataProvider getCorrectExpressions
-     */
+    #[DataProvider('getCorrectExpressions')]
     public function testParseWithCorrecrExpression($expression, $infos) {
         
         $infos['type'] = 'function';
@@ -33,7 +36,7 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($this->parser->parse($expression), $infos);
     }
     
-    public function getCorrectExpressions() {
+    public static function getCorrectExpressions() {
         return array(
             array('pi()', array('name' => 'pi')),
             array(' pi( ) ', array('name' => 'pi')),
@@ -46,9 +49,7 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    /**
-     * @dataProvider getUncorrectExpressions
-     */
+    #[DataProvider('getUncorrectExpressions')]
     public function testParseUncorrectExpression($expression) {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
@@ -57,7 +58,7 @@ class FunctionParserTest extends PHPUnit_Framework_TestCase {
         $this->parser->parse($expression);
     }
     
-    public function getUncorrectExpressions() {
+    public static function getUncorrectExpressions() {
         return array(
             array(' what ever '),
             array(' what_ever( '),

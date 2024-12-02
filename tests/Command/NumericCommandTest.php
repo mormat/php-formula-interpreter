@@ -3,49 +3,40 @@
 use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\NumericCommand;
 
-/**
- * Description of ParserTest
- *
- * @author mormat
- */
-class NumericCommandTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
+class NumericCommandTest extends TestCase {
     
-    /**
-     * @var ContextCommand
-     */
-    protected $commandContext;
+    protected CommandContext $commandContext;
     
-    public function setUp()
+    public function setUp(): void
     {
         $this->commandContext = new CommandContext();
     }
     
-    /**
-     * @dataProvider getData
-     */
+    #[DataProvider('getData')]
     public function testRun($value, $result) {
         $command = new NumericCommand($value);
         
         $this->assertEquals($command->run($this->commandContext), $result);
     }
     
-    public function getData() {
+    public static function getData() {
         return array(
             array(2, 2),
             array(2.2, 2.2),
         );
     }
     
-    /**
-     * @expectedException \InvalidArgumentException
-     * @dataProvider getIncorrectValues
-     */
+    #[DataProvider('getIncorrectValues')]
     public function testInjectIncorrectValue($value) {
+        $this->expectException(\InvalidArgumentException::class);
         $command = new NumericCommand($value);
         $command->run($this->commandContext);
     }
 
-    public function getIncorrectValues() {
+    public static function getIncorrectValues() {
         return array(
             array('string'),
             array(false),

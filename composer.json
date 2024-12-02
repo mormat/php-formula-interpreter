@@ -7,12 +7,14 @@
     "authors": [
         {
             "name":      "mormat",
-            "email":     "mormat@free.fr"
+            "email":     "morelmathieuj@gmail.com"
         }
     ],
-
+    "require": {
+        "php": ">=8.1"
+    },
     "require-dev": {
-        "symfony/class-loader": "2.1.*"
+        "phpunit/phpunit": "10.5.38"
     },
 
     "autoload": {

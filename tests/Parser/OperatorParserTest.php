@@ -4,14 +4,19 @@ use Mormat\FormulaInterpreter\Parser\OperatorParser;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the parsing of operators
  * 
  * @author mormat
  */
-class OperatorParserTest extends PHPUnit_Framework_TestCase {
+class OperatorParserTest extends TestCase {
     
-    public function setUp() {
+    protected OperatorParser $parser;
+    
+    public function setUp(): void {
         
         $operandParser = $this->getMockBuilder(
             ParserInterface::class
@@ -24,9 +29,7 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
         $this->parser = new OperatorParser($operandParser);
     }
     
-    /**
-     * @dataProvider getParseWithValidExpressionData
-     */
+    #[DataProvider('getParseWithValidExpressionData')]
     public function testParseWithValidExpression($expression, $infos) {
         $infos['type'] = 'operation';
         
@@ -38,7 +41,7 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
      * 
      * @return array
      */
-    public function getParseWithValidExpressionData() {
+    public static function getParseWithValidExpressionData() {
         
         
         return array(
@@ -247,7 +250,7 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
                     array('operator' => 'greater_or_equal', 'value' => 'operand 3 + 1'),
                 )
             )),
-            
+                        
         );
     }
     
@@ -255,9 +258,7 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
         return 'operand ' . $expression;
     }
 
-    /**
-     * @dataProvider getUncorrectExpressions
-     */
+    #[DataProvider('getUncorrectExpressions')]
     public function testParseUncorrectExpression($expression) {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
@@ -267,7 +268,7 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
         $this->parser->parse($expression);
     }
     
-    public function getUncorrectExpressions() {
+    public static function getUncorrectExpressions() {
         return array(
             array(' what ever '),
             array('2 + '),
@@ -278,13 +279,3 @@ class OperatorParserTest extends PHPUnit_Framework_TestCase {
     
 }
 
-/*
-class OperatorParserTest_OperatorParser extends OperatorParser
-{
-    function explodeExpression($expression, array $separators, array $options = [])
-    {
-        return ExpressionExploderTraitTest::mockExplodeExpression($expression, $options);
-    }
-}
- 
- */

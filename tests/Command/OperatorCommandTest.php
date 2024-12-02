@@ -5,19 +5,19 @@ use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\OperationCommand;
 use Mormat\FormulaInterpreter\Exception\UnsupportedOperandTypeException;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the execution of the operators
  *
  * @author mormat
  */
-class OperatorCommandTest extends PHPUnit_Framework_TestCase {
+class OperatorCommandTest extends TestCase {
     
-    /**
-     * @var ContextCommand
-     */
-    protected $commandContext;
+    protected CommandContext $commandContext;
     
-    public function setUp()
+    public function setUp(): void
     {
         $this->commandContext = new CommandContext();
     }
@@ -91,9 +91,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         
     }
     
-    /**
-     * @dataProvider getRunWithBinaryOperatorData
-     */
+    #[DataProvider('getRunWithBinaryOperatorData')]
     public function testRunWithBinaryOperator($operator, $leftValue, $rightValue, $expected) {
     
         // testing with integer
@@ -106,7 +104,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($command->run($this->commandContext), $expected);
     }
     
-    public function getRunWithBinaryOperatorData()
+    public static function getRunWithBinaryOperatorData()
     {
         return array(
             array('in', 2,     [1, 2, 3], true),
@@ -159,9 +157,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($command->run($this->commandContext), 14);
     }
     
-    /**
-     * @dataProvider getRunWithInvalidOperandsData
-     */
+    #[DataProvider('getRunWithInvalidOperandsData')]
     public function testRunWithInvalidOperands($firstValue, $secondValue, $operator)
     {
         $exception = UnsupportedOperandTypeException::class;
@@ -176,7 +172,7 @@ class OperatorCommandTest extends PHPUnit_Framework_TestCase {
         $command->run($this->commandContext);
     }
     
-    public function getRunWithInvalidOperandsData()
+    public static function getRunWithInvalidOperandsData()
     {
         return array(
             // additions

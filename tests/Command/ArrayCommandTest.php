@@ -4,26 +4,23 @@ use Mormat\FormulaInterpreter\Command\ArrayCommand;
 use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the execution of a array expression
  *
  * @author mormat
  */
-class ArrayCommandTest extends PHPUnit_Framework_TestCase {
+class ArrayCommandTest extends TestCase {
     
-    /**
-     * @var ContextCommand
-     */
-    protected $commandContext;
+    protected CommandContext $commandContext;
     
-    public function setUp()
-    {
+    protected function setUp(): void {
         $this->commandContext = new CommandContext();
     }
-    
-    /**
-     * @dataProvider getData
-     */
+
+    #[DataProvider('getData')]
     public function testRun($items, $result) {
         $mocker = [$this, 'createMockCommandReturningValue'];
         
@@ -34,7 +31,7 @@ class ArrayCommandTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($command->run($this->commandContext), $result);
     }
     
-    public function getData() {
+    public static function getData() {
         return array(
             array([1, 2], ['mocking 1', 'mocking 2']),
         );
