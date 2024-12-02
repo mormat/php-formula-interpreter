@@ -2,23 +2,24 @@
 
 use Mormat\FormulaInterpreter\Functions\CallableFunction;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests functions with single parameter
  *
  * @author mormat
  */
-class CallableFunctionTest extends PHPUnit_Framework_TestCase {
+class CallableFunctionTest extends TestCase {
 
-    /**
-     * @dataProvider getTestSupportsData
-     */
+    #[DataProvider('getTestSupportsData')]
     public function testSupports2($callable, $params, $supportedTypes = [])
     {
         $function = new CallableFunction($callable, $supportedTypes);
         $this->assertTrue($function->supports($params));
     }
     
-    public function getTestSupportsData() {
+    public static function getTestSupportsData() {
         return array(
             array('floor',  [2],        ['numeric']),
             array('floor',  [2.3],      ['numeric']),
@@ -28,16 +29,14 @@ class CallableFunctionTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    /**
-     * @dataProvider getSupportsWithInvalidParametersData
-     */
+    #[DataProvider('getSupportsWithInvalidParametersData')]
     public function testSupportsWithInvalidParameters($callable, $params, $supportedTypes)
     {
         $function = new CallableFunction($callable, $callable, $supportedTypes);
         $this->assertFalse($function->supports($params));
     }
     
-    public function getSupportsWithInvalidParametersData()
+    public static function getSupportsWithInvalidParametersData()
     {
         return array(
             
@@ -61,16 +60,14 @@ class CallableFunctionTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    /**
-     * @dataProvider getExecuteData
-     */
+    #[DataProvider('getExecuteData')]
     public function testExecute($callable, $params, $expectedResult)
     {
         $function = new CallableFunction($callable, $callable, $params);
         $this->assertEquals($function->execute($params), $expectedResult);
     }
     
-    public function getExecuteData() 
+    public static function getExecuteData() 
     {
         return array(
             array('floor', [2.3], 2)

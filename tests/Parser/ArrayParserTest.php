@@ -4,14 +4,19 @@ use Mormat\FormulaInterpreter\Parser\ArrayParser;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the parsing of arrays
  *
  * @author mormat
  */
-class ArrayParserTest extends PHPUnit_Framework_TestCase {
+class ArrayParserTest extends TestCase {
     
-    public function setUp() {
+    protected ArrayParser $parser;
+    
+    public function setUp(): void {
         
         $itemParser = $this->getMockBuilder(
             ParserInterface::class
@@ -25,15 +30,13 @@ class ArrayParserTest extends PHPUnit_Framework_TestCase {
         
     }
     
-    /**
-     * @dataProvider getParseIfExpressionisCorrectData
-     */
+    #[DataProvider('getParseIfExpressionisCorrectData')]
     public function testParseIfExpressionisCorrect($expression, $expected) {
         $expected['type'] = 'array';
         $this->assertEquals($this->parser->parse($expression), $expected);
     }
     
-    public function getParseIfExpressionisCorrectData() {
+    public static function getParseIfExpressionisCorrectData() {
         return array(
             array("[]",  array('value' => [])),
             array("[1]", array('value' => ['item = 1'])),
@@ -41,9 +44,7 @@ class ArrayParserTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    /**
-     * @dataProvider getParseIfExpressionisUncorrectData
-     */
+    #[DataProvider('getParseIfExpressionisUncorrectData')]
     public function testParseIfExpressionisUncorrect($expression) {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
@@ -52,7 +53,7 @@ class ArrayParserTest extends PHPUnit_Framework_TestCase {
         $this->parser->parse($expression);
     }
     
-    public function getParseIfExpressionisUncorrectData() {
+    public static function getParseIfExpressionisUncorrectData() {
         return array(
             array(""),
             array(" "),

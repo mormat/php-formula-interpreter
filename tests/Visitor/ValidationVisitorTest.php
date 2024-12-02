@@ -7,12 +7,12 @@ use \Mormat\FormulaInterpreter\Command\FunctionCommand;
 use \Mormat\FormulaInterpreter\Functions\FunctionInterface;
 use \Mormat\FormulaInterpreter\Visitor\ValidationVisitor;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
-class ValidationVisitorTest extends PHPUnit_Framework_TestCase {
+class ValidationVisitorTest extends TestCase {
     
-    /**
-     * @dataProvider getValidCommandsData
-     */
+    #[DataProvider('getValidCommandsData')]
     public function testAcceptWithValidCommands($command)
     {
         $validation = new ValidationVisitor(
@@ -23,7 +23,7 @@ class ValidationVisitorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals([], $validation->getErrors());        
     }
     
-    public function getValidCommandsData()
+    public static function getValidCommandsData()
     {
         return array(
             [new NumericCommand(10)],
@@ -33,9 +33,7 @@ class ValidationVisitorTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    /**
-     * @dataProvider getInvalidCommandsData
-     */
+    #[DataProvider('getInvalidCommandsData')]
     public function testAcceptWithInvalidCommands($command, $errors)
     {
         $validation = new ValidationVisitor();
@@ -43,7 +41,7 @@ class ValidationVisitorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($errors, $validation->getErrors());        
     }
     
-    public function getInvalidCommandsData()
+    public static function getInvalidCommandsData()
     {
         return array(
             [new VariableCommand('foo'), array(

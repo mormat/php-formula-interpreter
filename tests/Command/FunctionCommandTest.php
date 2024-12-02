@@ -3,21 +3,22 @@
 use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\FunctionCommand;
+use Mormat\FormulaInterpreter\Exception\InvalidParametersFunctionException;
+use Mormat\FormulaInterpreter\Exception\UnknownFunctionException;
 use Mormat\FormulaInterpreter\Functions\FunctionInterface;
+
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test execution of function
  *
  * @author mormat
  */
-class FunctionCommandTest extends PHPUnit_Framework_TestCase {
+class FunctionCommandTest extends TestCase {
 
-    /**
-     * @var ContextCommand
-     */
-    protected $commandContext;
+    protected CommandContext $commandContext;
     
-    public function setUp()
+    public function setUp(): void
     {    
         $this->commandContext = new CommandContext([], $this->getFunctions());
     }
@@ -78,30 +79,22 @@ class FunctionCommandTest extends PHPUnit_Framework_TestCase {
         
     }
     
-    /**
-     * @expectedException Mormat\FormulaInterpreter\Exception\InvalidParametersFunctionException
-     * @expectedExceptionMessage Invalid parameters provided to function 'invalid_params'
-     */
     public function testRunWithInvalidParameters() {
-        
+        $this->expectException(InvalidParametersFunctionException::class);
+        $this->expectExceptionMessage("Invalid parameters provided to function 'invalid_params'");
         $command = new FunctionCommand('invalid_params');  
         $command->run($this->commandContext);
     }
     
-    /**
-     * @expectedException \Mormat\FormulaInterpreter\Exception\UnknownFunctionException
-     * @expectedExceptionMessage Unknown function "cos"
-     */
     public function testRunWhenFunctionNotExists() {
-        
+        $this->expectException(UnknownFunctionException::class);
+        $this->expectExceptionMessage('Unknown function "cos"');
         $command = new FunctionCommand('cos', array());
         $command->run($this->commandContext);
     }
     
-    /**
-     * @expectedException \TypeError
-     */
     public function tesArgumentCommandsMustImplementCommandInterface() {
+        $this->expectException(\TypeError::class);
         new FunctionCommand('cos', array('some string'));  
     }
     

@@ -4,16 +4,12 @@ use \Mormat\FormulaInterpreter\Compiler;
 use \Mormat\FormulaInterpreter\Functions\CallableFunction;
 use \Mormat\FormulaInterpreter\Exception\UnknownFunctionException;
 
-/**
- * Tests the compiler
- *
- * @author mormat
- */
-class CompilerTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
+class CompilerTest extends TestCase {
     
-    /**
-     * @dataProvider getCompileAndRunData
-     */
+    #[DataProvider('getCompileAndRunData')]
     public function testCompileAndRun($expression, $result, $variables = []) {
         $compiler = new Compiler();
         $compiler->registerCustomFunction(
@@ -21,11 +17,11 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
         );
         
         $executable = $compiler->compile($expression);
-        $this->assertEquals($executable->run($variables), $result);
+        $this->assertEquals($result, $executable->run($variables));
 
     }
     
-    public function getCompileAndRunData() {
+    public static function getCompileAndRunData() {
         return array(
             
             array('3', 3),
@@ -42,10 +38,10 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
             array('pow(sqrt(pow(2, 2)), 2)', 4),
             array('get_integer_part(3.4)', 3, []),
             array('modulo(5, two)', 1, ['two' => 2]),
-            array('cos(1 * 2) + (3)', 2.5838531634529),
+            array('cos(1 * 2) + (3)', 2.5838531634528574),
             
             // Issue #4
-            array('(((100 * 0.43075) * 1.1 * 1.5) / (1-0.425)) * 1.105', 136.5852065217), 
+            array('(((100 * 0.43075) * 1.1 * 1.5) / (1-0.425)) * 1.105', 136.58520652173917), 
             array('1+(1+1)', 3),
             
             // handling strings
@@ -74,9 +70,7 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    /**
-     * @dataProvider getCompileInvalidExpressionData
-     */
+    #[DataProvider('getCompileInvalidExpressionData')]
     public function testCompileInvalidExpressions($expression, $expectedException)
     {
         $this->expectException($expectedException);
@@ -86,7 +80,7 @@ class CompilerTest extends PHPUnit_Framework_TestCase {
         $executable->run();
     }
     
-    function getCompileInvalidExpressionData() 
+    static function getCompileInvalidExpressionData() 
     {
         return array(
             array('get_integer_part(2)', UnknownFunctionException::class),

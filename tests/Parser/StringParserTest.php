@@ -3,35 +3,36 @@
 use Mormat\FormulaInterpreter\Parser\StringParser;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the parsing of strings
  *
  * @author mormat
  */
-class StringParserTest extends PHPUnit_Framework_TestCase {
+class StringParserTest extends TestCase {
     
-    public function setUp() {
+    protected StringParser $parser;
+    
+    public function setUp(): void {
         $this->parser = new StringParser();
     }
     
-    /**
-     * @dataProvider getStringValues
-     */
+    #[DataProvider('getStringValues')]
     public function testParseString($expression, $infos) {
         $infos['type'] = 'string';
         $this->assertEquals($this->parser->parse($expression), $infos);
     }
     
-    public function getStringValues() {
+    public static function getStringValues() {
         return array(
             array("'foo'",     array('value' => 'foo')),
             array("'bar'",     array('value' => 'bar')),
         );
     }
     
-    /**
-     * @dataProvider getUncorrectExpressionData
-     */
+    #[DataProvider('getUncorrectExpressionData')]
     public function testParseUncorrectExpression($expression) {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
@@ -40,7 +41,7 @@ class StringParserTest extends PHPUnit_Framework_TestCase {
         $this->parser->parse($expression);
     }
     
-    public function getUncorrectExpressionData() {
+    public static function getUncorrectExpressionData() {
         return array(
             array("2"),
             array("foo"),

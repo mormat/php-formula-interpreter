@@ -5,27 +5,27 @@ use Mormat\FormulaInterpreter\Parser\ExpressionExploderTrait;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
- * Tests the spliting of expressions
+ * Tests the splitting of expressions
  *
  * @author mormat
  */
-class ExpressionExploderTraitTest extends PHPUnit_Framework_TestCase {
+class ExpressionExploderTraitTest extends TestCase {
     
     /**
      * @var ExpressionExploderTrait
      */
     protected $expressionExploder;
     
-    public function setUp()
+    public function setUp(): void
     {
         $this->expressionExploder = new ExpressionExploderTraitTest_ExpressionExploderUser();
     }
     
-    /**
-     * @dataProvider getExplodeExpressionWithCommaAsSeparatorData
-     */
+    #[DataProvider('getExplodeExpressionWithCommaAsSeparatorData')]
     public function testExplodeExpressionWithCommaAsSeparator($expression, $expected) {
         $actual = $this->expressionExploder->explodeExpression($expression, [',']);
         $this->assertEquals(
@@ -35,7 +35,7 @@ class ExpressionExploderTraitTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    public function getExplodeExpressionWithCommaAsSeparatorData() {
+    public static function getExplodeExpressionWithCommaAsSeparatorData() {
         return array(
             
             array(
@@ -77,9 +77,7 @@ class ExpressionExploderTraitTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    /**
-     * @dataProvider getExplodeExpressionWithOperatorsAsSeparatorData
-     */
+    #[DataProvider('getExplodeExpressionWithOperatorsAsSeparatorData')]
     public function testExplodeExpressionWithOperatorsAsSeparator($expression, $expected) {
         $operators = ['+', '-', '/', '*', 'in', 'or'];
         $actual = $this->expressionExploder->explodeExpression($expression, $operators);
@@ -90,7 +88,7 @@ class ExpressionExploderTraitTest extends PHPUnit_Framework_TestCase {
         );
     }
     
-    public function getExplodeExpressionWithOperatorsAsSeparatorData() {
+    public static function getExplodeExpressionWithOperatorsAsSeparatorData() {
         return array(
             
             array(
@@ -170,6 +168,7 @@ class ExpressionExploderTraitTest extends PHPUnit_Framework_TestCase {
     
 }
 
+// @todo use anonymous class ?
 class ExpressionExploderTraitTest_ExpressionExploderUser {
     use ExpressionExploderTrait;
 }

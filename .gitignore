@@ -1,8 +1,9 @@
+#  hidden files
+.*
+
 # composer
 composer.lock
 
 # symfony
 /vendor
 
-# misc
-/nbproject

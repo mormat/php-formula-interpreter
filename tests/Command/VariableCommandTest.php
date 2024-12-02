@@ -2,17 +2,19 @@
 
 use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\VariableCommand;
+use Mormat\FormulaInterpreter\Exception\UnknownVariableException;
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Test the command to execute of a variable
  *
  * @author mormat
  */
-class VariableCommandTest extends PHPUnit_Framework_TestCase {
+class VariableCommandTest extends TestCase {
     
-    /**
-     * @dataProvider getData
-     */
+    #[DataProvider('getData')]
     public function testRunWhenVariablesExists($name, $variables, $result) {
         $command = new VariableCommand($name);
         
@@ -21,32 +23,28 @@ class VariableCommandTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($command->run($context), $result);
     }
     
-    public function getData() {
+    public static function getData() {
         return array(
             array('rate', array('rate' => 2), 2),
             array('price', array('price' => 32.2), 32.2),
         );
     }
     
-    /**
-     * @expectedException \Mormat\FormulaInterpreter\Exception\UnknownVariableException
-     */
     public function testRunWhenVariableNotExists() {
+        $this->expectException(UnknownVariableException::class);
         $context = new CommandContext([]);
         
         $command = new VariableCommand('rate', array());
         $command->run($context);
     }
     
-    /**
-     * @expectedException \InvalidArgumentException
-     * @dataProvider getIncorrectNames
-     */
+    #[DataProvider('getIncorrectNames')]
     public function testInjectIncorrectName($name) {
+        $this->expectException(InvalidArgumentException::class);
         $command = new VariableCommand($name, array());
     }
     
-    public function getIncorrectNames() {
+    public static function getIncorrectNames() {
         return array(
             array(12),
             array(False),

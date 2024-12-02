@@ -5,20 +5,19 @@ use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\CommandFactory\ArrayCommandFactory;
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Tests the creation of ArrayCommand
  *
  * @author mormat
  */
-class ArrayCommandFactoryTest extends PHPUnit_Framework_TestCase {
+class ArrayCommandFactoryTest extends TestCase {
     
-    public function setUp() {
+    protected CommandFactoryInterface $itemCommandFactoryMock;
+    
+    public function setUp(): void {
         
-        /* 
-        $this->itemCommandMock = $this->getMockBuilder(
-            CommandInterface::class
-        )->getMock();
-        */
         $this->itemCommandFactoryMock = $this->getMockBuilder(
             CommandFactoryInterface::class
         )->getMock();
