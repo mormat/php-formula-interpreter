@@ -131,7 +131,7 @@ class OperatorParser implements ParserInterface {
         
         if ($value != '') {
             if ($value[0] == '(' && substr($value, -1, 1) == ')') {
-                $value = substr($value, 1, -1);
+                // $value = substr($value, 1, -1);
                 $value = trim($value);
             }
         }

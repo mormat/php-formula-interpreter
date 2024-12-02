@@ -13,7 +13,14 @@ class CompilerTest extends TestCase {
     public function testCompileAndRun($expression, $result, $variables = []) {
         $compiler = new Compiler();
         $compiler->registerCustomFunction(
-            new CallableFunction('get_integer_part', 'floor', ['numeric'])
+            new CallableFunction('get_integer_part', 'floor', ['numeric']),
+        );
+        $compiler->registerCustomFunction(
+            new CallableFunction(
+                'equal', 
+                fn($a,$b) => intval($a == $b), 
+                ['numeric', 'numeric']
+            )
         );
         
         $executable = $compiler->compile($expression);
@@ -67,6 +74,11 @@ class CompilerTest extends TestCase {
             array('1 = 1', true),
             array('1 <= 2', true),
             array('2 <= 1', false),
+            
+            // issue #16
+            ['150+(b*150)*(1+0.05)', 307.5, ['b' => 1]],
+            ['(equal(b,1)*150+equal(c,1)) * ( 1-0.05)', 143.45, ['b' => 1, 'c' => 1]],
+            
         );
     }
     

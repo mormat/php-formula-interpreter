@@ -31,13 +31,14 @@ class Compiler {
         /**
          * The most complex parsers should be on top
          */
-        $this->parser = new Parser\CompositeParser();
-        $this->parser->addParser(new Parser\OperatorParser($this->parser));
-        $this->parser->addParser(new Parser\FunctionParser($this->parser));
-        $this->parser->addParser(new Parser\ArrayParser($this->parser));
-        $this->parser->addParser(new Parser\VariableParser());
-        $this->parser->addParser(new Parser\StringParser());
-        $this->parser->addParser(new Parser\NumericParser());
+        $parser = new Parser\CompositeParser();
+        $this->parser = new Parser\ExpressionCleanerDecorator($parser);
+        $parser->addParser(new Parser\OperatorParser($this->parser));
+        $parser->addParser(new Parser\FunctionParser($this->parser));
+        $parser->addParser(new Parser\ArrayParser($this->parser));
+        $parser->addParser(new Parser\VariableParser());
+        $parser->addParser(new Parser\StringParser());
+        $parser->addParser(new Parser\NumericParser());
         
         
         $this->commandFactory = new Command\CommandFactory();
@@ -123,7 +124,7 @@ class Compiler {
        $availableOperators = [];
        $supportedTypes = Command\OperationCommand::getSupportedTypes();
         
-       foreach ($this->parser->getParsers() as $parser) {
+       foreach ($this->parser->getBase()->getParsers() as $parser) {
            if ($parser instanceof Parser\OperatorParser) {
                $operators = $parser->getOperators();
                foreach ($operators as $key => $name) {
