@@ -78,7 +78,18 @@ class CompilerTest extends TestCase {
             // issue #16
             ['150+(b*150)*(1+0.05)', 307.5, ['b' => 1]],
             ['(equal(b,1)*150+equal(c,1)) * ( 1-0.05)', 143.45, ['b' => 1, 'c' => 1]],
+            ['(a=1)*150', 150, ['a' => 1]],
+            ['(a=0)*150', 150, ['a' => 0]],
             
+            // allow booleans in *,+,- and / operators #20
+            ['(0=1) + 2', 2],
+            ['2 + (1=1)', 3],
+            ['(0=1) - 2', -2],
+            ['2 - (1=1)', 1],
+            ['(0=1) * 2', 0],
+            ['2 * (1=1)', 2],
+            ['(0=1) / 2', 0],
+            ['2 / (1=1)', 2]
         );
     }
     
@@ -111,19 +122,19 @@ class CompilerTest extends TestCase {
             array(
                 '+'  => [
                     'name' => 'add',
-                    'supportedTypes' => ['numeric', 'numeric'],
+                    'supportedTypes' => ['bool|numeric', 'bool|numeric'],
                 ],
                 '-'  => [
                     'name' => 'subtract',
-                    'supportedTypes' => ['numeric', 'numeric'],
+                    'supportedTypes' => ['bool|numeric', 'bool|numeric'],
                 ],
                 '*'  => [
                     'name' => 'multiply',
-                    'supportedTypes' => ['numeric', 'numeric'],
+                    'supportedTypes' => ['bool|numeric', 'bool|numeric'],
                 ],
                 '/'  => [
                     'name' => 'divide',
-                    'supportedTypes' => ['numeric', 'numeric'],
+                    'supportedTypes' => ['bool|numeric', 'bool|numeric'],
                 ],
                 '<'  => [
                     'name' => 'lower',

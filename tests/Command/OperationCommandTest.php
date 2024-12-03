@@ -107,6 +107,17 @@ class OperationCommandTest extends TestCase {
             array( 'c','>=', 'b', true),
             array( 'b','>=', 'b', true),
             array( 'a','>=', 'b', false),
+            
+            // using boolean in +,-,*,/
+            [false, '+', 2,     2],
+            [2,     '+', true,  3],
+            [false, '-', 2,     -2],
+            [2,     '-', true,  1],
+            [false, '*', 2,     0],
+            [2,     '*', true,  2],
+            [false, '/', 2,     0],
+            [2,     '/', true,  2],
+            
         );
     }
     

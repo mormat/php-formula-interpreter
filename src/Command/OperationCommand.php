@@ -7,10 +7,10 @@ use \Mormat\FormulaInterpreter\Exception\UnsupportedOperandTypeException;
 class OperationCommand implements CommandInterface {
 
     protected static $supportedTypes = array(
-        '+' => ['numeric', 'numeric'],
-        '-' => ['numeric', 'numeric'],
-        '*' => ['numeric', 'numeric'],
-        '/' => ['numeric', 'numeric'],
+        '+' => ['bool|numeric', 'bool|numeric'],
+        '-' => ['bool|numeric', 'bool|numeric'],
+        '*' => ['bool|numeric', 'bool|numeric'],
+        '/' => ['bool|numeric', 'bool|numeric'],
         'in' => ['numeric|string', 'array|string'],
         '<'  => ['numeric|string', 'numeric|string'],
         '>'  => ['numeric|string', 'numeric|string'],
@@ -20,6 +20,7 @@ class OperationCommand implements CommandInterface {
     );
     
     protected static $validatorTypes = array(
+        'bool'    => 'is_bool',
         'numeric' => 'is_numeric',
         'array'   => 'is_array',
         'string'  => 'is_string'
