@@ -4,11 +4,6 @@ namespace Mormat\FormulaInterpreter;
 
 use Mormat\FormulaInterpreter\Exception\CustomFunctionNotCallableException;
 
-/**
- * Description of Compiler
- *
- * @author mormat
- */
 class Compiler {
     
     /**
@@ -28,18 +23,15 @@ class Compiler {
     
     function __construct() {
         
-        /**
-         * The most complex parsers should be on top
-         */
-        $parser = new Parser\CompositeParser();
-        $this->parser = new Parser\ExpressionCleanerDecorator($parser);
-        $parser->addParser(new Parser\OperatorParser($this->parser));
-        $parser->addParser(new Parser\FunctionParser($this->parser));
-        $parser->addParser(new Parser\ArrayParser($this->parser));
-        $parser->addParser(new Parser\VariableParser());
-        $parser->addParser(new Parser\StringParser());
-        $parser->addParser(new Parser\NumericParser());
-        
+        $this->parser = new Parser\CompositeParser();
+        $this->parser->addParser(new Parser\LeadingWhitespaceParser($this->parser));
+        $this->parser->addParser(new Parser\WrappingParenthesisParser($this->parser));
+        $this->parser->addParser(new Parser\OperationParser($this->parser));
+        $this->parser->addParser(new Parser\FunctionParser($this->parser));
+        $this->parser->addParser(new Parser\ArrayParser($this->parser));
+        $this->parser->addParser(new Parser\VariableParser());
+        $this->parser->addParser(new Parser\StringParser());
+        $this->parser->addParser(new Parser\NumericParser());
         
         $this->commandFactory = new Command\CommandFactory();
         $this->commandFactory->registerFactory('numeric', new Command\CommandFactory\NumericCommandFactory());
@@ -47,7 +39,6 @@ class Compiler {
         $this->commandFactory->registerFactory('variable', new Command\CommandFactory\VariableCommandFactory());
         $this->commandFactory->registerFactory('array', new Command\CommandFactory\ArrayCommandFactory($this->commandFactory));
         $this->commandFactory->registerFactory('operation', new Command\CommandFactory\OperationCommandFactory($this->commandFactory));
-        // $this->commandFactory->registerFactory('array', new Command\CommandFactory\C)
         
         $functionCommandFactory = new Command\CommandFactory\FunctionCommandFactory($this->commandFactory);
         $this->commandFactory->registerFactory('function', $functionCommandFactory);
@@ -121,22 +112,29 @@ class Compiler {
      */
     public function getAvailableOperators()
     {
-       $availableOperators = [];
-       $supportedTypes = Command\OperationCommand::getSupportedTypes();
-        
-       foreach ($this->parser->getBase()->getParsers() as $parser) {
-           if ($parser instanceof Parser\OperatorParser) {
-               $operators = $parser->getOperators();
-               foreach ($operators as $key => $name) {
-                   $availableOperators[$key] = [
-                       'name' => $name,
-                       'supportedTypes' => isset($supportedTypes[$name]) ? $supportedTypes[$name]: null
-                   ];
-               }
-           }
-       } 
+        $operators = [
+            '+' => 'add',
+            '-'  => 'subtract',
+            '*'  => 'multiply',
+            '/'  => 'divide',
+            '<'  => 'lower',
+            '>'  => 'greater',
+            '='  => 'equal',
+            "<=" => 'lower_or_equal',
+            ">=" => 'greater_or_equal',
+            "in" => 'in'
+        ];
        
-       return $availableOperators;
+        $results = [];
+        $supportedTypes = Command\OperationCommand::getSupportedTypes();
+        foreach ($operators as $operator => $name) {
+            $results[$operator] = [
+                'name' => $name,
+                'supportedTypes' => $supportedTypes[$operator]
+            ];
+        };
+        return $results;
+        
     }
     
     /**
