@@ -22,6 +22,9 @@ class CompilerTest extends TestCase {
                 ['numeric', 'numeric']
             )
         );
+        $compiler->registerCustomFunction(
+            new CallableFunction('invoicer', fn($n)=>$n, ['numeric']),
+        );
         
         $executable = $compiler->compile($expression);
         $this->assertEquals($result, $executable->run($variables));
@@ -89,7 +92,11 @@ class CompilerTest extends TestCase {
             ['(0=1) * 2', 0],
             ['2 * (1=1)', 2],
             ['(0=1) / 2', 0],
-            ['2 / (1=1)', 2]
+            ['2 / (1=1)', 2],
+            
+            // issue #20
+            ['2 + invoicer(2)', 4],
+            ['(1 + invoicer(2)) in [3]', true],
         );
     }
     #[DataProvider('dataCompileAndRunWithComplexFormula')]

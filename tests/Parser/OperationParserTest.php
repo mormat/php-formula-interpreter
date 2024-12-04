@@ -72,13 +72,16 @@ class OperationParserTest extends TestCase {
             ['(1-2)/3', '(1-2)', '/', '3'],
             
             // 'in' operator
-            ['1 in [1, 2]', '1', 'in', '[1, 2]'],
+            ['1 in [1, 2]', '1 ', 'in', ' [1, 2]'],
             ['[1]in[2]', '[1]', 'in', '[2]'],
             ['(1)in(2)', '(1)', 'in', '(2)'],
             
             // priority for 'in' operator
-            ['1+2 in [3,4]', '1+2', 'in', '[3,4]'],
-            ['2*2 in [4,5]', '2*2', 'in', '[4,5]'],
+            ['1+2 in [3,4]', '1+2 ', 'in', ' [3,4]'],
+            ['2*2 in [4,5]', '2*2 ', 'in', ' [4,5]'],
+            ['2 + invoicer(2) in [4]', '2 + invoicer(2) ', 'in', ' [4]'],
+            ['invoicer(2) + 2', 'invoicer(2) ', '+', ' 2'],
+            ['2 + is_admin', '2 ', '+', ' is_admin'],
             
             // 'lower than' operator
             ['2<3', '2', '<', '3'],

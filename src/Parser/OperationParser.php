@@ -56,32 +56,29 @@ class OperationParser implements ParserInterface {
         
     }
     
+    
+    
     protected function extractOperands($expression, $operator) {
             
-        $pos   = $this->findOperatorPosition($expression, $operator);
-        if (!$pos) {
-            return null;
-        }
-        
-        $left  = substr($expression, 0, $pos);
-        $right = substr($expression, $pos + strlen($operator));
-        
-        if ($operator === self::IN_OPERATOR) {
-            if (!in_array($right[0], ['[', ' ', '('])) {
-                return null;
+        $positions = $this->findOperatorPositions($expression, $operator);
+        foreach ($positions as $position) {
+                        
+            $left  = substr($expression, 0, $position);
+            $right = substr($expression, $position + strlen($operator));
+
+            if (!$this->areOperandsValid($operator, $left, $right)) {
+                continue;
             }
-            if (!in_array($left[-1], [']', ' ', ')'])) {
-                return null;
-            }
-            $left  = trim($left);
-            $right = trim($right);
-        }
-        
-        return [$left, $right];
             
+            return [$left, $right];
+            
+        }
+        
+        return null;
+        
     }
-      
-    protected function findOperatorPosition($expression, $operator) {
+          
+    protected function findOperatorPositions($expression, $operator) {
         
         $chars = str_split($expression);
         $openedParenthesis = 0;
@@ -101,11 +98,26 @@ class OperationParser implements ParserInterface {
                         
             $substr = substr($expression, $pos, strlen($operator));
             if ($substr === $operator) {
-                return $pos;
+                yield $pos;
             }
         }
         
-        return null;
+    }
+    
+    protected function areOperandsValid($operator, $left, $right): bool {
+        
+        if ($operator === self::IN_OPERATOR) {
+            $characterBefore = $right[0] ?? '';
+            if (!in_array($characterBefore, ['[', ' ', '('])) {
+                return false;
+            }
+            $characterAfter = $left[-1] ?? '';
+            if (!in_array($characterAfter, [']', ' ', ')'])) {
+                return false;
+            }
+        }
+        
+        return true;
         
     }
     
