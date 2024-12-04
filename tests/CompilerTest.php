@@ -92,6 +92,55 @@ class CompilerTest extends TestCase {
             ['2 / (1=1)', 2]
         );
     }
+    #[DataProvider('dataCompileAndRunWithComplexFormula')]
+    public function testCompileAndRunWithComplexFormula(
+        $otherVars,
+        $expectedResult
+    ) {
+        
+        $vars = $otherVars + [
+            'm' => 0, 'n' => 0, 'b' => 0, 'c' => 0,
+            'd' => 0, 'f' => 0, 'g' => 0, 'h' => 0,
+            'i' => 0, 'j' => 0, 'k' => 0, 'l' => 0,
+        ];
+        
+        $compiler = new Compiler();
+        $compiler->registerCustomFunction(
+            new CallableFunction(
+                'greater', 
+                fn($a,$b) => $a > $b, 
+                ['numeric', 'numeric']
+            )
+        );
+        $compiler->registerCustomFunction(
+            new CallableFunction(
+                'equal', 
+                fn($a,$b) => $a == $b, 
+                ['numeric', 'numeric']
+            )
+        );
+        
+        $executable = $compiler->compile(
+            <<<EOT
+            150+100*greater(m+n,5)+(equal(b,1)*150+equal(c,1)*150+
+            equal(d,1)*150+equal(f,1)*150+equal(g,1)*100+equal(h,1)*50+
+            equal(i,1)*50+equal(j,1)*150+equal(k,1)*50+equal(l,1)*50)
+            EOT
+        );
+        $this->assertEquals(
+            $expectedResult, 
+            $executable->run($vars)
+        );
+        
+    }
+    
+    public static function dataCompileAndRunWithComplexFormula() {
+        return array(
+            [ [], 150 ],
+            [ ['d' => 1], 300],
+            [ ['i' => 1], 200]
+        );
+    }
     
     #[DataProvider('getCompileInvalidExpressionData')]
     public function testCompileInvalidExpressions($expression, $expectedException)
