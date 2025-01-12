@@ -60,12 +60,10 @@ your_function_here(2)
 // use the `in` operator to check if a substring is in a string
 'Wars' in 'Star Wars'
 
-// `and` operator
+// Logical operators (`and`, `or`, `not`)
 1 < x and x < 10
-
-// `or` operator
 1 < x or x < 10
-
+not x > 0
 ```
 
 ## Supported types in formulas

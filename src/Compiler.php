@@ -26,6 +26,7 @@ class Compiler {
         $this->parser = new Parser\CompositeParser();
         $this->parser->addParser(new Parser\LeadingWhitespaceParser($this->parser));
         $this->parser->addParser(new Parser\WrappingParenthesisParser($this->parser));
+        $this->parser->addParser(new Parser\UnaryOperatorParser($this->parser));
         $this->parser->addParser(new Parser\OperationParser($this->parser));
         $this->parser->addParser(new Parser\FunctionParser($this->parser));
         $this->parser->addParser(new Parser\ArrayParser($this->parser));
@@ -41,6 +42,7 @@ class Compiler {
         $this->commandFactory->registerFactory('boolean', new Command\CommandFactory\BooleanCommandFactory());
         $this->commandFactory->registerFactory('variable', new Command\CommandFactory\VariableCommandFactory());
         $this->commandFactory->registerFactory('array', new Command\CommandFactory\ArrayCommandFactory($this->commandFactory));
+        $this->commandFactory->registerFactory('unary_operator', new Command\CommandFactory\UnaryOperatorCommandFactory($this->commandFactory));
         $this->commandFactory->registerFactory('operation', new Command\CommandFactory\OperationCommandFactory($this->commandFactory));
         
         $functionCommandFactory = new Command\CommandFactory\FunctionCommandFactory($this->commandFactory);

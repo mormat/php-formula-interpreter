@@ -108,6 +108,13 @@ class CompilerTest extends TestCase {
             ['1 < x or x < 10',  true,  ['x' => 5]],
             ['1 or 0', true],
             ['0 or 0', false],
+            
+            // `not` operator
+            ['not true', false],
+            ['not 0', true],
+            
+            // mixing logical operators
+            ["1 > 0 and not 'baz' in 'foobar'", true]
         );
     }
     #[DataProvider('dataCompileAndRunWithComplexFormula')]
