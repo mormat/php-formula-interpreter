@@ -118,6 +118,17 @@ class OperationCommandTest extends TestCase {
             [false, '/', 2,     0],
             [2,     '/', true,  2],
             
+            // `and` operator
+            [true,  'and', true,  true],
+            [false, 'and', true,  false],
+            [true,  'and', false, false],
+            [false,  'and', false, false],
+     
+            // `or` operator
+            [true,   'or', true,  true],
+            [false,  'or', true,  true],
+            [true,   'or', false, true],
+            [false,  'or', false, false],
         );
     }
     

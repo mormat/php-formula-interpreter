@@ -97,6 +97,17 @@ class CompilerTest extends TestCase {
             // issue #20
             ['2 + invoicer(2)', 4],
             ['(1 + invoicer(2)) in [3]', true],
+            
+            // `and` operator
+            ['1 < x and x < 10',  true,  ['x' => 5]],
+            ['1 < x and x < 10',  false, ['x' => 11]],
+            ['1 and 1', true],
+            ['0 and 0', false],
+            
+            // `or` operator
+            ['1 < x or x < 10',  true,  ['x' => 5]],
+            ['1 or 0', true],
+            ['0 or 0', false],
         );
     }
     #[DataProvider('dataCompileAndRunWithComplexFormula')]

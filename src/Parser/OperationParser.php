@@ -9,6 +9,8 @@ class OperationParser implements ParserInterface {
     const MULTIPLY_OPERATOR = '*';
     const DIVIDE_OPERATOR = '/';
     const IN_OPERATOR = 'in';
+    const AND_OPERATOR = 'and';
+    const OR_OPERATOR = 'or';
     const LOWER_THAN_OPERATOR = '<';
     const GREATER_THAN_OPERATOR = '>';
     const EQUAL_OPERATOR = '=';
@@ -23,6 +25,8 @@ class OperationParser implements ParserInterface {
     public function parse($expression): array {
         
         $orderedOperators = [
+            self::AND_OPERATOR,
+            self::OR_OPERATOR,
             self::LOWER_OR_EQUAL_OPERATOR,
             self::LOWER_THAN_OPERATOR, 
             self::GREATER_OR_EQUAL_OPERATOR,
@@ -33,7 +37,6 @@ class OperationParser implements ParserInterface {
             self::SUBSTRACT_OPERATOR, 
             self::MULTIPLY_OPERATOR, 
             self::DIVIDE_OPERATOR,
-            
         ];
         
         foreach ($orderedOperators as $operator) {
@@ -106,7 +109,12 @@ class OperationParser implements ParserInterface {
     
     protected function areOperandsValid($operator, $left, $right): bool {
         
-        if ($operator === self::IN_OPERATOR) {
+        $complexOperators = [
+            self::IN_OPERATOR, 
+            self::AND_OPERATOR, 
+            self::OR_OPERATOR
+        ];
+        if (in_array($operator, $complexOperators)) {
             $characterBefore = $right[0] ?? '';
             if (!in_array($characterBefore, ['[', ' ', '('])) {
                 return false;

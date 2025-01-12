@@ -48,7 +48,7 @@ class OperationParserTest extends TestCase {
     }
     
     public static function dataParseWithValidExpression() {
-        return array(
+        $data = array(
             
             ['2+2', '2', '+', '2'],
             ['3+2', '3', '+', '2'],
@@ -112,8 +112,37 @@ class OperationParserTest extends TestCase {
             [ "'(2'='3)'", "'(2'", "=", "'3)'"],
             
             // ignore operators in array
-            [ '2*[1 + 1]', '2', '*', '[1 + 1]']
+            [ '2*[1 + 1]', '2', '*', '[1 + 1]'],
+            
         );
+        
+        // logical operators ('and', or')
+        foreach (['and', 'or'] as $op) {
+            $data = [...$data, 
+                ["true $op true", 'true ', $op, ' true'],
+                ["a = 1 $op true", 'a = 1 ', $op, ' true'],
+                
+                // operator priority
+                ["a = 1 $op true", 'a = 1 ', $op, ' true'],
+                ["a < 1 $op true", 'a < 1 ', $op, ' true'],
+                ["a > 1 $op true", 'a > 1 ', $op, ' true'],
+                ["a >= 1 $op true", 'a >= 1 ', $op, ' true'],
+                ["a <= 1 $op true", 'a <= 1 ', $op, ' true'],
+                
+                // variables containing the operator should still be considered as variable
+                ["bar${op}baz + 2", "bar${op}baz ", '+', ' 2'],
+                ["bar${op}baz()+ 2", "bar${op}baz()", '+', ' 2'],
+                
+                // handling parenthesis and brackets
+                ["(foo)${op}[bar]", '(foo)', $op, '[bar]'],
+                ["(foo $op bar)${op}[baz]", "(foo $op bar)", $op, '[baz]'],
+                ["[bar]${op}(foo)", '[bar]', $op, '(foo)'],
+                ["[bar $op foo]${op}(baz)", "[bar $op foo]", $op, '(baz)'],
+            ];
+            
+        }
+        
+        return $data;
     }
     
     #[DataProvider('dataParseWithInvalidExpression')]

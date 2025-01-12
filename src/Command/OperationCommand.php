@@ -17,6 +17,8 @@ class OperationCommand implements CommandInterface {
         '='  => ['numeric|string', 'numeric|string'],
         '<='  => ['numeric|string', 'numeric|string'],
         '>=' => ['numeric|string', 'numeric|string'],    
+        'and' => ['bool|numeric', 'bool|numeric'],
+        'or'  => ['bool|numeric', 'bool|numeric'],
     );
     
     protected static $validatorTypes = array(
@@ -65,6 +67,10 @@ class OperationCommand implements CommandInterface {
                     return str_contains($right, $left);
                 }
                 return in_array($left, $right);
+            case 'and':
+                return $left && $right;
+            case 'or':
+                return $left || $right;
         }
     }
 

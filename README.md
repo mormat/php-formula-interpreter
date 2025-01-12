@@ -9,7 +9,7 @@ A stand-alone php library for parsing and running formulas
 composer require mormat/php-formula-interpreter
 ```
 
-## How does it work ?
+## Usage
 
 First, create an instance of `\Mormat\FormulaInterpreter\Compiler`
 
@@ -54,11 +54,17 @@ count([2, 3, 4])
 // custom functions can be registered
 your_function_here(2) 
 
-// use the in operator to check if an item is in array
+// use the `in` operator to check if an item is in array
 1 in [1, 2, 3]  // returns true
 
-// use the in operator to check if a substring is in a string
+// use the `in` operator to check if a substring is in a string
 'Wars' in 'Star Wars'
+
+// `and` operator
+1 < x and x < 10
+
+// `or` operator
+1 < x or x < 10
 
 ```
 
