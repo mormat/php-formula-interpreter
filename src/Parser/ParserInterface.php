@@ -2,15 +2,11 @@
 
 namespace Mormat\FormulaInterpreter\Parser;
 
-/**
- * @author mormat
- */
-interface ParserInterface {
-    
+interface ParserInterface
+{
     /**
-     * @param  string $expression
+     * @param string $expression @todo set type 'string' instead
      * @return array
      */
-    function parse($expression);
-    
+    public function parse($expression);
 }

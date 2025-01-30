@@ -2,14 +2,15 @@
 
 namespace Mormat\FormulaInterpreter\Parser;
 
-class LeadingWhitespaceParser implements ParserInterface {
-
+class LeadingWhitespaceParser implements ParserInterface
+{
     public function __construct(
         protected ParserInterface $childParser
-    ) { }
+    ) {
+    }
 
-    public function parse($expression) {
-        
+    public function parse($expression)
+    {
         if ($expression !== '') {
             if ($expression[0] === ' ' || $expression[-1] === ' ') {
                 return $this->childParser->parse(trim($expression));
@@ -17,7 +18,5 @@ class LeadingWhitespaceParser implements ParserInterface {
         }
         
         throw new ParserException($expression);
-        
     }
-    
 }

@@ -9,17 +9,15 @@ use Mormat\FormulaInterpreter\Exception as BaseException;
  *
  * @author mormat
  */
-class InvalidParametersFunctionException extends BaseException {
-    
-    function __construct($functionName) {
-        
+class InvalidParametersFunctionException extends BaseException
+{
+    public function __construct($functionName)
+    {
         $message = sprintf(
             'Invalid parameters supplied for function "%s"',
-            $functionName    
+            $functionName
         );
         
         parent::__construct($message);
     }
-    
 }
-

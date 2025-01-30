@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Parser\FunctionParser;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
@@ -9,14 +11,14 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the parsing of functions
- *
- * @author mormat
  */
-class FunctionParserTest extends TestCase {
+class FunctionParserTest extends TestCase
+{
     
     protected FunctionParser $parser;
     
-    public function setUp(): void {
+    public function setUp(): void
+    {
         $argumentParser = $this->getMockBuilder(
             ParserInterface::class
         )->getMock();
@@ -24,19 +26,19 @@ class FunctionParserTest extends TestCase {
             ->expects($this->any())
             ->method('parse')
             ->will($this->returnCallback(array($this, 'mockArgumentParser')));
-        $this->parser = new FunctionParserTest_FunctionParser($argumentParser);
-        
+        $this->parser = $this->createFunctionParser($argumentParser);
     }
     
     #[DataProvider('getCorrectExpressions')]
-    public function testParseWithCorrecrExpression($expression, $infos) {
-        
+    public function testParseWithCorrecrExpression($expression, $infos)
+    {
         $infos['type'] = 'function';
         
         $this->assertEquals($this->parser->parse($expression), $infos);
     }
     
-    public static function getCorrectExpressions() {
+    public static function getCorrectExpressions()
+    {
         return array(
             array('pi()', array('name' => 'pi')),
             array(' pi( ) ', array('name' => 'pi')),
@@ -50,7 +52,8 @@ class FunctionParserTest extends TestCase {
     }
     
     #[DataProvider('getUncorrectExpressions')]
-    public function testParseUncorrectExpression($expression) {
+    public function testParseUncorrectExpression($expression)
+    {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
             sprintf('Failed to parse expression %s', $expression)
@@ -58,7 +61,8 @@ class FunctionParserTest extends TestCase {
         $this->parser->parse($expression);
     }
     
-    public static function getUncorrectExpressions() {
+    public static function getUncorrectExpressions()
+    {
         return array(
             array(' what ever '),
             array(' what_ever( '),
@@ -66,15 +70,27 @@ class FunctionParserTest extends TestCase {
         );
     }
     
-    public function mockArgumentParser($expression) {
+    public function mockArgumentParser($expression)
+    {
         return 'arg ' . $expression;
     }
-}
-
-class FunctionParserTest_FunctionParser extends FunctionParser
-{
-    function explodeExpression($expression, array $separators, array $options = [])
+    
+    public function createFunctionParser(...$args)
     {
-        return ExpressionExploderTraitTest::mockExplodeExpression($expression, $separators, $options);
+        
+        return new class(...$args) extends FunctionParser
+        {
+            public function explodeExpression(
+                $expression,
+                array $separators,
+                array $options = []
+            ) {
+                return ExpressionExploderTraitTest::mockExplodeExpression(
+                    $expression,
+                    $separators,
+                    $options
+                );
+            }
+        };
     }
 }

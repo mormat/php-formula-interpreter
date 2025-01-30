@@ -2,23 +2,12 @@
 
 namespace Mormat\FormulaInterpreter\Command;
 
-/**
- * Execution context of a command
- *
- * @author mormat
- */
-class CommandContext {
-     
-    protected $variables = [];
-    
-    protected $functions = [];
-    
-    public function __construct($variables = [], $functions = []) {
-        
-        $this->variables = $variables;
-        
-        $this->functions = $functions;
-        
+class CommandContext
+{
+    public function __construct(
+        protected $variables = [],
+        protected $functions = []
+    ) {
     }
     
     public function hasVariable($name)
@@ -35,7 +24,7 @@ class CommandContext {
     public function getVariable($name)
     {
         if ($this->hasVariable($name)) {
-            return $this->variables[$name];    
+            return $this->variables[$name];
         }
     }
     
@@ -48,5 +37,4 @@ class CommandContext {
     {
         return $this->functions[$name];
     }
-    
 }

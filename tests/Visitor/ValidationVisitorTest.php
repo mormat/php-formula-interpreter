@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use \Mormat\FormulaInterpreter\Command\NumericCommand;
 use \Mormat\FormulaInterpreter\Command\StringCommand;
 use \Mormat\FormulaInterpreter\Command\VariableCommand;
@@ -10,8 +12,8 @@ use \Mormat\FormulaInterpreter\Visitor\ValidationVisitor;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class ValidationVisitorTest extends TestCase {
-    
+class ValidationVisitorTest extends TestCase
+{
     #[DataProvider('getValidCommandsData')]
     public function testAcceptWithValidCommands($command)
     {
@@ -20,7 +22,7 @@ class ValidationVisitorTest extends TestCase {
             ['cos' => $this->getMockBuilder(FunctionInterface::class)->getMock()]
         );
         $validation->accept($command);
-        $this->assertEquals([], $validation->getErrors());        
+        $this->assertEquals([], $validation->getErrors());
     }
     
     public static function getValidCommandsData()
@@ -38,7 +40,7 @@ class ValidationVisitorTest extends TestCase {
     {
         $validation = new ValidationVisitor();
         $validation->accept($command);
-        $this->assertEquals($errors, $validation->getErrors());        
+        $this->assertEquals($errors, $validation->getErrors());
     }
     
     public static function getInvalidCommandsData()
@@ -52,6 +54,4 @@ class ValidationVisitorTest extends TestCase {
             )],
         );
     }
-    
 }
-

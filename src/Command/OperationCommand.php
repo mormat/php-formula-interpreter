@@ -4,7 +4,8 @@ namespace Mormat\FormulaInterpreter\Command;
 
 use \Mormat\FormulaInterpreter\Exception\UnsupportedOperandTypeException;
 
-class OperationCommand implements CommandInterface {
+class OperationCommand implements CommandInterface
+{
 
     protected static $supportedTypes = array(
         '+' => ['bool|numeric', 'bool|numeric'],
@@ -16,7 +17,7 @@ class OperationCommand implements CommandInterface {
         '>'  => ['numeric|string', 'numeric|string'],
         '='  => ['numeric|string', 'numeric|string'],
         '<='  => ['numeric|string', 'numeric|string'],
-        '>=' => ['numeric|string', 'numeric|string'],    
+        '>=' => ['numeric|string', 'numeric|string'],
         'and' => ['bool|numeric', 'bool|numeric'],
         'or'  => ['bool|numeric', 'bool|numeric'],
     );
@@ -29,15 +30,14 @@ class OperationCommand implements CommandInterface {
     );
     
     public function __construct(
-            protected CommandInterface $left,
-            protected string $operator,
-            protected CommandInterface $right
+        protected CommandInterface $left,
+        protected string $operator,
+        protected CommandInterface $right
     ) {
-        
     }
 
-    public function run(CommandContext $context) {
-
+    public function run(CommandContext $context)
+    {
         $left = $this->left->run($context);
         $right = $this->right->run($context);
 
@@ -74,8 +74,8 @@ class OperationCommand implements CommandInterface {
         }
     }
 
-    protected function checkOperands($operator, $left, $right) {
-        
+    protected function checkOperands($operator, $left, $right)
+    {
         $values = [$left, $right];
         foreach ($values as $n => $value) {
             $types = explode('|', self::$supportedTypes[$operator][$n]);
@@ -95,13 +95,11 @@ class OperationCommand implements CommandInterface {
                     $operator
                 ));
             }
-            
         }
-                
     }
     
-    public static function getSupportedTypes() {
+    public static function getSupportedTypes()
+    {
         return self::$supportedTypes;
     }
-
 }

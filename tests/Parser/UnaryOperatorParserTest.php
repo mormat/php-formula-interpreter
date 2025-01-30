@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 use Mormat\FormulaInterpreter\Parser\UnaryOperatorParser;
@@ -7,14 +9,15 @@ use Mormat\FormulaInterpreter\Parser\UnaryOperatorParser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class UnaryOperatorParserTest extends TestCase {
-    
+class UnaryOperatorParserTest extends TestCase
+{
     protected UnaryOperatorParser $parser;
     
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $childParser = $this->createMock(ParserInterface::class);
         $childParser->method('parse')->willReturnCallback(
-            function($expression) {
+            function ($expression) {
                 if (str_contains($expression, '#bad_expr')) {
                     throw new ParserException($expression);
                 }
@@ -27,11 +30,10 @@ class UnaryOperatorParserTest extends TestCase {
     
     #[DataProvider('dataParseWithValidExpression')]
     public function testParseWithValidExpression(
-        $expression, 
+        $expression,
         $expectedOperator,
         $expectedValue
     ) {
-        
         $this->assertEquals(
             array(
                 'type'     => 'unary_operator',
@@ -40,37 +42,34 @@ class UnaryOperatorParserTest extends TestCase {
             ),
             $this->parser->parse($expression)
         );
-        
     }
     
-    public static function dataParseWithValidExpression() {
-        
+    public static function dataParseWithValidExpression()
+    {
         return array(
             ['not true', 'not', ' true'],
             ['not(true)', 'not', '(true)'],
             ['not[true]', 'not', '[true]']
         );
-        
     }
     
     #[DataProvider('dataParseWithInvalidExpression')]
-    public function testParseWithInvalidExpression($expression, $unparsable) {
-        
+    public function testParseWithInvalidExpression($expression, $unparsable)
+    {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
             sprintf('Failed to parse expression %s', $unparsable)
         );
         
         $this->parser->parse($expression);
-        
     }
     
-    public static function dataParseWithInvalidExpression() {
+    public static function dataParseWithInvalidExpression()
+    {
         return array(
             [ 'whatever',  'whatever' ],
             [ 'notfoo',    'notfoo' ],
             [ 'not #bad_expr', ' #bad_expr'],
         );
     }
-    
 }

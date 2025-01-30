@@ -2,45 +2,31 @@
 
 namespace Mormat\FormulaInterpreter\Functions;
 
-class CallableFunction implements FunctionInterface {
-    
-    /**
-     * @var string
-     */
-    protected $name;
-    
-    /**
-     * @var callable
-     */
-    protected $callable;
-    
-    /**
-     * @var string[]
-     */
-    protected $supportedTypes;
-    
+class CallableFunction implements FunctionInterface
+{
     protected $validatorTypes = array(
         'numeric' => 'is_numeric',
         'array'   => 'is_array',
         'string'  => 'is_string'
     );
     
-    public function __construct($name, $callable, array $supportedTypes = []) {
-        $this->name     = $name;
-        $this->callable = $callable; // @todo tests if callable is really callable
-        $this->supportedTypes = $supportedTypes;
+    public function __construct(
+        protected string $name,
+        protected $callable,
+        protected array $supportedTypes = []
+    ) {
     }
     
-    public function getSupportedTypes() {
+    public function getSupportedTypes(): array
+    {
         return $this->supportedTypes;
     }
     
-    public function supports(array $values) {
+    public function supports(array $values): bool
+    {
         
-        foreach ($this->supportedTypes as $i => $rawSupportedType) {   
-            
-            $results = array_map(function($supportedType) use ($i, $values) {
-                
+        foreach ($this->supportedTypes as $i => $rawSupportedType) {
+            $supportedTypefilter = function ($supportedType) use ($i, $values) {
                 if (!isset($values[$i])) {
                     return false;
                 }
@@ -49,29 +35,39 @@ class CallableFunction implements FunctionInterface {
                 if (!$validator($values[$i])) {
                     return false;
                 }
-                
+
                 return true;
-                
-            }, explode('|', $rawSupportedType));
+            };
+            
+            $results = array_map(
+                $supportedTypefilter,
+                explode('|', $rawSupportedType)
+            );
             
             if (array_unique($results) == [false]) {
                 return false;
             }
-            
         }
         
         return true;
-        
     }
     
+    public function execute(array $params): mixed
+    {
+        return call_user_func_array($this->callable, $params);
+    }
+    
+    public function getName(): string
+    {
+        return $this->name;
+    }
+        
     /**
-     * Checks if $type matches the provided $value 
-     * 
+     * Checks if $type matches the provided $value
      * @param mixed  $value
      * @param string $type
-     * @return boolean
      */
-    protected function valueIsType($value, $type = 'mixed')
+    protected function valueIsType($value, string $type = 'mixed'): bool
     {
         switch ($type) {
             case 'numeric':
@@ -83,13 +79,4 @@ class CallableFunction implements FunctionInterface {
         }
         return true;
     }
-    
-    public function execute(array $params) {
-        return call_user_func_array($this->callable, $params);
-    }
-    
-    public function getName() {
-        return $this->name;
-    }
-
 }

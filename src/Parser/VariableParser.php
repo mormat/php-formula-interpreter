@@ -4,12 +4,11 @@ namespace Mormat\FormulaInterpreter\Parser;
 
 /**
  * Parse variables in formulas
- *
- * @author mormat
  */
-class VariableParser implements ParserInterface{
-    
-    function parse($rawExpression) {
+class VariableParser implements ParserInterface
+{
+    public function parse($rawExpression)
+    {
         $expression = trim($rawExpression);
         
         if (!preg_match('/^([a-zA-Z_]+[0-9]*)+$/', $expression)) {
@@ -21,5 +20,4 @@ class VariableParser implements ParserInterface{
             'name' => $expression,
         );
     }
-    
 }

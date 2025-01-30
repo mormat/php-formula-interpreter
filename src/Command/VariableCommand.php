@@ -4,28 +4,16 @@ namespace Mormat\FormulaInterpreter\Command;
 
 use \Mormat\FormulaInterpreter\Exception\UnknownVariableException;
 
-/**
- * Description of FunctionParser
- *
- * @author mormat
- */
-class VariableCommand implements CommandInterface {
-    
-    /**
-     * @var string
-     */
-    protected $name;
-        
-    function __construct($name) {
-        if (!is_string($name)) {
-            $message = sprintf(
-                'Parameter $name of method __construct() of class %s must be a string. Got %s type instead.', 
-                get_class($this), 
-                gettype($name)
-            );
-            throw new \InvalidArgumentException($message);
+class VariableCommand implements CommandInterface
+{
+    public function __construct(protected string $name)
+    {
+        if (!$name) {
+            throw new \TypeError("Variable name '$name' should not be empty");
         }
-        $this->name = $name;
+        if (is_numeric($name)) {
+            throw new \TypeError("Variable name '$name' should not be numeric");
+        }
     }
     
     public function getVariableName()
@@ -33,7 +21,8 @@ class VariableCommand implements CommandInterface {
         return $this->name;
     }
 
-    public function run(CommandContext $context) {
+    public function run(CommandContext $context)
+    {
         if (!$context->hasVariable($this->name)) {
             throw new UnknownVariableException($this->name);
         }

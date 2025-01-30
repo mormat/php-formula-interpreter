@@ -2,20 +2,19 @@
 
 namespace Mormat\FormulaInterpreter\Command;
 
-/**
- * Description of FunctionParser
- *
- * @author mormat
- */
-class CommandFactory implements CommandFactory\CommandFactoryInterface {
-    
+class CommandFactory implements CommandFactory\CommandFactoryInterface
+{
     protected $factories = array();
     
-    public function registerFactory($type, CommandFactory\CommandFactoryInterface $factory) {
+    public function registerFactory(
+        $type,
+        CommandFactory\CommandFactoryInterface $factory
+    ) {
         $this->factories[$type] = $factory;
     }
     
-    public function create($options) {
+    public function create($options): CommandInterface
+    {
         if (!isset($options['type'])) {
             throw new CommandFactory\CommandFactoryException('Missing argument "type"');
         }

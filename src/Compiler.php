@@ -2,27 +2,21 @@
 
 namespace Mormat\FormulaInterpreter;
 
-use Mormat\FormulaInterpreter\Exception\CustomFunctionNotCallableException;
+use Exception\CustomFunctionNotCallableException;
 
-class Compiler {
+class Compiler
+{
+    protected Parser\CompositeParser $parser;
     
-    /**
-     * @var Parser\CompositeParser
-     */
-    protected $parser;
-    
-    /**
-     * @var Command\CommandFactory;
-     */
-    protected $commandFactory;
+    protected Command\CommandFactory $commandFactory;
     
     /**
      * @var Functions\FunctionInterface[]
      */
-    protected $functions = [];
+    protected array $functions = [];
     
-    function __construct() {
-        
+    public function __construct()
+    {
         $this->parser = new Parser\CompositeParser();
         $this->parser->addParser(new Parser\LeadingWhitespaceParser($this->parser));
         $this->parser->addParser(new Parser\WrappingParenthesisParser($this->parser));
@@ -35,35 +29,33 @@ class Compiler {
         $this->parser->addParser(new Parser\StringParser());
         $this->parser->addParser(new Parser\NumericParser());
         
-        
         $this->commandFactory = new Command\CommandFactory();
-        $this->commandFactory->registerFactory('numeric', new Command\CommandFactory\NumericCommandFactory());
-        $this->commandFactory->registerFactory('string', new Command\CommandFactory\StringCommandFactory());
-        $this->commandFactory->registerFactory('boolean', new Command\CommandFactory\BooleanCommandFactory());
-        $this->commandFactory->registerFactory('variable', new Command\CommandFactory\VariableCommandFactory());
-        $this->commandFactory->registerFactory('array', new Command\CommandFactory\ArrayCommandFactory($this->commandFactory));
-        $this->commandFactory->registerFactory('unary_operator', new Command\CommandFactory\UnaryOperatorCommandFactory($this->commandFactory));
-        $this->commandFactory->registerFactory('operation', new Command\CommandFactory\OperationCommandFactory($this->commandFactory));
-        
-        $functionCommandFactory = new Command\CommandFactory\FunctionCommandFactory($this->commandFactory);
-        $this->commandFactory->registerFactory('function', $functionCommandFactory);
+        $commandFactories = [
+            'numeric' => new Command\CommandFactory\NumericCommandFactory(),
+            'string'  => new Command\CommandFactory\StringCommandFactory(),
+            'boolean' => new Command\CommandFactory\BooleanCommandFactory(),
+            'variable'=> new Command\CommandFactory\VariableCommandFactory(),
+            'array'   => new Command\CommandFactory\ArrayCommandFactory($this->commandFactory),
+            'unary_operator' => new Command\CommandFactory\UnaryOperatorCommandFactory($this->commandFactory),
+            'operation' => new Command\CommandFactory\OperationCommandFactory($this->commandFactory),
+            'function'  => new Command\CommandFactory\FunctionCommandFactory($this->commandFactory)
+        ];
+        foreach ($commandFactories as $type => $factory) {
+            $this->commandFactory->registerFactory($type, $factory);
+        }
         
         foreach ($this->buildDefaultFunctions() as $function) {
             $this->registerCustomFunction($function);
         }
-        
     }
     
-    /**
-     * @return Parser\ParserInterface
-     */
-    public function getParser()
+    public function getParser(): Parser\ParserInterface
     {
         return $this->parser;
     }
     
-    protected function buildDefaultFunctions() {
-
+    protected function buildDefaultFunctions()
+    {
         $phpFunctions = array(
             array(['pi'], []),
             array(['cos', 'sin', 'sqrt'], ['numeric']),
@@ -74,7 +66,7 @@ class Compiler {
             list($callables, $supportedTypes) = $phpFunction;
             foreach ($callables as $callable) {
                 yield new Functions\CallableFunction($callable, $callable, $supportedTypes);
-            }  
+            }
         }
         
         $aliases = array(
@@ -88,34 +80,27 @@ class Compiler {
         }
         
         yield new Functions\CallableFunction(
-            'modulo', 
-            function($a, $b) {
-                return $a % $b;
-            }, 
+            'modulo',
+            fn($a, $b) => $a % $b,
             ['numeric', 'numeric']
         );
         yield new Functions\CallableFunction(
-            'count', 
-            function($a) {
-                return is_array($a) ? sizeof($a) : strlen($a);
-            }, 
+            'count',
+            fn($a) => is_array($a) ? sizeof($a) : strlen($a),
             ['string|array']
         );
     }
     
-    /**
-     * @param Functions\FunctionInterface $function
-     */
-    public function registerCustomFunction(Functions\FunctionInterface $function) {
+    public function registerCustomFunction(
+        Functions\FunctionInterface $function
+    ) {
         $this->functions[$function->getName()] = $function;
     }
     
     /**
      * Get a list of available operators
-     * 
-     * @return array
      */
-    public function getAvailableOperators()
+    public function getAvailableOperators(): array
     {
         $operators = [
             '+' => 'add',
@@ -139,23 +124,20 @@ class Compiler {
             ];
         };
         return $results;
-        
     }
     
     /**
      * Get a list of registered functions
      */
-    public function getRegisteredFunctions()
+    public function getRegisteredFunctions(): array
     {
         $functions = [];
         
         foreach ($this->functions as $function) {
-            
             $supportedTypes = null;
             if ($function instanceof Functions\CallableFunction) {
                 $supportedTypes = $function->getSupportedTypes();
             }
-            
             
             $functions[$function->getName()] = array(
                 'name'           => $function->getName(),
@@ -168,14 +150,13 @@ class Compiler {
     
     /**
      * Compile an expression and return the corresponding executable
-     * 
      * @param string $expression
      * @return \FormulaInterpreter\Executable
      */
-    function compile($expression) {
-        $options = $this->parser->parse($expression);        
+    public function compile($expression)
+    {
+        $options = $this->parser->parse($expression);
         $command = $this->commandFactory->create($options);
         return new Executable($command, $this->functions);
     }
-    
 }

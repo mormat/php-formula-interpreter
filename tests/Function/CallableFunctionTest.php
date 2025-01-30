@@ -1,17 +1,14 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Functions\CallableFunction;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-/**
- * Tests functions with single parameter
- *
- * @author mormat
- */
-class CallableFunctionTest extends TestCase {
-
+class CallableFunctionTest extends TestCase
+{
     #[DataProvider('getTestSupportsData')]
     public function testSupports2($callable, $params, $supportedTypes = [])
     {
@@ -19,7 +16,8 @@ class CallableFunctionTest extends TestCase {
         $this->assertTrue($function->supports($params));
     }
     
-    public static function getTestSupportsData() {
+    public static function getTestSupportsData()
+    {
         return array(
             array('floor',  [2],        ['numeric']),
             array('floor',  [2.3],      ['numeric']),
@@ -30,8 +28,11 @@ class CallableFunctionTest extends TestCase {
     }
     
     #[DataProvider('getSupportsWithInvalidParametersData')]
-    public function testSupportsWithInvalidParameters($callable, $params, $supportedTypes)
-    {
+    public function testSupportsWithInvalidParameters(
+        $callable,
+        $params,
+        $supportedTypes
+    ) {
         $function = new CallableFunction($callable, $callable, $supportedTypes);
         $this->assertFalse($function->supports($params));
     }
@@ -41,13 +42,13 @@ class CallableFunctionTest extends TestCase {
         return array(
             
             // at least, one parameter required
-            array('floor', [],        ['numeric']),                  
+            array('floor', [],        ['numeric']),
             
             // strings not allowed
             array('floor', ['foobar'], ['numeric']),
             
             // objects not allowed
-            array('floor', [ new \stdClass() ], ['numeric']), 
+            array('floor', [ new \stdClass() ], ['numeric']),
             
             // 2 arguments required
             array('modulo', [1],   ['numeric', 'numeric']),
@@ -67,11 +68,10 @@ class CallableFunctionTest extends TestCase {
         $this->assertEquals($function->execute($params), $expectedResult);
     }
     
-    public static function getExecuteData() 
+    public static function getExecuteData()
     {
         return array(
             array('floor', [2.3], 2)
         );
     }
-    
 }

@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 use Mormat\FormulaInterpreter\Parser\WrappingParenthesisParser;
@@ -7,13 +9,14 @@ use Mormat\FormulaInterpreter\Parser\WrappingParenthesisParser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class WrappingParenthesisParserTest extends TestCase {
-    
+class WrappingParenthesisParserTest extends TestCase
+{
     protected WrappingParenthesisParser $parser;
     
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $childParser = $this->createMock(ParserInterface::class);
-        $childParser->method('parse')->willReturnCallback(function($expr) {
+        $childParser->method('parse')->willReturnCallback(function ($expr) {
             if ($expr === '') {
                 throw new ParserException($expr);
             }
@@ -24,16 +27,16 @@ class WrappingParenthesisParserTest extends TestCase {
     }
     
     #[DataProvider('dataParse')]
-    public function testParse($expression, $expectedParsing) {
-        
+    public function testParse($expression, $expectedParsing)
+    {
         $this->assertEquals(
             ['parsed' => $expectedParsing],
             $this->parser->parse($expression)
         );
-                
     }
     
-    public static function dataParse() {
+    public static function dataParse()
+    {
         return [
             ['(0)', '0'],
             ['(100)', '100'],
@@ -42,7 +45,8 @@ class WrappingParenthesisParserTest extends TestCase {
     }
     
     #[DataProvider('dataParseWithInvalidExpression')]
-    public function testParseWithInvalidExpression($invalidExpression) {
+    public function testParseWithInvalidExpression($invalidExpression)
+    {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
             sprintf('Failed to parse expression %s', $invalidExpression)
@@ -51,7 +55,8 @@ class WrappingParenthesisParserTest extends TestCase {
         $this->parser->parse($invalidExpression);
     }
     
-    public static function dataParseWithInvalidExpression() {
+    public static function dataParseWithInvalidExpression()
+    {
         return [
             ['whatever'],
             ['()'],
@@ -59,5 +64,4 @@ class WrappingParenthesisParserTest extends TestCase {
             ['(100) + (100)']
         ];
     }
-        
 }

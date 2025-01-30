@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\OperationCommand;
@@ -8,29 +10,31 @@ use Mormat\FormulaInterpreter\Exception\UnsupportedOperandTypeException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class OperationCommandTest extends TestCase {
-    
+class OperationCommandTest extends TestCase
+{
     protected CommandContext $commandContext;
     
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $this->commandContext = new CommandContext();
     }
     
     #[DataProvider('dataWithInvalidOperands')]
-    public function testRunWithInvalidOperands($left, $operator, $right) {
-        
+    public function testRunWithInvalidOperands($left, $operator, $right)
+    {
         $this->expectException(UnsupportedOperandTypeException::class);
         
         $command = new OperationCommand(
-            $this->mockChildCommand($left), 
-            $operator, 
+            $this->mockChildCommand($left),
+            $operator,
             $this->mockChildCommand($right)
         );
         
         $command->run($this->commandContext);
     }
     
-    public static function dataWithInvalidOperands() {
+    public static function dataWithInvalidOperands()
+    {
         return array(
             // additions
             [ 'foo', '+', 'bar' ],
@@ -58,10 +62,11 @@ class OperationCommandTest extends TestCase {
     }
 
     #[DataProvider('dataRunWithValidOperands')]
-    public function testRunWithValidOperands($left, $operator, $right, $expected) {
+    public function testRunWithValidOperands($left, $operator, $right, $expected)
+    {
         $command = new OperationCommand(
-            $this->mockChildCommand($left), 
-            $operator, 
+            $this->mockChildCommand($left),
+            $operator,
             $this->mockChildCommand($right)
         );
         $this->assertEquals(
@@ -70,7 +75,8 @@ class OperationCommandTest extends TestCase {
         );
     }
     
-    public static function dataRunWithValidOperands() {
+    public static function dataRunWithValidOperands()
+    {
         return array(
             ['1', '+', '2', 3],
             ['3', '-', '1', 2],
@@ -132,10 +138,10 @@ class OperationCommandTest extends TestCase {
         );
     }
     
-    protected function mockChildCommand($returnValue) {
+    protected function mockChildCommand($returnValue)
+    {
         $mock = $this->createMock(CommandInterface::class);
         $mock->method('run')->willReturn($returnValue);
         return $mock;
     }
-    
 }

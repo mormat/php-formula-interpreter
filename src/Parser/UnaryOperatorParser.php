@@ -2,15 +2,15 @@
 
 namespace Mormat\FormulaInterpreter\Parser;
 
-class UnaryOperatorParser implements ParserInterface {
-    
+class UnaryOperatorParser implements ParserInterface
+{
     public function __construct(
         protected ParserInterface $childParser
-    ) { }
-
+    ) {
+    }
     
-    public function parse($expression): array {
-    
+    public function parse($expression): array
+    {
         $operator = 'not';
         if (!str_starts_with($expression, $operator)) {
             throw new ParserException($expression);
@@ -26,8 +26,5 @@ class UnaryOperatorParser implements ParserInterface {
             'operator' => 'not',
             'value'    => $this->childParser->parse($value)
         ];
-
-        
-        
     }
 }

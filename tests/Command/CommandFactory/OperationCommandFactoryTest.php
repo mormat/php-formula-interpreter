@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException;
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface;
@@ -9,10 +11,10 @@ use Mormat\FormulaInterpreter\Command\OperationCommand;
 
 use PHPUnit\Framework\TestCase;
 
-class OperationCommandFactoryTest extends TestCase {
-    
-    public function testCreate() {
-        
+class OperationCommandFactoryTest extends TestCase
+{
+    public function testCreate()
+    {
         $operands = [
             'left_value'  => $this->createMock(CommandInterface::class),
             'right_value' => $this->createMock(CommandInterface::class)
@@ -33,12 +35,11 @@ class OperationCommandFactoryTest extends TestCase {
         
         $this->assertEquals(
             new OperationCommand(
-                $operands['left_value'], '+', 
+                $operands['left_value'],
+                '+',
                 $operands['right_value']
             ),
             $actual
         );
-        
     }
-    
 }

@@ -9,4 +9,7 @@ use Mormat\FormulaInterpreter\Exception as BaseException;
  *
  * @author mathieu
  */
-class UnsupportedOperandTypeException extends BaseException {}
+class UnsupportedOperandTypeException extends BaseException
+{
+    
+}

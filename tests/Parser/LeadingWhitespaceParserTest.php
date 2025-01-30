@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 use Mormat\FormulaInterpreter\Parser\LeadingWhitespaceParser;
@@ -7,13 +9,14 @@ use Mormat\FormulaInterpreter\Parser\LeadingWhitespaceParser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class LeadingWhitespaceParserTest extends TestCase {
-    
+class LeadingWhitespaceParserTest extends TestCase
+{
     protected LeadingWhitespaceParser $parser;
     
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $childParser = $this->createMock(ParserInterface::class);
-        $childParser->method('parse')->willReturnCallback(function($expr) {
+        $childParser->method('parse')->willReturnCallback(function ($expr) {
             if ($expr === '') {
                 throw new ParserException($expr);
             }
@@ -24,16 +27,16 @@ class LeadingWhitespaceParserTest extends TestCase {
     }
     
     #[DataProvider('dataParse')]
-    public function testParse($expression, $expectedParsing) {
-        
+    public function testParse($expression, $expectedParsing)
+    {
         $this->assertEquals(
             ['parsed' => $expectedParsing],
             $this->parser->parse($expression)
         );
-                
     }
     
-    public static function dataParse() {
+    public static function dataParse()
+    {
         return [
             [' 0', '0'],
             ['0 ', '0'],
@@ -42,7 +45,8 @@ class LeadingWhitespaceParserTest extends TestCase {
     }
     
     #[DataProvider('dataParseWithInvalidExpression')]
-    public function testParseWithInvalidExpression($invalidExpression) {
+    public function testParseWithInvalidExpression($invalidExpression)
+    {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
             sprintf('Failed to parse expression %s', $invalidExpression)
@@ -51,11 +55,11 @@ class LeadingWhitespaceParserTest extends TestCase {
         $this->parser->parse($invalidExpression);
     }
     
-    public static function dataParseWithInvalidExpression() {
+    public static function dataParseWithInvalidExpression()
+    {
         return [
             ['whatever'],
             ['']
         ];
     }
-        
 }

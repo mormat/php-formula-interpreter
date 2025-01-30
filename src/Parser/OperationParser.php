@@ -2,8 +2,8 @@
 
 namespace Mormat\FormulaInterpreter\Parser;
 
-class OperationParser implements ParserInterface {
-    
+class OperationParser implements ParserInterface
+{
     const ADD_OPERATOR = '+';
     const SUBSTRACT_OPERATOR = '-';
     const MULTIPLY_OPERATOR = '*';
@@ -19,28 +19,28 @@ class OperationParser implements ParserInterface {
     
     public function __construct(
         protected ParserInterface $childParser
-    ) { }
+    ) {
+    }
 
     
-    public function parse($expression): array {
-        
+    public function parse($expression): array
+    {
         $orderedOperators = [
             self::AND_OPERATOR,
             self::OR_OPERATOR,
             self::LOWER_OR_EQUAL_OPERATOR,
-            self::LOWER_THAN_OPERATOR, 
+            self::LOWER_THAN_OPERATOR,
             self::GREATER_OR_EQUAL_OPERATOR,
             self::GREATER_THAN_OPERATOR,
             self::EQUAL_OPERATOR,
-            self::IN_OPERATOR, 
-            self::ADD_OPERATOR, 
-            self::SUBSTRACT_OPERATOR, 
-            self::MULTIPLY_OPERATOR, 
+            self::IN_OPERATOR,
+            self::ADD_OPERATOR,
+            self::SUBSTRACT_OPERATOR,
+            self::MULTIPLY_OPERATOR,
             self::DIVIDE_OPERATOR,
         ];
         
         foreach ($orderedOperators as $operator) {
-            
             $operands = $this->extractOperands($expression, $operator);
             if ($operands === null) {
                 continue;
@@ -52,20 +52,15 @@ class OperationParser implements ParserInterface {
                 'operator' => $operator,
                 'right'    => $this->childParser->parse($operands[1])
             ];
-
         }
         
         throw new ParserException($expression);
-        
     }
     
-    
-    
-    protected function extractOperands($expression, $operator) {
-            
+    protected function extractOperands($expression, $operator)
+    {
         $positions = $this->findOperatorPositions($expression, $operator);
         foreach ($positions as $position) {
-                        
             $left  = substr($expression, 0, $position);
             $right = substr($expression, $position + strlen($operator));
 
@@ -74,44 +69,57 @@ class OperationParser implements ParserInterface {
             }
             
             return [$left, $right];
-            
         }
         
         return null;
-        
     }
           
-    protected function findOperatorPositions($expression, $operator) {
-        
+    protected function findOperatorPositions($expression, $operator)
+    {
         $chars = str_split($expression);
         $openedParenthesis = 0;
         $openedString = false;
         $openedArrays = 0;
         foreach ($chars as $pos => $char) {
-            if ($char === "'") $openedString = !$openedString;
-            if ($openedString) continue;
+            if ($char === "'") {
+                $openedString = !$openedString;
+            }
+            if ($openedString) {
+                continue;
+            }
             
-            if ($char === '(') $openedParenthesis++;
-            if ($char === ')') $openedParenthesis--;
-            if ($openedParenthesis > 0) continue;
+            if ($char === '(') {
+                $openedParenthesis++;
+            }
+            if ($char === ')') {
+                $openedParenthesis--;
+            }
+            if ($openedParenthesis > 0) {
+                continue;
+            }
             
-            if ($char === '[') $openedArrays++;
-            if ($char === ']') $openedArrays--;
-            if ($openedArrays > 0) continue;
+            if ($char === '[') {
+                $openedArrays++;
+            }
+            if ($char === ']') {
+                $openedArrays--;
+            }
+            if ($openedArrays > 0) {
+                continue;
+            }
                         
             $substr = substr($expression, $pos, strlen($operator));
             if ($substr === $operator) {
                 yield $pos;
             }
         }
-        
     }
     
-    protected function areOperandsValid($operator, $left, $right): bool {
-        
+    protected function areOperandsValid($operator, $left, $right): bool
+    {
         $complexOperators = [
-            self::IN_OPERATOR, 
-            self::AND_OPERATOR, 
+            self::IN_OPERATOR,
+            self::AND_OPERATOR,
             self::OR_OPERATOR
         ];
         if (in_array($operator, $complexOperators)) {
@@ -126,7 +134,5 @@ class OperationParser implements ParserInterface {
         }
         
         return true;
-        
     }
-    
 }

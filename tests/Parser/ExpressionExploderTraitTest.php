@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Parser\ArrayParser;
 use Mormat\FormulaInterpreter\Parser\ExpressionExploderTrait;
 use Mormat\FormulaInterpreter\Parser\ParserException;
@@ -10,11 +12,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the splitting of expressions
- *
- * @author mormat
  */
-class ExpressionExploderTraitTest extends TestCase {
-    
+class ExpressionExploderTraitTest extends TestCase
+{
     /**
      * @var ExpressionExploderTrait
      */
@@ -22,20 +22,24 @@ class ExpressionExploderTraitTest extends TestCase {
     
     public function setUp(): void
     {
-        $this->expressionExploder = new ExpressionExploderTraitTest_ExpressionExploderUser();
+        $this->expressionExploder = new class() {
+            use ExpressionExploderTrait;
+        };
     }
     
     #[DataProvider('getExplodeExpressionWithCommaAsSeparatorData')]
-    public function testExplodeExpressionWithCommaAsSeparator($expression, $expected) {
+    public function testExplodeExpressionWithCommaAsSeparator($expression, $expected)
+    {
         $actual = $this->expressionExploder->explodeExpression($expression, [',']);
         $this->assertEquals(
-            $actual, 
+            $actual,
             $expected,
             sprintf("actual value is %s", var_export($actual, true))
         );
     }
     
-    public static function getExplodeExpressionWithCommaAsSeparatorData() {
+    public static function getExplodeExpressionWithCommaAsSeparatorData()
+    {
         return array(
             
             array(
@@ -78,34 +82,36 @@ class ExpressionExploderTraitTest extends TestCase {
     }
     
     #[DataProvider('getExplodeExpressionWithOperatorsAsSeparatorData')]
-    public function testExplodeExpressionWithOperatorsAsSeparator($expression, $expected) {
+    public function testExplodeExpressionWithOperatorsAsSeparator($expression, $expected)
+    {
         $operators = ['+', '-', '/', '*', 'in', 'or'];
         $actual = $this->expressionExploder->explodeExpression($expression, $operators);
         $this->assertEquals(
-            $actual, 
+            $actual,
             $expected,
             sprintf("actual value is %s", var_export($actual, true))
         );
     }
     
-    public static function getExplodeExpressionWithOperatorsAsSeparatorData() {
+    public static function getExplodeExpressionWithOperatorsAsSeparatorData()
+    {
         return array(
             
             array(
-                '2 + 3 - 4 + 5', 
+                '2 + 3 - 4 + 5',
                 ['2 ', '+', ' 3 ', '-', " 4 ", '+', ' 5']
             ),
             array(
-                '2 * 3 + 4', 
+                '2 * 3 + 4',
                 ['2 ', '*', ' 3 ', '+', " 4"]
             ),
             array(
-                '2 * (3 + 4)', 
+                '2 * (3 + 4)',
                 ['2 ', '*', ' (3 + 4)']
             ),
             
             array(
-                "'a' in foo or 'b' in bar", 
+                "'a' in foo or 'b' in bar",
                 ["'a' ", 'in',  ' foo ', 'or', " 'b' ", 'in', ' bar']
             ),
             
@@ -116,13 +122,13 @@ class ExpressionExploderTraitTest extends TestCase {
             
             // missing closing parenthesis
             array(
-                "((5) * 2 / (3 - 1)", 
+                "((5) * 2 / (3 - 1)",
                 ["((5) * 2 / (3 - 1)"]
             ),
             
             // the operator 'in' between quotes must be ignored
             array(
-                "'fun' in 'fun in fundamental'", 
+                "'fun' in 'fun in fundamental'",
                 ["'fun' ", 'in', " 'fun in fundamental'"]
             ),
             
@@ -145,18 +151,21 @@ class ExpressionExploderTraitTest extends TestCase {
     
     /**
      * to be used for testing class using this trait
-     * 
      * @param string $expression
      * @param array  $options
      * @return array
      */
-    public static function mockExplodeExpression($expression, array $validators, array $options = []) {
+    public static function mockExplodeExpression(
+        $expression,
+        array $validators,
+        array $options = []
+    ) {
         if ($expression === '') {
             return [];
         }
         
         if ($validators == [',']) {
-            $results = array_map(function($i) {
+            $results = array_map(function ($i) {
                 return '= ' . $i;
             }, explode(',', $expression));
 
@@ -165,10 +174,4 @@ class ExpressionExploderTraitTest extends TestCase {
         
         throw new \Exception("not implemented");
     }
-    
-}
-
-// @todo use anonymous class ?
-class ExpressionExploderTraitTest_ExpressionExploderUser {
-    use ExpressionExploderTrait;
 }

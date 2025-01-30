@@ -2,13 +2,7 @@
 
 namespace Mormat\FormulaInterpreter\Command;
 
-/**
- * Description of FunctionParser
- *
- * @author mormat
- */
-interface CommandInterface {
-    
-    function run(CommandContext $context);
-     
+interface CommandInterface
+{
+    public function run(CommandContext $context);
 }

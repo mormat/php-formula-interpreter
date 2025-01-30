@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Parser\StringParser;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 
@@ -8,24 +10,25 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the parsing of strings
- *
- * @author mormat
  */
-class StringParserTest extends TestCase {
-    
+class StringParserTest extends TestCase
+{
     protected StringParser $parser;
     
-    public function setUp(): void {
+    public function setUp(): void
+    {
         $this->parser = new StringParser();
     }
     
     #[DataProvider('getStringValues')]
-    public function testParseString($expression, $infos) {
+    public function testParseString($expression, $infos)
+    {
         $infos['type'] = 'string';
         $this->assertEquals($this->parser->parse($expression), $infos);
     }
     
-    public static function getStringValues() {
+    public static function getStringValues()
+    {
         return array(
             array("'foo'",     array('value' => 'foo')),
             array("'bar'",     array('value' => 'bar')),
@@ -33,7 +36,8 @@ class StringParserTest extends TestCase {
     }
     
     #[DataProvider('getUncorrectExpressionData')]
-    public function testParseUncorrectExpression($expression) {
+    public function testParseUncorrectExpression($expression)
+    {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
             sprintf('Failed to parse expression %s', $expression)
@@ -41,7 +45,8 @@ class StringParserTest extends TestCase {
         $this->parser->parse($expression);
     }
     
-    public static function getUncorrectExpressionData() {
+    public static function getUncorrectExpressionData()
+    {
         return array(
             array("2"),
             array("foo"),
@@ -51,5 +56,4 @@ class StringParserTest extends TestCase {
             array(" ''foobar'"),
         );
     }
-    
 }

@@ -6,21 +6,21 @@ use Mormat\FormulaInterpreter\Exception\StackOverflowException;
 
 /**
  * Aggregates multiples parsers into one
- *
- * @author mormat
  */
-class CompositeParser implements ParserInterface {
-    
+class CompositeParser implements ParserInterface
+{
     protected $parsers  = array();
     protected static $nbrCalls = 0;
     
     const NBR_CALLS_MAX = 10000;
 
-    public function addParser(ParserInterface $parser) {
+    public function addParser(ParserInterface $parser)
+    {
         $this->parsers[] = $parser;
     }
     
-    function parse($expression) {
+    public function parse($expression)
+    {
         if (self::$nbrCalls >= self::NBR_CALLS_MAX) {
             throw new StackOverflowException(
                 "Too many recursive call when parsing exception"
@@ -38,7 +38,7 @@ class CompositeParser implements ParserInterface {
                 if ($e->getExpression() != $expression) {
                     throw $e;
                 }
-            }           
+            }
         }
         
         throw new ParserException($expression);
@@ -46,11 +46,9 @@ class CompositeParser implements ParserInterface {
 
     /**
      * @return ParserInterface[]
-     */    
-    public function getParsers() {
+     */
+    public function getParsers()
+    {
         return $this->parsers;
     }
-
-
-
 }

@@ -9,4 +9,7 @@ use Mormat\FormulaInterpreter\Exception as BaseException;
  *
  * @author mormat
  */
-class StackOverflowException extends BaseException { }
+class StackOverflowException extends BaseException
+{
+
+}

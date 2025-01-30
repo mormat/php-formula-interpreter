@@ -4,28 +4,18 @@ namespace Mormat\FormulaInterpreter\Command;
 
 use \Mormat\FormulaInterpreter\Exception\InvalidParametersFunctionException;
 use \Mormat\FormulaInterpreter\Exception\UnknownFunctionException;
-use \Mormat\FormulaInterpreter\Functions\FunctionInterface;
 
-/**
- * Command to execute a function
- *
- * @author mormat
- */
-class FunctionCommand implements CommandInterface {
+class FunctionCommand implements CommandInterface
+{
     
     /**
-     * @var string
+     * @param string $function
+     * @param CommandInterface[] $argumentCommands
      */
-    protected $function;
-    
-    protected $argumentCommands = array();
-    
-    function __construct($function, $argumentCommands = array()) {
-        $this->function = $function;
-
-        foreach ($argumentCommands as $argumentCommand) {   
-            $this->addArgumentCommand($argumentCommand);
-        }
+    public function __construct(
+        protected string $function,
+        protected array $argumentCommands = []
+    ) {
     }
     
     public function getFunctionName()
@@ -33,13 +23,8 @@ class FunctionCommand implements CommandInterface {
         return $this->function;
     }
     
-    public function addArgumentCommand(CommandInterface $argumentCommand)
+    public function run(CommandContext $context)
     {
-        $this->argumentCommands[] = $argumentCommand;
-    }
-
-    public function run(CommandContext $context) {
-        
         if (!$context->hasFunction($this->function)) {
             throw new UnknownFunctionException($this->function);
         }

@@ -6,24 +6,18 @@ use Mormat\FormulaInterpreter\Parser\ParserInterface;
 
 /**
  * Parse arrays in formulas
- *
- * @author mormat
  */
-class ArrayParser implements ParserInterface  {
-    
+class ArrayParser implements ParserInterface
+{
     use ExpressionExploderTrait;
     
-    /**
-     * @var ParserInterface
-     */
-    protected $itemParser;
-    
-    public function __construct(ParserInterface $itemParser) {
-        $this->itemParser = $itemParser;
+    public function __construct(
+        protected ParserInterface $itemParser
+    ) {
     }
 
-    public function parse($rawExpression) {
-        
+    public function parse($rawExpression)
+    {
         $expression = trim($rawExpression);
         
         if (!$expression) {
@@ -46,5 +40,4 @@ class ArrayParser implements ParserInterface  {
         
         throw new ParserException($rawExpression);
     }
-    
 }

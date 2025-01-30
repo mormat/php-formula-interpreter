@@ -2,21 +2,21 @@
 
 namespace Mormat\FormulaInterpreter\Parser;
 
-trait ExpressionExploderTrait {
-
+trait ExpressionExploderTrait
+{
     /**
      * Explodes an expression into multiple fragments using specific separators
-     * 
      * useful in complex parsers such as operators, functions and arrays
-     * 
      * @param  string $expression
      * @param  array  $separators List of separators
-     * @param  array  $options    
-     * 
-     * @return array  List of fragments
+     * @param  array  $options
+     * @return array  list of fragments
      */
-    function explodeExpression($expression, array $separators, array $options = []) {
-
+    public function explodeExpression(
+        $expression,
+        array $separators,
+        array $options = []
+    ) {
         $fragments = [];
         
         // setting default options
@@ -50,7 +50,7 @@ trait ExpressionExploderTrait {
         ];
         
         // Check if separators contains words (examples: 'or', 'and', 'in')
-        $isWord  = function($str) {
+        $isWord  = function ($str) {
             $nbrChars = strlen($str);
             for ($i = 0; $i < $nbrChars; $i++) {
                 $dec = ord($str[$i]);
@@ -74,7 +74,6 @@ trait ExpressionExploderTrait {
         
         list($offset, $limit) = [-1, strlen($expression)];
         while (++$offset < $limit) {
-
             if ($expression[$offset] == '[') {
                 $infos->openedBrackets++;
             }
@@ -130,10 +129,8 @@ trait ExpressionExploderTrait {
         }
 
         $fragments[] = $infos->previousFragment;
-        $fragments   = array_filter($fragments, function($str) {
-            return $str !== '';
-        });
-        return array_values($fragments);
+        return array_values(
+            array_filter($fragments, fn($str) => ($str !== ''))
+        );
     }
-
 }

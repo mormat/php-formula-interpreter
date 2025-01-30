@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 use Mormat\FormulaInterpreter\Command\UnaryOperatorCommand;
@@ -8,18 +10,20 @@ use Mormat\FormulaInterpreter\Exception\UnsupportedOperandTypeException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class UnaryOperatorCommandTest extends TestCase {
-    
+class UnaryOperatorCommandTest extends TestCase
+{
     protected CommandContext $commandContext;
     
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $this->commandContext = new CommandContext();
     }
     
     #[DataProvider('dataRunWithValidOperands')]
-    public function testRunWithValidOperands($operator, $value, $expected) {
+    public function testRunWithValidOperands($operator, $value, $expected)
+    {
         $command = new UnaryOperatorCommand(
-            $operator, 
+            $operator,
             $this->mockChildCommand($value)
         );
         $this->assertEquals(
@@ -28,7 +32,8 @@ class UnaryOperatorCommandTest extends TestCase {
         );
     }
     
-    public static function dataRunWithValidOperands() {
+    public static function dataRunWithValidOperands()
+    {
         return array(
             // `not` operator
             ['not', true,  false],
@@ -38,10 +43,10 @@ class UnaryOperatorCommandTest extends TestCase {
         );
     }
     
-    protected function mockChildCommand($returnValue) {
+    protected function mockChildCommand($returnValue)
+    {
         $mock = $this->createMock(CommandInterface::class);
         $mock->method('run')->willReturn($returnValue);
         return $mock;
     }
-    
 }

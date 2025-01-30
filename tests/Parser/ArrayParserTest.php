@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Parser\ArrayParser;
 use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
@@ -9,15 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the parsing of arrays
- *
- * @author mormat
  */
-class ArrayParserTest extends TestCase {
-    
+class ArrayParserTest extends TestCase
+{
     protected ArrayParser $parser;
     
-    public function setUp(): void {
-        
+    public function setUp(): void
+    {
         $itemParser = $this->getMockBuilder(
             ParserInterface::class
         )->getMock();
@@ -26,17 +26,30 @@ class ArrayParserTest extends TestCase {
             ->method('parse')
             ->will($this->returnCallback(array($this, 'mockItemParser')));
         
-        $this->parser = new ArrayParserTest_ArrayParser($itemParser);
-        
+        $this->parser = new class($itemParser) extends ArrayParser {
+            public function explodeExpression(
+                $expression,
+                array $separators,
+                array $options = []
+            ) {
+                return ExpressionExploderTraitTest::mockExplodeExpression(
+                    $expression,
+                    $separators,
+                    $options
+                );
+            }
+        };
     }
     
     #[DataProvider('getParseIfExpressionisCorrectData')]
-    public function testParseIfExpressionisCorrect($expression, $expected) {
+    public function testParseIfExpressionisCorrect($expression, $expected)
+    {
         $expected['type'] = 'array';
         $this->assertEquals($this->parser->parse($expression), $expected);
     }
     
-    public static function getParseIfExpressionisCorrectData() {
+    public static function getParseIfExpressionisCorrectData()
+    {
         return array(
             array("[]",  array('value' => [])),
             array("[1]", array('value' => ['item = 1'])),
@@ -45,7 +58,8 @@ class ArrayParserTest extends TestCase {
     }
     
     #[DataProvider('getParseIfExpressionisUncorrectData')]
-    public function testParseIfExpressionisUncorrect($expression) {
+    public function testParseIfExpressionisUncorrect($expression)
+    {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
             sprintf('Failed to parse expression %s', $expression)
@@ -53,7 +67,8 @@ class ArrayParserTest extends TestCase {
         $this->parser->parse($expression);
     }
     
-    public static function getParseIfExpressionisUncorrectData() {
+    public static function getParseIfExpressionisUncorrectData()
+    {
         return array(
             array(""),
             array(" "),
@@ -64,14 +79,5 @@ class ArrayParserTest extends TestCase {
     public function mockItemParser($expression)
     {
         return 'item ' . $expression;
-    }
-    
-}
-
-class ArrayParserTest_ArrayParser extends ArrayParser
-{
-    function explodeExpression($expression, array $separators, array $options = [])
-    {
-        return ExpressionExploderTraitTest::mockExplodeExpression($expression, $separators, $options);
     }
 }

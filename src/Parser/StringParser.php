@@ -4,13 +4,11 @@ namespace Mormat\FormulaInterpreter\Parser;
 
 /**
  * Parse strings in formulas
- *
- * @author mormat
  */
-class StringParser implements ParserInterface  {
-    
-    public function parse($rawExpression) {
-        
+class StringParser implements ParserInterface
+{
+    public function parse($rawExpression)
+    {
         $expression = trim($rawExpression);
         
         if ($expression[0] !== "'" || $expression[-1] !== "'") {
@@ -27,7 +25,5 @@ class StringParser implements ParserInterface  {
             'type'  => 'string',
             'value' => $value,
         );
-        
     }
-
 }

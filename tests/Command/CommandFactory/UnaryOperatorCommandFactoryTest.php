@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException;
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface;
@@ -9,10 +11,11 @@ use Mormat\FormulaInterpreter\Command\UnaryOperatorCommand;
 
 use PHPUnit\Framework\TestCase;
 
-class UnaryOperatorCommandFactoryTest extends TestCase {
+class UnaryOperatorCommandFactoryTest extends TestCase
+{
     
-    public function testCreate() {
-        
+    public function testCreate()
+    {
         $operands = [
             'some_value'  => $this->createMock(CommandInterface::class),
         ];
@@ -31,12 +34,10 @@ class UnaryOperatorCommandFactoryTest extends TestCase {
         
         $this->assertEquals(
             new UnaryOperatorCommand(
-                 '+', 
+                '+',
                 $operands['some_value']
             ),
             $actual
         );
-        
     }
-    
 }

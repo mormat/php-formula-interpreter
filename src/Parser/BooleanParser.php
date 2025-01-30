@@ -2,10 +2,10 @@
 
 namespace Mormat\FormulaInterpreter\Parser;
 
-class BooleanParser implements ParserInterface {
-    
-    function parse($expression) {
-        
+class BooleanParser implements ParserInterface
+{
+    public function parse($expression)
+    {
         if (in_array($expression, ['true', 'false'])) {
             return [
                 'type' => 'boolean',
@@ -15,5 +15,4 @@ class BooleanParser implements ParserInterface {
         
         throw new ParserException($expression);
     }
-    
 }

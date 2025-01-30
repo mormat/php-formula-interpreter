@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\VariableCommand;
 use Mormat\FormulaInterpreter\Exception\UnknownVariableException;
@@ -9,13 +11,12 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test the command to execute of a variable
- *
- * @author mormat
  */
-class VariableCommandTest extends TestCase {
-    
+class VariableCommandTest extends TestCase
+{
     #[DataProvider('getData')]
-    public function testRunWhenVariablesExists($name, $variables, $result) {
+    public function testRunWhenVariablesExists($name, $variables, $result)
+    {
         $command = new VariableCommand($name);
         
         $context = new CommandContext($variables);
@@ -23,14 +24,16 @@ class VariableCommandTest extends TestCase {
         $this->assertEquals($command->run($context), $result);
     }
     
-    public static function getData() {
+    public static function getData()
+    {
         return array(
             array('rate', array('rate' => 2), 2),
             array('price', array('price' => 32.2), 32.2),
         );
     }
     
-    public function testRunWhenVariableNotExists() {
+    public function testRunWhenVariableNotExists()
+    {
         $this->expectException(UnknownVariableException::class);
         $context = new CommandContext([]);
         
@@ -39,18 +42,19 @@ class VariableCommandTest extends TestCase {
     }
     
     #[DataProvider('getIncorrectNames')]
-    public function testInjectIncorrectName($name) {
-        $this->expectException(InvalidArgumentException::class);
-        $command = new VariableCommand($name, array());
+    public function testInjectIncorrectName($name)
+    {
+        $this->expectException(\TypeError::class);
+        new VariableCommand($name, array());
     }
     
-    public static function getIncorrectNames() {
+    public static function getIncorrectNames()
+    {
         return array(
             array(12),
-            array(False),
+            array(false),
             array(array()),
-            array(new StdClass()),
+            array(new \StdClass()),
         );
     }
-    
 }

@@ -1,22 +1,20 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandFactory;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
 
 use PHPUnit\Framework\TestCase;
 
-/**
- * Description of ParserTest
- *
- * @author mormat
- */
-class CommandFactoryTest extends TestCase {
-    
-    public function testCreate() {
+class CommandFactoryTest extends TestCase
+{
+    public function testCreate()
+    {
         $factory = new CommandFactory();
         
-        $command = new CommandFactoryTest_FakeCommand();
+        $command = $this->createFakeCommand();
         $numericFactory = $this->getMockBuilder(
             CommandFactory::class
         )->getMock();
@@ -28,8 +26,8 @@ class CommandFactoryTest extends TestCase {
         $this->assertEquals($factory->create(array('type' => 'numeric')), $command);
     }
     
-    public function testMissingTypeOption() {
-        
+    public function testMissingTypeOption()
+    {
         $this->expectException(CommandFactory\CommandFactoryException::class);
         
         $factory = new CommandFactory();
@@ -37,8 +35,8 @@ class CommandFactoryTest extends TestCase {
         $factory->create(array());
     }
     
-    public function testUnknownType() {
-        
+    public function testUnknownType()
+    {
         $this->expectException(CommandFactory\CommandFactoryException::class);
         
         $factory = new CommandFactory();
@@ -46,9 +44,13 @@ class CommandFactoryTest extends TestCase {
         $factory->create(array('type' => 'numeric'));
     }
     
+    protected function createFakeCommand()
+    {
+        return new class implements CommandInterface
+        {
+            public function run(CommandContext $context)
+            {
+            }
+        };
+    }
 }
-
-class CommandFactoryTest_FakeCommand implements CommandInterface {
-    public function run(CommandContext $context) {}
-}
-

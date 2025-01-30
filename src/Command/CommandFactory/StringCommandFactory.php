@@ -2,6 +2,7 @@
 
 namespace Mormat\FormulaInterpreter\Command\CommandFactory;
 
+use \Mormat\FormulaInterpreter\Command\CommandInterface;
 use \Mormat\FormulaInterpreter\Command\StringCommand;
 
 /**
@@ -9,14 +10,14 @@ use \Mormat\FormulaInterpreter\Command\StringCommand;
  *
  * @author mormat
  */
-class StringCommandFactory implements CommandFactoryInterface {
-    
-    public function create($options) {
+class StringCommandFactory implements CommandFactoryInterface
+{
+    public function create($options): CommandInterface
+    {
         if (!isset($options['value'])) {
             throw new CommandFactoryException();
         }
         
         return new StringCommand($options['value']);
     }
-    
 }

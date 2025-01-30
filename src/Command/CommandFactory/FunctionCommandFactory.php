@@ -2,28 +2,22 @@
 
 namespace Mormat\FormulaInterpreter\Command\CommandFactory;
 
+use \Mormat\FormulaInterpreter\Command\CommandInterface;
 use \Mormat\FormulaInterpreter\Command\FunctionCommand;
 use \Mormat\FormulaInterpreter\Exception\UnknownFunctionException;
 use \Mormat\FormulaInterpreter\Functions\FunctionInterface;
 
-/**
- * Description of FunctionParser
- *
- * @author mormat
- */
-class FunctionCommandFactory implements CommandFactoryInterface {
+class FunctionCommandFactory implements CommandFactoryInterface
+{
     
-    /**
-     * @var CommandFactoryInstance
-     */
-    protected $argumentCommandFactory;
-    
-    function __construct(CommandFactoryInterface $argumentCommandFactory) {
+    public function __construct(
+        protected CommandFactoryInterface $argumentCommandFactory
+    ) {
         $this->argumentCommandFactory = $argumentCommandFactory;
     }
     
-    public function create($options) {
-        
+    public function create($options): CommandInterface
+    {
         if (!isset($options['name'])) {
             throw new CommandFactoryException('Missing option "name"');
         }
@@ -37,5 +31,4 @@ class FunctionCommandFactory implements CommandFactoryInterface {
         
         return new FunctionCommand($options['name'], $argumentCommands);
     }
-    
 }

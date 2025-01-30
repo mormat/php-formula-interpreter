@@ -9,18 +9,23 @@ use Mormat\FormulaInterpreter\Exception as BaseException;
  *
  * @author mormat
  */
-class UnknownFunctionException extends BaseException {
+class UnknownFunctionException extends BaseException
+{
     
-    protected $name;
-    
-    function __construct($name) {
+    public function __construct(protected string $name)
+    {
         $this->name = $name;
         
         parent::__construct(sprintf('Unknown function "%s"', $name));
     }
     
-    public function getName() {
+    /**
+     * get the function name that triggers the exception
+     * @todo rename to getFunctionName
+     * @return string
+     */
+    public function getName(): string
+    {
         return $this->name;
     }
-
 }

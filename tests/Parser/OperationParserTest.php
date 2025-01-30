@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Parser\ParserException;
 use Mormat\FormulaInterpreter\Parser\ParserInterface;
 use Mormat\FormulaInterpreter\Parser\OperationParser;
@@ -7,16 +9,17 @@ use Mormat\FormulaInterpreter\Parser\OperationParser;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class OperationParserTest extends TestCase {
-    
+class OperationParserTest extends TestCase
+{
     const BAD_EXPRESSION = '#@?§%&!';
     
     protected OperationParser $parser;
     
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $childParser = $this->createMock(ParserInterface::class);
         $childParser->method('parse')->willReturnCallback(
-            function($expression) {
+            function ($expression) {
                 if ($expression === self::BAD_EXPRESSION) {
                     throw new ParserException($expression);
                 }
@@ -29,7 +32,7 @@ class OperationParserTest extends TestCase {
     
     #[DataProvider('dataParseWithValidExpression')]
     public function testParseWithValidExpression(
-        $expression, 
+        $expression,
         $expectedLeft,
         $expectedOperator,
         $expectedRight,
@@ -44,10 +47,10 @@ class OperationParserTest extends TestCase {
             ),
             $this->parser->parse($expression)
         );
-        
     }
     
-    public static function dataParseWithValidExpression() {
+    public static function dataParseWithValidExpression()
+    {
         $data = array(
             
             ['2+2', '2', '+', '2'],
@@ -118,7 +121,8 @@ class OperationParserTest extends TestCase {
         
         // logical operators ('and', or')
         foreach (['and', 'or'] as $op) {
-            $data = [...$data, 
+            $data = [
+                ...$data,
                 ["true $op true", 'true ', $op, ' true'],
                 ["a = 1 $op true", 'a = 1 ', $op, ' true'],
                 
@@ -139,25 +143,24 @@ class OperationParserTest extends TestCase {
                 ["[bar]${op}(foo)", '[bar]', $op, '(foo)'],
                 ["[bar $op foo]${op}(baz)", "[bar $op foo]", $op, '(baz)'],
             ];
-            
         }
         
         return $data;
     }
     
     #[DataProvider('dataParseWithInvalidExpression')]
-    public function testParseWithInvalidExpression($expression, $unparsable) {
-        
+    public function testParseWithInvalidExpression($expression, $unparsable)
+    {
         $this->expectException(ParserException::class);
         $this->expectExceptionMessage(
             sprintf('Failed to parse expression %s', $unparsable)
         );
         
         $this->parser->parse($expression);
-        
     }
     
-    public static function dataParseWithInvalidExpression() {
+    public static function dataParseWithInvalidExpression()
+    {
         return array(
             [ 'whatever',  'whatever' ],
             [ sprintf('%s+2', self::BAD_EXPRESSION), self::BAD_EXPRESSION ],
@@ -167,5 +170,4 @@ class OperationParserTest extends TestCase {
             [ "'2 * 3'", "'2 * 3'"]
         );
     }
-    
 }

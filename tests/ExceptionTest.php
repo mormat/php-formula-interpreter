@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Exception as BaseException;
 
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -7,13 +9,11 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Testing Exceptions
- *
- * @author mormat
  */
-class ExceptionTest extends TestCase {
-    
+class ExceptionTest extends TestCase
+{
      #[DataProvider('getAllExceptionsMustImplementsBaseExceptionData')]
-    function testAllExceptionsMustImplementsBaseException($exception)
+    public function testAllExceptionsMustImplementsBaseException($exception)
     {
         $this->assertTrue(
             is_subclass_of($exception, BaseException::class),
@@ -21,7 +21,7 @@ class ExceptionTest extends TestCase {
         );
     }
     
-    static function getAllExceptionsMustImplementsBaseExceptionData()
+    public static function getAllExceptionsMustImplementsBaseExceptionData()
     {
         $exceptions = [];
         $srcFolder = implode(DIRECTORY_SEPARATOR, [__DIR__, '..', 'src']);
@@ -36,15 +36,13 @@ class ExceptionTest extends TestCase {
             foreach ($files as $file) {
                 $class = substr($file, strlen($srcFolder), -strlen('.php'));
                 $class = '\Mormat\FormulaInterpreter' . str_replace('/', '\\', $class);
-                $exceptions[] = $class;                
+                $exceptions[] = $class;
             }
-            
         }
         
-        return array_map(function($exception) {
-            return [$exception];
-        }, $exceptions);
+        return array_map(
+            fn($exception) => [$exception],
+            $exceptions
+        );
     }
-    
 }
-

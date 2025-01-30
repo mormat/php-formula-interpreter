@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryException;
 use Mormat\FormulaInterpreter\Command\CommandFactory\CommandFactoryInterface;
 use Mormat\FormulaInterpreter\Command\CommandFactory\FunctionCommandFactory;
@@ -10,28 +12,29 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Description of NumericCommandFactory
- *
- * @author mormat
  */
-class FunctionCommandFactoryTest extends TestCase {
-    
+class FunctionCommandFactoryTest extends TestCase
+{
     protected CommandFactoryInterface $argumentCommandFactory;
     protected FunctionCommandFactory $factory;
     
-    public function setUp(): void {
+    public function setUp(): void
+    {
         $this->argumentCommandFactory = $this->getMockBuilder(
             CommandFactoryInterface::class
         )->getMock();
-        $this->factory = new FunctionCommandFactory($this->argumentCommandFactory);        
+        $this->factory = new FunctionCommandFactory($this->argumentCommandFactory);
     }
     
-    public function testCreateShouldReturnFunctionCommand() {
+    public function testCreateShouldReturnFunctionCommand()
+    {
         $options = array('name' => 'pi');
         $object = $this->factory->create($options);
         $this->assertTrue($object instanceof FunctionCommand, 'An instance of FunctionCommand should be returned');
     }
     
-    public function testCreateWithNoArguments() {       
+    public function testCreateWithNoArguments()
+    {
         $options = array('name' => 'pi');
         $object = $this->factory->create($options);
         
@@ -45,8 +48,8 @@ class FunctionCommandFactoryTest extends TestCase {
         );
     }
     
-    public function testCreateWithArguments() {       
-        
+    public function testCreateWithArguments()
+    {
         $argumentCommand = $this->getMockBuilder(
             CommandInterface::class
         )->getMock();
@@ -70,16 +73,17 @@ class FunctionCommandFactoryTest extends TestCase {
         );
     }
     
-    public function testCreateWithMissingNameOption() {
+    public function testCreateWithMissingNameOption()
+    {
         $this->expectException(CommandFactoryException::class);
         $this->factory->create(array());
     }
     
-    protected static function getObjectProperty($object, $property) {        
+    protected static function getObjectProperty($object, $property)
+    {
         $reflectedClass = new \ReflectionClass($object);
         $reflection = $reflectedClass->getProperty($property);
         $reflection->setAccessible(true);
         return $reflection->getValue($object);
     }
-    
 }

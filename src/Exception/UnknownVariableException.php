@@ -4,23 +4,23 @@ namespace Mormat\FormulaInterpreter\Exception;
 
 use Mormat\FormulaInterpreter\Exception as BaseException;
 
-/**
- * Description of FunctionParser
- *
- * @author mormat
- */
-class UnknownVariableException extends BaseException {
+class UnknownVariableException extends BaseException
+{
     
-    protected $name;
-    
-    function __construct($name) {
+    public function __construct(protected string $name)
+    {
         $this->name = $name;
         
         parent::__construct(sprintf('Unknown variable "%s"', $name));
     }
     
-    public function getName() {
+    /**
+     * get the variable name
+     * @todo rename to getVariableName()
+     * @return string
+     */
+    public function getName(): string
+    {
         return $this->name;
     }
-
 }

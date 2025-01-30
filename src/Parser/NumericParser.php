@@ -4,13 +4,11 @@ namespace Mormat\FormulaInterpreter\Parser;
 
 /**
  * Parse numeric values in formulas
- *
- * @author mormat
  */
-class NumericParser implements ParserInterface  {
-    
-    function parse($rawExpression) {
-        
+class NumericParser implements ParserInterface
+{
+    public function parse($rawExpression)
+    {
         $expression = trim($rawExpression);
         
         if (!preg_match('/^[0-9]*(\.[0-9]*){0,1}$/', $expression)) {
@@ -22,5 +20,4 @@ class NumericParser implements ParserInterface  {
             'value' => floatval($expression),
         );
     }
-    
 }

@@ -4,23 +4,18 @@ namespace Mormat\FormulaInterpreter\Parser;
 
 /**
  * Parse functions in formulas
- *
- * @author mormat
  */
-class FunctionParser implements ParserInterface {
-    
+class FunctionParser implements ParserInterface
+{
     use ExpressionExploderTrait;
     
-    /**
-     * @var ParserInterface
-     */
-    protected $argumentParser;
-    
-    function __construct(ParserInterface $argumentParser) {
-        $this->argumentParser = $argumentParser;
+    public function __construct(
+        protected ParserInterface $argumentParser
+    ) {
     }
 
-    function parse($rawExpression) {
+    public function parse($rawExpression)
+    {
         $expression = trim($rawExpression);
         
         if (!preg_match('/^(\w)+\(/', $expression)) {
@@ -48,5 +43,4 @@ class FunctionParser implements ParserInterface {
 
         return $results;
     }
-
 }

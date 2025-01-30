@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use Mormat\FormulaInterpreter\Command\ArrayCommand;
 use Mormat\FormulaInterpreter\Command\CommandContext;
 use Mormat\FormulaInterpreter\Command\CommandInterface;
@@ -9,19 +11,19 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Tests the execution of a array expression
- *
- * @author mormat
  */
-class ArrayCommandTest extends TestCase {
-    
+class ArrayCommandTest extends TestCase
+{
     protected CommandContext $commandContext;
     
-    protected function setUp(): void {
+    protected function setUp(): void
+    {
         $this->commandContext = new CommandContext();
     }
 
     #[DataProvider('getData')]
-    public function testRun($items, $result) {
+    public function testRun($items, $result)
+    {
         $mocker = [$this, 'createMockCommandReturningValue'];
         
         $command = new ArrayCommand(
@@ -31,13 +33,15 @@ class ArrayCommandTest extends TestCase {
         $this->assertEquals($command->run($this->commandContext), $result);
     }
     
-    public static function getData() {
+    public static function getData()
+    {
         return array(
             array([1, 2], ['mocking 1', 'mocking 2']),
         );
     }
     
-    public function createMockCommandReturningValue($value) {
+    public function createMockCommandReturningValue($value)
+    {
         $command = $this->getMockBuilder(
             CommandInterface::class
         )->getMock();
@@ -46,5 +50,4 @@ class ArrayCommandTest extends TestCase {
             ->will($this->returnValue('mocking '.$value));
         return $command;
     }
-    
 }

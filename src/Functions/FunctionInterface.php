@@ -2,30 +2,22 @@
 
 namespace Mormat\FormulaInterpreter\Functions;
 
-interface FunctionInterface {
-    
+interface FunctionInterface
+{
     /**
      * check if the provided params are valid
-     * 
      * @param mixed[] $params
-     * @return boolean
      */
-    function supports(array $params);
+    public function supports(array $params): bool;
     
     /**
      * execute the function
-     * 
-     * @param mixed $value
-     * @return mixed
+     * @param mixed[] $params
      */
-    function execute(array $params);
-    
+    public function execute(array $params): mixed;
     
     /**
      * returns the name of the function
-     * 
-     * @return string
      */
-    function getName();
-    
+    public function getName(): string;
 }

@@ -2,18 +2,12 @@
 
 namespace Mormat\FormulaInterpreter\Command\CommandFactory;
 
-/**
- * Description of FunctionParser
- *
- * @author mormat
- */
-interface CommandFactoryInterface {
-    
+use Mormat\FormulaInterpreter\Command\CommandInterface;
+
+interface CommandFactoryInterface
+{
     /**
      * @param array $options
-     * @return FormulaInterpreter\Command\CommandInterface
      */
-    function create($options);
-    
+    public function create($options): CommandInterface;
 }
-

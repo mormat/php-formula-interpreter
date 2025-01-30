@@ -1,5 +1,7 @@
 <?php
 
+namespace Mormat\FormulaInterpreter\Tests;
+
 use \Mormat\FormulaInterpreter\Compiler;
 use \Mormat\FormulaInterpreter\Functions\CallableFunction;
 use \Mormat\FormulaInterpreter\Exception\UnknownFunctionException;
@@ -7,18 +9,19 @@ use \Mormat\FormulaInterpreter\Exception\UnknownFunctionException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-class CompilerTest extends TestCase {
-    
+class CompilerTest extends TestCase
+{
     #[DataProvider('getCompileAndRunData')]
-    public function testCompileAndRun($expression, $result, $variables = []) {
+    public function testCompileAndRun($expression, $result, $variables = [])
+    {
         $compiler = new Compiler();
         $compiler->registerCustomFunction(
             new CallableFunction('get_integer_part', 'floor', ['numeric']),
         );
         $compiler->registerCustomFunction(
             new CallableFunction(
-                'equal', 
-                fn($a,$b) => intval($a == $b), 
+                'equal',
+                fn($a, $b) => intval($a == $b),
                 ['numeric', 'numeric']
             )
         );
@@ -28,17 +31,17 @@ class CompilerTest extends TestCase {
         
         $executable = $compiler->compile($expression);
         $this->assertEquals($result, $executable->run($variables));
-
     }
     
-    public static function getCompileAndRunData() {
+    public static function getCompileAndRunData()
+    {
         return array(
             
             array('3', 3),
             array('3 + 3', 6),
             array('price', 10, array('price' => 10)),
             array('price + 2 * 3', 16, array('price' => 10)),
-            array('price * 25 / 100', 37.5, new CompilerTest_Variables(['price' => 150])),
+            array('price * 25 / 100', 37.5, new \ArrayObject(['price' => 150])),
             array('pi()', pi()),
             array('pow(3, 2)', 9),
             array('modulo(5, 2)', 1),
@@ -51,7 +54,7 @@ class CompilerTest extends TestCase {
             array('cos(1 * 2) + (3)', 2.5838531634528574),
             
             // Issue #4
-            array('(((100 * 0.43075) * 1.1 * 1.5) / (1-0.425)) * 1.105', 136.58520652173917), 
+            array('(((100 * 0.43075) * 1.1 * 1.5) / (1-0.425)) * 1.105', 136.58520652173917),
             array('1+(1+1)', 3),
             
             // handling strings
@@ -122,7 +125,6 @@ class CompilerTest extends TestCase {
         $otherVars,
         $expectedResult
     ) {
-        
         $vars = $otherVars + [
             'm' => 0, 'n' => 0, 'b' => 0, 'c' => 0,
             'd' => 0, 'f' => 0, 'g' => 0, 'h' => 0,
@@ -132,15 +134,15 @@ class CompilerTest extends TestCase {
         $compiler = new Compiler();
         $compiler->registerCustomFunction(
             new CallableFunction(
-                'greater', 
-                fn($a,$b) => $a > $b, 
+                'greater',
+                fn($a, $b) => $a > $b,
                 ['numeric', 'numeric']
             )
         );
         $compiler->registerCustomFunction(
             new CallableFunction(
-                'equal', 
-                fn($a,$b) => $a == $b, 
+                'equal',
+                fn($a, $b) => $a == $b,
                 ['numeric', 'numeric']
             )
         );
@@ -153,13 +155,13 @@ class CompilerTest extends TestCase {
             EOT
         );
         $this->assertEquals(
-            $expectedResult, 
+            $expectedResult,
             $executable->run($vars)
         );
-        
     }
     
-    public static function dataCompileAndRunWithComplexFormula() {
+    public static function dataCompileAndRunWithComplexFormula()
+    {
         return array(
             [ [], 150 ],
             [ ['d' => 1], 300],
@@ -177,7 +179,7 @@ class CompilerTest extends TestCase {
         $executable->run();
     }
     
-    static function getCompileInvalidExpressionData() 
+    public static function getCompileInvalidExpressionData()
     {
         return array(
             array('get_integer_part(2)', UnknownFunctionException::class),
@@ -186,7 +188,7 @@ class CompilerTest extends TestCase {
         
     
     public function testGetAvailableOperators()
-        {
+    {
         $compiler = new Compiler();
         
         $actual = $compiler->getAvailableOperators();
@@ -233,7 +235,7 @@ class CompilerTest extends TestCase {
                 "in" => [
                     'name' => 'in',
                     'supportedTypes' => ['numeric|string', 'array|string'],
-                ]   
+                ]
             ),
             sprintf('actual values : %s', json_encode($actual, JSON_PRETTY_PRINT))
         );
@@ -249,81 +251,47 @@ class CompilerTest extends TestCase {
             $actual,
             array(
                 'pi'    => [
-                    'name' => 'pi', 
+                    'name' => 'pi',
                     'supportedTypes' => []
                 ],
                 'cos'   => [
-                    'name' => 'cos', 
+                    'name' => 'cos',
                     'supportedTypes' => ['numeric']
                 ],
                 'sin'   => [
-                    'name' => 'sin', 
+                    'name' => 'sin',
                     'supportedTypes' => ['numeric']
                 ],
                 'sqrt'  => [
-                    'name' => 'sqrt', 
+                    'name' => 'sqrt',
                     'supportedTypes' => ['numeric']
                 ],
                 'pow'   => [
-                    'name' => 'pow', 
+                    'name' => 'pow',
                     'supportedTypes' => ['numeric', 'numeric']
                 ],
                 'modulo'     => [
-                    'name' => 'modulo', 
+                    'name' => 'modulo',
                     'supportedTypes' => ['numeric', 'numeric']
                 ],
                 'lowercase'  => [
-                    'name' => 'lowercase', 
+                    'name' => 'lowercase',
                     'supportedTypes' => ['string']
                 ],
                 'uppercase'  => [
-                    'name' => 'uppercase', 
+                    'name' => 'uppercase',
                     'supportedTypes' => ['string']
                 ],
                 'capitalize' => [
-                    'name' => 'capitalize', 
+                    'name' => 'capitalize',
                     'supportedTypes' => ['string']
                 ],
                 'count'      => [
-                    'name' => 'count', 
+                    'name' => 'count',
                     'supportedTypes' => ['string|array']
                 ],
             ),
             sprintf('actual values : %s', json_encode($actual, JSON_PRETTY_PRINT))
         );
-        
     }
-    
-}
-
-/**
- * @todo replace with getMockBuilder
- */
-class CompilerTest_Variables implements \ArrayAccess {
-    
-    protected $variables = array();
-    
-    public function __construct(array $variables) {
-        $this->variables = $variables;
-    }
-
-    
-    public function offsetExists($offset) {
-        return array_key_exists($offset, $this->variables);
-    }
-
-    public function offsetGet($offset) {
-        if (array_key_exists($offset, $this->variables)) {
-            return $this->variables[$offset];
-        }
-    }
-
-    public function offsetSet($offset, $value) {
-        throw new \Exception("not implemented");
-    }
-
-    public function offsetUnset($offset) {
-        throw new \Exception("not implemented");
-    }
-
 }

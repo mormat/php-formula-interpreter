@@ -4,28 +4,23 @@ namespace Mormat\FormulaInterpreter\Command\CommandFactory;
 
 use \Mormat\FormulaInterpreter\Command\ArrayCommand;
 
-/**
- * Create an array command
- *
- * @author mathieu
- */
-class ArrayCommandFactory implements CommandFactoryInterface {
-    
-    /**
-     * @var CommandFactoryInterface
-     */
-    protected $itemCommandFactory;
-    
-    public function __construct(CommandFactoryInterface $itemCommandFactory) {
+use Mormat\FormulaInterpreter\Command\CommandInterface;
+
+class ArrayCommandFactory implements CommandFactoryInterface
+{
+    public function __construct(
+        protected CommandFactoryInterface $itemCommandFactory
+    ) {
         $this->itemCommandFactory = $itemCommandFactory;
     }
     
-    public function create($options) {
+    public function create($options): CommandInterface
+    {
         return new ArrayCommand(
-            array_map(function($item) {
-                return $this->itemCommandFactory->create($item);
-            }, $options['value'])
+            array_map(
+                fn($item) => $this->itemCommandFactory->create($item),
+                $options['value']
+            )
         );
     }
-
 }
