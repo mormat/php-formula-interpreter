@@ -60,7 +60,7 @@ your_function_here(2)
 // use the `in` operator to check if a substring is in a string
 'Wars' in 'Star Wars'
 
-// Logical operators (`and`, `or`, `not`)
+// using logical operators (`and`, `or`, `not`)
 1 < x and x < 10
 1 < x or x < 10
 not x > 0
@@ -107,6 +107,9 @@ The following operators are available :
 | `*` | a * b | Product of a and b. |
 | `/` | a / b | Quotient of a and b. |
 | `in` | a in b | If a is an array, checks if b is an item of a. If a is a string, checks if b is a substring of a |
+| `and` | a and b | Returns `true` if both the operands are true |
+| `or` | a or b | Returns `true` if either of the operands is true |
+| `not` | not a | Returns `true` if the operand is false |
 
 The operators `*`, `\` are being evaluated first, then the operators `+` and `-`
 
