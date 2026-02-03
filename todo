@@ -1,6 +1,0 @@
-
-- implements the 'in' operator. Works only with strings and array
-
-- in OperatorParser, the method must be probably be improved by caching results in memory
-
-- in Readme.md, write "A stand-alone php library for interpreting formulas" in description and remove quotes from examples showing formulas

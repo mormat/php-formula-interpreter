@@ -1,7 +1,7 @@
 php-formula-interpreter
 =======================
 
-A stand-alone php library for parsing and running formulas
+A stand-alone php library for interpreting formulas
 
 ## Installation via composer
 

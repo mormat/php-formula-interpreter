@@ -16,13 +16,12 @@ class OperationParser implements ParserInterface
     const EQUAL_OPERATOR = '=';
     const LOWER_OR_EQUAL_OPERATOR = '<=';
     const GREATER_OR_EQUAL_OPERATOR = '>=';
-    
+
     public function __construct(
         protected ParserInterface $childParser
-    ) {
-    }
+    ) {}
 
-    
+
     public function parse($expression): array
     {
         $orderedOperators = [
@@ -39,13 +38,13 @@ class OperationParser implements ParserInterface
             self::MULTIPLY_OPERATOR,
             self::DIVIDE_OPERATOR,
         ];
-        
+
         foreach ($orderedOperators as $operator) {
             $operands = $this->extractOperands($expression, $operator);
             if ($operands === null) {
                 continue;
             }
-            
+
             return [
                 'type'     => 'operation',
                 'left'     => $this->childParser->parse($operands[0]),
@@ -53,27 +52,56 @@ class OperationParser implements ParserInterface
                 'right'    => $this->childParser->parse($operands[1])
             ];
         }
-        
+
         throw new ParserException($expression);
     }
-    
+
     protected function extractOperands($expression, $operator)
     {
         $positions = $this->findOperatorPositions($expression, $operator);
-        foreach ($positions as $position) {
+        $positionsArray = iterator_to_array($positions);
+
+        // For left-associative operators, use the last occurrence
+        // For right-associative operators, use the first occurrence
+        if ($this->isLeftAssociative($operator)) {
+            $positionsArray = array_reverse($positionsArray);
+        }
+
+        foreach ($positionsArray as $position) {
             $left  = substr($expression, 0, $position);
             $right = substr($expression, $position + strlen($operator));
 
             if (!$this->areOperandsValid($operator, $left, $right)) {
                 continue;
             }
-            
+
             return [$left, $right];
         }
-        
+
         return null;
     }
-          
+
+    protected function isLeftAssociative($operator): bool
+    {
+        // Left-associative operators: a op b op c = (a op b) op c
+        $leftAssociativeOperators = [
+            self::ADD_OPERATOR,              // +
+            self::SUBSTRACT_OPERATOR,        // -
+            self::MULTIPLY_OPERATOR,         // *
+            self::DIVIDE_OPERATOR,           // /
+            self::AND_OPERATOR,              // and
+            self::OR_OPERATOR,               // or
+            self::EQUAL_OPERATOR,            // =
+            self::LOWER_THAN_OPERATOR,       // <
+            self::GREATER_THAN_OPERATOR,     // >
+            self::LOWER_OR_EQUAL_OPERATOR,   // <=
+            self::GREATER_OR_EQUAL_OPERATOR, // >=
+            self::IN_OPERATOR,               // in
+        ];
+
+        return in_array($operator, $leftAssociativeOperators);
+    }
+
     protected function findOperatorPositions($expression, $operator)
     {
         $chars = str_split($expression);
@@ -87,7 +115,7 @@ class OperationParser implements ParserInterface
             if ($openedString) {
                 continue;
             }
-            
+
             if ($char === '(') {
                 $openedParenthesis++;
             }
@@ -97,7 +125,7 @@ class OperationParser implements ParserInterface
             if ($openedParenthesis > 0) {
                 continue;
             }
-            
+
             if ($char === '[') {
                 $openedArrays++;
             }
@@ -107,14 +135,14 @@ class OperationParser implements ParserInterface
             if ($openedArrays > 0) {
                 continue;
             }
-                        
+
             $substr = substr($expression, $pos, strlen($operator));
             if ($substr === $operator) {
                 yield $pos;
             }
         }
     }
-    
+
     protected function areOperandsValid($operator, $left, $right): bool
     {
         $complexOperators = [
@@ -132,7 +160,7 @@ class OperationParser implements ParserInterface
                 return false;
             }
         }
-        
+
         return true;
     }
 }
