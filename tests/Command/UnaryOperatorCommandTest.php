@@ -40,7 +40,21 @@ class UnaryOperatorCommandTest extends TestCase
             ['not', false, true],
             ['not', 1, false],
             ['not', 0, true],
+
+            // `-` operator
+            ['-', 2, -2],
+            ['-', -2.5, 2.5],
+            ['-', 0, 0],
+            ['-', true, -1],
         );
+    }
+
+    public function testRunMinusWithInvalidOperand()
+    {
+        $this->expectException(UnsupportedOperandTypeException::class);
+
+        $command = new UnaryOperatorCommand('-', $this->mockChildCommand('foo'));
+        $command->run($this->commandContext);
     }
     
     protected function mockChildCommand($returnValue)

@@ -2,6 +2,8 @@
 
 namespace Mormat\FormulaInterpreter\Command;
 
+use Mormat\FormulaInterpreter\Exception\UnsupportedOperandTypeException;
+
 class UnaryOperatorCommand implements CommandInterface
 {
     public function __construct(
@@ -16,6 +18,15 @@ class UnaryOperatorCommand implements CommandInterface
         
         if ($this->operator === 'not') {
             return !$value;
+        }
+
+        if ($this->operator === '-') {
+            if (!is_numeric($value) && !is_bool($value)) {
+                throw new UnsupportedOperandTypeException(
+                    'Unsupported operand type in - operation'
+                );
+            }
+            return -$value;
         }
     }
 }

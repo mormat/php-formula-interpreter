@@ -5,6 +5,8 @@ namespace Mormat\FormulaInterpreter\Tests;
 use \Mormat\FormulaInterpreter\Compiler;
 use \Mormat\FormulaInterpreter\Functions\CallableFunction;
 use \Mormat\FormulaInterpreter\Exception\UnknownFunctionException;
+use \Mormat\FormulaInterpreter\Exception\UnsupportedOperandTypeException;
+use \Mormat\FormulaInterpreter\Parser\ParserException;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -117,7 +119,33 @@ class CompilerTest extends TestCase
             ['not 0', true],
             
             // mixing logical operators
-            ["1 > 0 and not 'baz' in 'foobar'", true]
+            ["1 > 0 and not 'baz' in 'foobar'", true],
+
+            // unary minus
+            ['-2', -2],
+            ['-2.5', -2.5],
+            ['-x', -3, ['x' => 3]],
+            ['- x', -3, ['x' => 3]],
+            ['-(1 + 2)', -3],
+            ['--2', 2],
+            ['2 * -3', -6],
+            ['2 / -4', -0.5],
+            ['1 + -2', -1],
+            ['1 - -2', 3],
+            ['-2 - 3', -5],
+            ['-2 * 3', -6],
+            ['-2 * 3 - 1', -7],
+            ['2 - 3 * -1', 5],
+            ['10 - 2 - 3', 5],
+            ['pow(-2, 2)', 4],
+            ['modulo(5, -2)', 1],
+            ['-pow(2, 2)', -4],
+            ['1 < -2', false],
+            ['-1 < 2', true],
+            ['-1 = -1', true],
+            ['-1 in [-1, 2]', true],
+            ['not -1', false],
+            ['invoicer(-2) + -x', -5, ['x' => 3]]
         );
     }
     #[DataProvider('dataCompileAndRunWithComplexFormula')]
@@ -183,6 +211,10 @@ class CompilerTest extends TestCase
     {
         return array(
             array('get_integer_part(2)', UnknownFunctionException::class),
+            array("-'foo'", UnsupportedOperandTypeException::class),
+            array('-', ParserException::class),
+            array('1 +', ParserException::class),
+            array('* 2', ParserException::class),
         );
     }
         
