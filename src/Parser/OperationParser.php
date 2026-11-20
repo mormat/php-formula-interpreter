@@ -145,6 +145,20 @@ class OperationParser implements ParserInterface
 
     protected function areOperandsValid($operator, $left, $right): bool
     {
+        // an operator needs something on both sides; '1 +' is not an operation
+        if (trim($left) === '' || trim($right) === '') {
+            return false;
+        }
+
+        // a '+' or '-' right after another operator is a sign, as in '2 * -3'
+        $signOperators = [self::ADD_OPERATOR, self::SUBSTRACT_OPERATOR];
+        if (in_array($operator, $signOperators)) {
+            $characterBefore = substr(rtrim($left), -1);
+            if (in_array($characterBefore, ['+', '-', '*', '/', '<', '>', '='])) {
+                return false;
+            }
+        }
+
         $complexOperators = [
             self::IN_OPERATOR,
             self::AND_OPERATOR,

@@ -22,6 +22,7 @@ class Compiler
         $this->parser->addParser(new Parser\WrappingParenthesisParser($this->parser));
         $this->parser->addParser(new Parser\UnaryOperatorParser($this->parser));
         $this->parser->addParser(new Parser\OperationParser($this->parser));
+        $this->parser->addParser(new Parser\UnaryMinusParser($this->parser));
         $this->parser->addParser(new Parser\FunctionParser($this->parser));
         $this->parser->addParser(new Parser\ArrayParser($this->parser));
         $this->parser->addParser(new Parser\BooleanParser());

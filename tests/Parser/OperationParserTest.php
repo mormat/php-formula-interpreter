@@ -116,7 +116,16 @@ class OperationParserTest extends TestCase
             
             // ignore operators in array
             [ '2*[1 + 1]', '2', '*', '[1 + 1]'],
-            
+
+            // a '+' or '-' after another operator is a sign, not an operation
+            [ '-2-3', '-2', '-', '3'],
+            [ '1--2', '1', '-', '-2'],
+            [ '1+-2', '1', '+', '-2'],
+            [ '2*-3', '2', '*', '-3'],
+            [ '2 * -3 - 1', '2 * -3 ', '-', ' 1'],
+            [ '2 - 3 * -1', '2 ', '-', ' 3 * -1'],
+            [ '1 < -2', '1 ', '<', ' -2'],
+
         );
         
         // logical operators ('and', or')
@@ -167,7 +176,13 @@ class OperationParserTest extends TestCase
             [ sprintf('2+%s', self::BAD_EXPRESSION), self::BAD_EXPRESSION ],
             [ '1 in_items', '1 in_items' ],
             [ 'is_in 1', 'is_in 1' ],
-            [ "'2 * 3'", "'2 * 3'"]
+            [ "'2 * 3'", "'2 * 3'"],
+
+            // a missing operand is not an operation
+            [ '-2', '-2'],
+            [ '- x', '- x'],
+            [ '1 +', '1 +'],
+            [ '* 2', '* 2'],
         );
     }
 }
